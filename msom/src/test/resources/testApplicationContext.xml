@@ -19,7 +19,7 @@
     <context:annotation-config />  
      
     <!-- package to look for annotated classes -->
-    <context:component-scan base-package="pl.edu.uj.fais.wpz.msom.dao" />
+    <context:component-scan base-package="pl.edu.uj.fais.wpz.msom" />
      
     <!-- we will manage transactions with annotations -->
     <tx:annotation-driven />
