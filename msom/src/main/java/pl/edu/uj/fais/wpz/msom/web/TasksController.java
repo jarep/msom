@@ -26,7 +26,7 @@ public class TasksController {
     TaskService taskService;
     
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
-    public String showTaskTypes(Model model) {
+    public String showTasks(Model model) {
         List<Task> tasks = taskService.getTasksList();
         model.addAttribute("tasksList", tasks);
 

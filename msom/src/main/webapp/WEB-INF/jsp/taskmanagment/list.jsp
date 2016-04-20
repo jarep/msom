@@ -36,6 +36,7 @@
                             <th>Name</th>
                             <th>Type</th>
                             <th>Type - difficulty</th>
+                            <th>Delete</th>
                         </tr>
                         <c:forEach items="#{tasksList}" var="task">
                             <tr>
@@ -43,6 +44,11 @@
                                 <td>${task.name}</td>
                                 <td>${task.taskType.name}</td>
                                 <td>${task.taskType.difficulty}</td>
+                                <td>
+                                        <sf:form action="taskmanagment/remove/${task.id}" method="post">
+                                            <input type="submit" class="btn-sm btn-danger" value="Delete" />
+                                        </sf:form>
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>
