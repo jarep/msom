@@ -34,4 +34,9 @@ public class TaskTypeServiceImpl implements TaskTypeService {
         return taskTypeDao.list();
     }
 
+    @Override
+    public boolean removeTaskType(TaskType taskType) {
+        return taskTypeDao.removeTaskType(taskType);
+    }
+
 }

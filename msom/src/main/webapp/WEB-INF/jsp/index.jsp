@@ -30,11 +30,11 @@
                 <div class="col-md-3">
                     <nav id="tmp-nav">
                         <ul class="nav">
-                            <li><a href="index.html">Home</a></li>
+                            <li><a href="/msom/index.html">Home</a></li>
                             <li>
                                 <a href="#">Task Management</a>
                                 <ul class="nav">
-                                    <li><a href="tasktypes">Task Types</a></li>
+                                    <li><a href="/msom/tasktypes">Task Types</a></li>
                                     <li><a href="#">Tasks</a></li>
                                 </ul>
                             </li>

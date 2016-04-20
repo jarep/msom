@@ -1,6 +1,6 @@
 <%-- 
-    Document   : list
-    Created on : 2016-04-19, 19:03:36
+    Document   : view
+    Created on : 2016-04-20, 12:21:16
     Author     : jaroslaw
 --%>
 
@@ -30,37 +30,18 @@
                         Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
                         obsługiwać zadania konkretnego typu.
                     </p>
-
-                    <p class="lead">
-                        <a class="btn btn-default" href="tasktypes/new">Dodaj nowy typ</a>
-                    </p>
-                    <h2>Dostępne typy</h1>
-                        <table class="table">
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Difficulty</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                            <c:forEach items="#{taskTypesList}" var="type">
-                                <tr>
-                                    <td>${type.id}</td>
-                                    <td>${type.name}</td>
-                                    <td>${type.difficulty}</td>
-                                    <td><a href="tasktypes/${type.id}">Edit</a></td>
-                                    <td>
-                                        <sf:form action="tasktypes/remove/${type.id}" method="post">
-                                            <input type="submit" class="btn-sm btn-danger" value="Delete" />
-                                        </sf:form>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                        <p>
-                            <em>Uwaga - można usunąc tylko te typy, które nie mają 
-                                powiązanych zadań (dla przykładowych danych "Type D")</em>
-                        </p>
+                    <h3>Edycja typu zadań</h2>
+                        <sf:form method="post">
+                            <div class="form-group">
+                                <label for="name">Name of type</label>
+                                <input name="name" id="name" value="${taskType.name}" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="difficulty">Difficulty (Integer)</label>
+                                <input name="difficulty" id="difficulty" value="${taskType.difficulty}" class="form-control"/>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </sf:form>
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">

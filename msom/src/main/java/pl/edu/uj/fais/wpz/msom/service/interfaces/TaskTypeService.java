@@ -16,4 +16,6 @@ public interface TaskTypeService {
       
     List<TaskType> getTypesList();
     
+    boolean removeTaskType(TaskType taskType);
+    
 }
