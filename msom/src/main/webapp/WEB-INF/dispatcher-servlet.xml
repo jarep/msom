@@ -37,6 +37,7 @@
         <property name="mappings">
             <props>
                 <prop key="index.html">indexController</prop>
+                <prop key="/">indexController</prop>
             </props>
         </property>
     </bean>

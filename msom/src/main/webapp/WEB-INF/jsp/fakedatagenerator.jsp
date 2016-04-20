@@ -21,11 +21,9 @@
                 <div class="col-md-9">
                     <h1 class="page-header">MSOM</h1>
                     <h2>Modelowanie Systemów Obsługi Masowej</h2>
-                    <p class="lead">
-                        System jest w początkowej fazie - aktualnie działa tylko 
-                        zarządzanie typami zadań -> Link "Task Types" w menu po prawej.
+                    <p class="alert-danger">
+                        Wygenerowano przykładowe dane!
                     </p>
-                    <a href="fakedatagenerator">Generuj przykładowe dane</a>
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">
