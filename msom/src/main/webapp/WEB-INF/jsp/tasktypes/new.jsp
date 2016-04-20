@@ -51,7 +51,7 @@
                                 <a href="#">Task Management</a>
                                 <ul class="nav">
                                     <li><a href="/msom/tasktypes">Task Types</a></li>
-                                    <li><a href="#">Tasks</a></li>
+                                    <li><a href="/msom/tasks">Tasks</a></li>
                                 </ul>
                             </li>
                             <li><a href="#">Modules Managemenet</a></li>

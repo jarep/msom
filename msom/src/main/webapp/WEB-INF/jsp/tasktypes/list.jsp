@@ -34,7 +34,7 @@
                     <p class="lead">
                         <a class="btn btn-default" href="tasktypes/new">Dodaj nowy typ</a>
                     </p>
-                    <h2>Dostępne typy</h1>
+                    <h2>Dostępne typy</h2>
                         <table class="table">
                             <tr>
                                 <th>Id</th>
@@ -70,7 +70,7 @@
                                 <a href="#">Task Management</a>
                                 <ul class="nav">
                                     <li><a href="/msom/tasktypes">Task Types</a></li>
-                                    <li><a href="#">Tasks</a></li>
+                                    <li><a href="/msom/tasks">Tasks</a></li>
                                 </ul>
                             </li>
                             <li><a href="#">Modules Managemenet</a></li>

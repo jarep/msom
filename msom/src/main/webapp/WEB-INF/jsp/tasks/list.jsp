@@ -1,3 +1,9 @@
+<%-- 
+    Document   : list
+    Created on : 2016-04-20, 13:11:33
+    Author     : jaroslaw
+--%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -9,7 +15,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="/msom/resources/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="/msom/resources/css/style.css" type="text/css">
-        <title>Task types list</title>
+        <title>Task list</title>
     </head>
     <body>
         <header id="tmp-header">
@@ -19,16 +25,28 @@
 
             <div class="row">
                 <div class="col-md-9">
-                    <h1 class="page-header">MSOM</h1>
-                    <h2>Modelowanie Systemów Obsługi Masowej</h2>
+                    <h1 class="page-header">Zarządzanie zadaniami.</h1>
                     <p class="lead">
-                        System jest w początkowej fazie - aktualnie działa tylko 
-                        zarządzanie typami zadań -> Link "Task Types" w menu po prawej
-                        oraz lista zadań -> Link "Tasks"
+                        Zadanie aktualnie posiada tylko nazwę i typ zadania.
                     </p>
-                    <hr />
-                    <h3>Wyczyszczenie bazy danych i utworzenie przykładowych danych</h3>         
-                    <a class="btn btn-danger" href="fakedatagenerator">Generuj przykładowe dane</a>
+                    <h2>Zadania w systemie</h2>
+                    <table class="table">
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Type - difficulty</th>
+                        </tr>
+                        <c:forEach items="#{tasksList}" var="task">
+                            <tr>
+                                <td>${task.id}</td>
+                                <td>${task.name}</td>
+                                <td>${task.taskType.name}</td>
+                                <td>${task.taskType.difficulty}</td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+     
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">
