@@ -9,10 +9,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
  *
@@ -21,10 +26,18 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 @Controller
 public class TasksController {
 
-    
+    @Autowired
+    TaskDao taskDao;
+
+    @Autowired
+    TaskTypeDao taskTypeDao;
+
     @Autowired
     TaskService taskService;
-    
+
+    @Autowired
+    private TaskTypeService taskTypeService;
+
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public String showTasks(Model model) {
         List<Task> tasks = taskService.getTasksList();
@@ -32,4 +45,51 @@ public class TasksController {
 
         return "tasks/list";
     }
+
+    @RequestMapping(value = "/tasks/remove/{id}", method = RequestMethod.POST)
+    public String deleteTask(@PathVariable("id") long id) {
+
+        Task toDelete = taskService.find(id);
+        boolean wasDeleted = taskService.removeTask(toDelete);
+
+        if (!wasDeleted) {
+            // nie mozna usunac, 
+            // należy obsłużyć wyjątek i przekazać odpowiedni komunikat użytkownikowi
+        }
+
+        // everything OK, see remaining task types
+        return "redirect:/tasks";
+    }
+
+    /**
+     * Creates form for new task
+     *
+     * @param model Model to bind to HTML form
+     * @return tasks/new
+     */
+    @RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
+    public String createTask(Model model) {
+        model.addAttribute("task", new Task());
+
+        List<TaskType> taskTypes = taskTypeService.getTypesList();
+        model.addAttribute("taskTypesList", taskTypes);
+
+        return "tasks/new";
+    }
+
+    /**
+     * Saves new task to the database
+     *
+     * @param task
+     * @param taskTypeId
+     * @return redirects to tasks
+     */
+    @RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
+    public String addTask(Task task, Long taskTypeId) {
+        TaskType taskType = taskTypeDao.find(taskTypeId);
+        task.setTaskType(taskType);
+        taskDao.add(task);
+        return "redirect:/tasks";
+    }
+
 }

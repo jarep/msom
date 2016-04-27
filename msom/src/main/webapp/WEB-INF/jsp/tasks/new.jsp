@@ -1,6 +1,6 @@
 <%-- 
-    Document   : list
-    Created on : 2016-04-20, 13:11:33
+    Document   : new
+    Created on : 2016-04-20, 12:04:59
     Author     : jaroslaw
 --%>
 
@@ -15,7 +15,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="/msom/resources/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="/msom/resources/css/style.css" type="text/css">
-        <title>Task list</title>
+        <title>Task adding</title>
     </head>
     <body>
         <header id="tmp-header">
@@ -29,30 +29,19 @@
                     <p class="lead">
                         Zadanie aktualnie posiada tylko nazwę i typ zadania.
                     </p>
-                    <h2>Zadania w systemie</h2>
-                    <table class="table">
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Type - difficulty</th>
-                            <th>Delete</th>
-                        </tr>
-                        <c:forEach items="#{tasksList}" var="task">
-                            <tr>
-                                <td>${task.id}</td>
-                                <td>${task.name}</td>
-                                <td>${task.taskType.name}</td>
-                                <td>${task.taskType.difficulty}</td>
-                                <td>
-                                        <sf:form action="taskmanagment/remove/${task.id}" method="post">
-                                            <input type="submit" class="btn-sm btn-danger" value="Delete" />
-                                        </sf:form>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-     
+                    <h3>Dodawanie nowego zadania</h2>
+                        <sf:form method="post" action="new">
+                            <div class="form-group">
+                                <label for="name">Name of task</label>
+                                <input name="name" id="name" value="${task.name}" class="form-control" />
+                            </div>
+                            <select class="selectpicker" name="taskTypeId">
+                                <c:forEach items="#{taskTypesList}" var="taskType">
+                                    <option value="${taskType.id}">${taskType.name}</option>   
+                                </c:forEach>
+                            </select>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </sf:form>
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">
