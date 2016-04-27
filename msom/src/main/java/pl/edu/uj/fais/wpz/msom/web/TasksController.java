@@ -92,4 +92,44 @@ public class TasksController {
         return "redirect:/tasks";
     }
 
+    /**
+     * Returns task with specified ID
+     *
+     * @param id task's ID
+     * @param model Model to put taskType to
+     * @return tasks/view
+     */
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.GET)
+    public String getTask(@PathVariable("id") long id, Model model) {
+        Task task = taskDao.find(id);
+
+        List<TaskType> taskTypes = taskTypeService.getTypesList();
+        model.addAttribute("taskTypesList", taskTypes);
+        model.addAttribute("task", task);
+
+        return "tasks/view";
+    }
+
+    /**
+     * Updates taskType with specified ID
+     *
+     * @param taskTypeId
+     * @param task
+     * @return redirects to task
+     */
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.POST)
+    public String updateTask(@PathVariable("id") long id, Long taskTypeId, Task task) {
+        String name= task.getName();
+        task = taskDao.find(id);
+        TaskType taskType = taskTypeDao.find(taskTypeId);
+
+        if (task.getTaskType() == null || !task.getTaskType().equals(taskType)) {
+            task.setTaskType(taskType);
+        }
+        task.setName(name);
+        taskDao.update(task);
+
+        return "redirect:/tasks";
+    }
+
 }

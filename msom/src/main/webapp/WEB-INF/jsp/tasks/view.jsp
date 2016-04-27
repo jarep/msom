@@ -1,6 +1,6 @@
 <%-- 
-    Document   : list
-    Created on : 2016-04-20, 13:11:33
+    Document   : view
+    Created on : 2016-04-20, 12:21:16
     Author     : jaroslaw
 --%>
 
@@ -15,50 +15,37 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="/msom/resources/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="/msom/resources/css/style.css" type="text/css">
-        <title>Task list</title>
+        <title>Task types list</title>
     </head>
     <body>
         <header id="tmp-header">
+            <a href="view.jsp"></a>
 
         </header>
         <div class="container">
 
             <div class="row">
                 <div class="col-md-9">
-                    <h1 class="page-header">Zarządzanie zadaniami.</h1>
-                    <p class="lead">
-                        Zadanie aktualnie posiada tylko nazwę i typ zadania.
+                    <h1 class="page-header">Zarządzanie typami zadań.</h1>
+                    <p class="lead">Typ zadania pozwala określić złożoność zadania. 
+                        Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
+                        obsługiwać zadania konkretnego typu.
                     </p>
-                    <p class="lead">
-                        <a class="btn btn-default" href="tasks/new">Dodaj nowe zadanie</a>
-                    </p>
-
-                    <h2>Zadania w systemie</h2>
-                    <table class="table">
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Type - difficulty</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                        <c:forEach items="#{tasksList}" var="task">
-                            <tr>
-                                <td>${task.id}</td>
-                                <td>${task.name}</td>
-                                <td>${task.taskType.name}</td>
-                                <td>${task.taskType.difficulty}</td>
-                                <td><a href="tasks/${task.id}">Edit</a></td>
-                                <td>
-                                    <sf:form action="tasks/remove/${task.id}" method="post">
-                                        <input type="submit" class="btn-sm btn-danger" value="Delete" />
-                                    </sf:form>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-
+                    <h3>Edycja typu zadań</h2>
+                        <sf:form method="post">
+                            <div class="form-group">
+                                <label for="name">Nazwa zadania</label>
+                                <input name="name" id="name" value="${task.name}" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <select class="selectpicker" selected="${task.getTaskType().getId()}" name="taskTypeId">
+                                    <c:forEach items="#{taskTypesList}" var="taskType">
+                                        <option value="${taskType.id}">${taskType.name}</option>   
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </sf:form>
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">
