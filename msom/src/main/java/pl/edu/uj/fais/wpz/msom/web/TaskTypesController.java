@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -24,14 +23,11 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 public class TaskTypesController {
 
     @Autowired
-    private TaskTypeDao taskTypeDao;
-
-    @Autowired
     private TaskTypeService taskTypeService;
 
     @RequestMapping(value = "/tasktypes", method = RequestMethod.GET)
     public String showTaskTypes(Model model) {
-        List<TaskType> taskTypes = taskTypeService.getTypesList();
+        List<TaskType> taskTypes = taskTypeService.findAll();
         model.addAttribute("taskTypesList", taskTypes);
 
         return "tasktypes/list";
@@ -46,8 +42,8 @@ public class TaskTypesController {
     @RequestMapping(value = "/tasktypes/remove/{id}", method = RequestMethod.POST)
     public String deleteTaskType(@PathVariable("id") long id) {
 
-        TaskType toDelete = taskTypeDao.find(id);
-        boolean wasDeleted = taskTypeService.removeTaskType(toDelete);
+        TaskType toDelete = taskTypeService.find(id);
+        boolean wasDeleted = taskTypeService.remove(toDelete);
 
         if (!wasDeleted) {
             // nie mozna usunac, 
@@ -78,7 +74,7 @@ public class TaskTypesController {
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.POST)
     public String addEmployee(TaskType taskType) {
-        taskTypeDao.add(taskType);
+        taskTypeService.add(taskType);
 
         return "redirect:/tasktypes";
     }
@@ -92,7 +88,7 @@ public class TaskTypesController {
      */
     @RequestMapping(value = "/tasktypes/{id}", method = RequestMethod.GET)
     public String getTaskType(@PathVariable("id") long id, Model model) {
-        TaskType taskType = taskTypeDao.find(id);
+        TaskType taskType = taskTypeService.find(id);
         model.addAttribute("taskType", taskType);
 
         return "tasktypes/view";
@@ -108,7 +104,7 @@ public class TaskTypesController {
     @RequestMapping(value = "/tasktypes/{id}", method = RequestMethod.POST)
     public String updateTaskType(@PathVariable("id") long id, TaskType taskType) {
         taskType.setId(id);
-        taskTypeDao.update(taskType);
+        taskTypeService.update(taskType);
 
         return "redirect:/tasktypes";
     }

@@ -5,17 +5,22 @@
  */
 package pl.edu.uj.fais.wpz.msom.service.interfaces;
 
-import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
  *
  * @author jaroslaw
  */
-public interface TaskTypeService {
-      
-    List<TaskType> getTypesList();
-    
-    boolean removeTaskType(TaskType taskType);
-    
+public interface TaskTypeService extends IService<TaskType> {
+
+    /**
+     * Tries to remove typeTask from the system.
+     *
+     * @param taskType TaskType to remove
+     * @return {@code true} if taskType is not assigned to any task, else
+     * {@code false}.
+     */
+    @Override
+    public boolean remove(TaskType taskType);
+
 }

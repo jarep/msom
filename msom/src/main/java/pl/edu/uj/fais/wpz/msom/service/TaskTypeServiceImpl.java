@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -21,22 +22,25 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  */
 @Service(value = "taskTypeService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-public class TaskTypeServiceImpl implements TaskTypeService {
+public class TaskTypeServiceImpl extends AbstractService<TaskType> implements TaskTypeService {
 
-    @Autowired
-    private TaskDao taskDao;
 
     @Autowired
     private TaskTypeDao taskTypeDao;
 
-    @Override
-    public List<TaskType> getTypesList() {
-        return taskTypeDao.list();
+    public TaskTypeDao getTaskTypeDao() {
+        return taskTypeDao;
     }
 
     @Override
-    public boolean removeTaskType(TaskType taskType) {
+    public IDao getDao() {
+        return getTaskTypeDao();
+    }
+    
+    @Override
+    public boolean remove(TaskType taskType){
         return taskTypeDao.removeTaskType(taskType);
     }
+
 
 }

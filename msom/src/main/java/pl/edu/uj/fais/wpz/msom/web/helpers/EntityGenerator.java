@@ -8,7 +8,7 @@ package pl.edu.uj.fais.wpz.msom.web.helpers;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.edu.uj.fais.wpz.msom.dao.interfaces.GenericDao;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
@@ -52,18 +52,18 @@ public class EntityGenerator {
     }
 
     public void deleteDomain() {
-        List<Task> tasks = taskDao.list();
+        List<Task> tasks = taskDao.findAll();
         for (Task t : tasks) {
             taskDao.remove(t);
         }
 
-        List<TaskType> taskTypes = taskTypeDao.list();
+        List<TaskType> taskTypes = taskTypeDao.findAll();
         for (TaskType type : taskTypes) {
             taskTypeDao.remove(type);
         }
     }
 
-    private <T> void addAll(GenericDao<T, Long> dao, T... entites) {
+    private <T> void addAll(IDao<T, Long> dao, T... entites) {
         for (T o : entites) {
             dao.add(o);
         }
