@@ -32,18 +32,18 @@
                         obsługiwać zadania konkretnego typu.
                     </p>
                     <h3>Edycja typu zadań</h2>
-                        <sf:form method="post">
+                        <sf:form method="post" modelAttribute="task" action="update">
+                            <sf:hidden path="id" />
                             <div class="form-group">
                                 <label for="name">Nazwa zadania</label>
-                                <input name="name" id="name" value="${task.name}" class="form-control" />
+                                <sf:input path="name" class="form-control"/>
                             </div>
                             <div class="form-group">
-                                <select class="selectpicker" selected="${task.getTaskType().getId()}" name="taskTypeId">
-                                    <c:forEach items="#{taskTypesList}" var="taskType">
-                                        <option value="${taskType.id}">${taskType.name}</option>   
-                                    </c:forEach>
-                                </select>
+                                <sf:select path="taskType.id" >
+                                    <sf:options items="${taskTypesList}" itemLabel="name" itemValue="id" />
+                                </sf:select>
                             </div>
+
                             <button type="submit" class="btn btn-default">Submit</button>
                         </sf:form>
                 </div>

@@ -31,14 +31,15 @@
                         obsługiwać zadania konkretnego typu.
                     </p>
                     <h3>Edycja typu zadań</h2>
-                        <sf:form method="post">
+                        <sf:form method="post" modelAttribute="taskType" action="update">
+                            <sf:hidden path="id" />
                             <div class="form-group">
                                 <label for="name">Name of type</label>
-                                <input name="name" id="name" value="${taskType.name}" class="form-control" />
+                                <sf:input path="name" class="form-control"/>
                             </div>
                             <div class="form-group">
                                 <label for="difficulty">Difficulty (Integer)</label>
-                                <input name="difficulty" id="difficulty" value="${taskType.difficulty}" class="form-control"/>
+                                <sf:input path="difficulty" class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-default">Submit</button>
                         </sf:form>

@@ -5,10 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,10 +76,10 @@ public class TasksController {
 
         List<TaskType> taskTypes = taskTypeService.getTypesList();
         model.addAttribute("taskTypesList", taskTypes);
-
+        
         return "tasks/new";
     }
-
+    
     /**
      * Saves new task to the database
      *
@@ -106,29 +109,19 @@ public class TasksController {
         List<TaskType> taskTypes = taskTypeService.getTypesList();
         model.addAttribute("taskTypesList", taskTypes);
         model.addAttribute("task", task);
-
+        
         return "tasks/view";
     }
 
     /**
-     * Updates taskType with specified ID
+     * Updates task
      *
-     * @param taskTypeId
-     * @param task
-     * @return redirects to task
+     * @param task Task to update (bounded from HTML form)
+     * @return redirects to tasks
      */
-    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.POST)
-    public String updateTask(@PathVariable("id") long id, Long taskTypeId, Task task) {
-        String name= task.getName();
-        task = taskDao.find(id);
-        TaskType taskType = taskTypeDao.find(taskTypeId);
-
-        if (task.getTaskType() == null || !task.getTaskType().equals(taskType)) {
-            task.setTaskType(taskType);
-        }
-        task.setName(name);
+    @RequestMapping(value = "/tasks/update", method = RequestMethod.POST)
+    public String updateTask(@ModelAttribute(value = "task") Task task) {
         taskDao.update(task);
-
         return "redirect:/tasks";
     }
 
