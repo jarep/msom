@@ -65,13 +65,12 @@
                         <ul class="nav">
                             <li><a href="/msom/index.html">Home</a></li>
                             <li>
-                                <a href="/msom/taskmanagment">Task Management</a>
                                 <ul class="nav">
                                     <li><a href="/msom/tasktypes">Task Types</a></li>
                                     <li><a href="/msom/tasks">Tasks</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#">Modules Managemenet</a></li>
+                            <li><a href="#">Modules Management</a></li>
                             <li><a href="#">Probability Management</a></li>
                         </ul>
                     </nav>

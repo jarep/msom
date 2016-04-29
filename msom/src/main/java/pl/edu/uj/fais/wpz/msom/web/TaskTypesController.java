@@ -78,7 +78,7 @@ public class TaskTypesController {
      * @return redirects to tasktypes
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.POST)
-    public String addTaskType(TaskType taskType) {
+    public String addTaskType(@ModelAttribute(value = "taskType") TaskType taskType) {
         taskTypeDao.add(taskType);
 
         return "redirect:/tasktypes";
