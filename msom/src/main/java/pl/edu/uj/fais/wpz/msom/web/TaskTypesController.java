@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,7 +66,7 @@ public class TaskTypesController {
      * @return tasktypes/new
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.GET)
-    public String createEmployeeForm(Model model) {
+    public String createTaskType(Model model) {
         model.addAttribute("taskType", new TaskType());
         return "tasktypes/new";
     }
@@ -77,7 +78,7 @@ public class TaskTypesController {
      * @return redirects to tasktypes
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.POST)
-    public String addEmployee(TaskType taskType) {
+    public String addTaskType(TaskType taskType) {
         taskTypeDao.add(taskType);
 
         return "redirect:/tasktypes";
@@ -99,15 +100,13 @@ public class TaskTypesController {
     }
 
     /**
-     * Updates taskType with specified ID
+     * Updates taskType
      *
-     * @param id taskType's ID
      * @param taskType Type of task to update (bounded from HTML form)
      * @return redirects to taskType
      */
-    @RequestMapping(value = "/tasktypes/{id}", method = RequestMethod.POST)
-    public String updateTaskType(@PathVariable("id") long id, TaskType taskType) {
-        taskType.setId(id);
+    @RequestMapping(value = "/tasktypes/update", method = RequestMethod.POST)
+    public String updateTaskType(@ModelAttribute(value = "taskType") TaskType taskType) {
         taskTypeDao.update(taskType);
 
         return "redirect:/tasktypes";

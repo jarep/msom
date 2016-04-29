@@ -30,4 +30,15 @@ public class TaskServiceImpl implements TaskService {
         return taskDao.list();
     }
 
+    @Override
+    public boolean removeTask(Task task) {
+        return taskDao.removeTask(task);
+    }
+
+    @Override
+    public Task find(long l) {
+       return taskDao.find(l);
+    }
+    
+
 }

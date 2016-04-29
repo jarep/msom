@@ -14,5 +14,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Task;
  */
 public interface TaskService {
     
-    List<Task> getTasksList();
+    public List<Task> getTasksList();
+    public boolean removeTask(Task task);
+    public Task find(long l);
 }
