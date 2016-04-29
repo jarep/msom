@@ -75,7 +75,7 @@ public class TaskTypesController {
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.POST)
     public String addTaskType(@ModelAttribute(value = "taskType") TaskType taskType) {
-        taskTypeDao.add(taskType);
+        taskTypeService.add(taskType);
 
         return "redirect:/tasktypes";
     }
@@ -103,8 +103,8 @@ public class TaskTypesController {
      */
     @RequestMapping(value = "/tasktypes/update", method = RequestMethod.POST)
     public String updateTaskType(@ModelAttribute(value = "taskType") TaskType taskType) {
-        taskTypeDao.update(taskType);
+        taskTypeService.update(taskType);
 
         return "redirect:/tasktypes";
     }
-
+}

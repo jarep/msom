@@ -33,16 +33,6 @@ public class TaskServiceImpl extends AbstractService<Task> implements TaskServic
     public IDao getDao() {
         return getTaskDao();
     }
-
-    @Override
-    public boolean removeTask(Task task) {
-        return taskDao.removeTask(task);
-    }
-
-    @Override
-    public Task find(long l) {
-       return taskDao.find(l);
-    }
-    
+   
 
 }

@@ -5,13 +5,11 @@
  */
 package pl.edu.uj.fais.wpz.msom.service;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
-import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
