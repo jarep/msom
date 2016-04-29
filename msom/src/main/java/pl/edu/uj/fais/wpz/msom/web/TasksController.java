@@ -88,9 +88,7 @@ public class TasksController {
      * @return redirects to tasks
      */
     @RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
-    public String addTask(@ModelAttribute(value = "task")Task task, Long taskTypeId) {
-        //TaskType taskType = taskTypeDao.find(taskTypeId);
-        //task.setTaskType(taskType);
+    public String addTask(@ModelAttribute(value = "task")Task task) {
         taskDao.add(task);
         return "redirect:/tasks";
     }
