@@ -29,6 +29,10 @@
                     <p class="lead">
                         Zadanie aktualnie posiada tylko nazwę i typ zadania.
                     </p>
+                    <p class="lead">
+                        <a class="btn btn-default" href="tasks/new">Dodaj nowe zadanie</a>
+                    </p>
+
                     <h2>Zadania w systemie</h2>
                     <table class="table">
                         <tr>
@@ -36,6 +40,8 @@
                             <th>Name</th>
                             <th>Type</th>
                             <th>Type - difficulty</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                         <c:forEach items="#{tasksList}" var="task">
                             <tr>
@@ -43,23 +49,28 @@
                                 <td>${task.name}</td>
                                 <td>${task.taskType.name}</td>
                                 <td>${task.taskType.difficulty}</td>
+                                <td><a href="tasks/${task.id}">Edit</a></td>
+                                <td>
+                                    <sf:form action="tasks/remove/${task.id}" method="post">
+                                        <input type="submit" class="btn-sm btn-danger" value="Delete" />
+                                    </sf:form>
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>
-     
+
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">
                         <ul class="nav">
                             <li><a href="/msom/index.html">Home</a></li>
                             <li>
-                                <a href="#">Task Management</a>
                                 <ul class="nav">
                                     <li><a href="/msom/tasktypes">Task Types</a></li>
                                     <li><a href="/msom/tasks">Tasks</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#">Modules Managemenet</a></li>
+                            <li><a href="#">Modules Management</a></li>
                             <li><a href="#">Probability Management</a></li>
                         </ul>
                     </nav>

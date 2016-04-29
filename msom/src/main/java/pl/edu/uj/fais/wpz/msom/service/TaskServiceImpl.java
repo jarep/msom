@@ -33,5 +33,6 @@ public class TaskServiceImpl extends AbstractService<Task> implements TaskServic
     public IDao getDao() {
         return getTaskDao();
     }
+   
 
 }

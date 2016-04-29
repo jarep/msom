@@ -1,3 +1,4 @@
+
 <%-- 
     Document   : new
     Created on : 2016-04-20, 12:04:59
@@ -15,7 +16,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="/msom/resources/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="/msom/resources/css/style.css" type="text/css">
-        <title>Task types list</title>
+        <title>Task adding</title>
     </head>
     <body>
         <header id="tmp-header">
@@ -25,23 +26,22 @@
 
             <div class="row">
                 <div class="col-md-9">
-                    <h1 class="page-header">Zarządzanie typami zadań.</h1>
-                    <p class="lead">Typ zadania pozwala określić złożoność zadania. 
-                        Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
-                        obsługiwać zadania konkretnego typu.
+                    <h1 class="page-header">Zarządzanie zadaniami.</h1>
+                    <p class="lead">
+                        Zadanie aktualnie posiada tylko nazwę i typ zadania.
                     </p>
-                    <h3>Dodawanie nowego typu zadań</h2>
-                    <sf:form method="post" modelAttribute="taskType" action="new">
-                        <div class="form-group">
-                            <label for="name">Name of type</label>
-                            <sf:input path="name" class="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="difficulty">Difficulty (Integer)</label>
-                            <sf:input path="difficulty" class="form-control"/>
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                    </sf:form>
+                    <h3>Dodawanie nowego zadania</h2>
+                        <sf:form method="post" action="new" modelAttribute="task">
+                            <div class="form-group">
+                                <label for="name">Name of task</label>
+                                <sf:input path="name" class="form-control" />
+                            </div>
+
+                            <sf:select path="taskType.id">
+                                <sf:options items="${taskTypesList}" itemLabel="name" itemValue="id" />
+                            </sf:select>    
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </sf:form>
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">

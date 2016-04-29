@@ -1,6 +1,6 @@
 <%-- 
-    Document   : new
-    Created on : 2016-04-20, 12:04:59
+    Document   : view
+    Created on : 2016-04-20, 12:21:16
     Author     : jaroslaw
 --%>
 
@@ -19,6 +19,7 @@
     </head>
     <body>
         <header id="tmp-header">
+            <a href="view.jsp"></a>
 
         </header>
         <div class="container">
@@ -30,18 +31,21 @@
                         Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
                         obsługiwać zadania konkretnego typu.
                     </p>
-                    <h3>Dodawanie nowego typu zadań</h2>
-                    <sf:form method="post" modelAttribute="taskType" action="new">
-                        <div class="form-group">
-                            <label for="name">Name of type</label>
-                            <sf:input path="name" class="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="difficulty">Difficulty (Integer)</label>
-                            <sf:input path="difficulty" class="form-control"/>
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                    </sf:form>
+                    <h3>Edycja typu zadań</h2>
+                        <sf:form method="post" modelAttribute="task" action="update">
+                            <sf:hidden path="id" />
+                            <div class="form-group">
+                                <label for="name">Nazwa zadania</label>
+                                <sf:input path="name" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <sf:select path="taskType.id" >
+                                    <sf:options items="${taskTypesList}" itemLabel="name" itemValue="id" />
+                                </sf:select>
+                            </div>
+
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </sf:form>
                 </div>
                 <div class="col-md-3">
                     <nav id="tmp-nav">
