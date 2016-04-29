@@ -5,11 +5,9 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao;
 
-import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -64,12 +62,12 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testAdd() {
-        int size = taskTypeDao.list().size();
+        int size = taskTypeDao.findAll().size();
 
         TaskType taskType = new TaskType("Typ c", 20);
         taskTypeDao.add(taskType);
 
-        assertTrue(size < taskTypeDao.list().size());
+        assertTrue(size < taskTypeDao.findAll().size());
     }
 
     @Test
@@ -97,14 +95,14 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testList() {
-        List<TaskType> taskTypes = taskTypeDao.list();
+        List<TaskType> taskTypes = taskTypeDao.findAll();
 
         TaskType taskType1 = new TaskType("Typ f", 45);
         taskTypeDao.add(taskType1);
         TaskType taskType2 = new TaskType("Typ g", 55);
         taskTypeDao.add(taskType2);
 
-        List<TaskType> found = taskTypeDao.list();
+        List<TaskType> found = taskTypeDao.findAll();
 
         assertEquals(taskTypes.size() + 2, found.size());
 

@@ -10,7 +10,6 @@ import java.util.Objects;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public class TaskDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testAdd() {
-        int size = taskDao.list().size();
+        int size = taskDao.findAll().size();
 
         TaskType type = new TaskType("Typ x", 40);
         taskTypeDao.add(type);
@@ -84,12 +83,12 @@ public class TaskDaoImplTest extends DomainAwareBase {
         Task task = new Task("Task 1", type);
         taskDao.add(task);
 
-        assertTrue(size < taskDao.list().size());
+        assertTrue(size < taskDao.findAll().size());
     }
 
     @Test
     public void testUpdate() {
-        List<TaskType> types = taskTypeDao.list();
+        List<TaskType> types = taskTypeDao.findAll();
 
         Task task = new Task("Task 2", types.get(0));
         taskDao.add(task);
@@ -118,7 +117,7 @@ public class TaskDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testList() {
-        List<Task> tasks = taskDao.list();
+        List<Task> tasks = taskDao.findAll();
 
         TaskType taskType1 = new TaskType("Typ f", 45);
         taskTypeDao.add(taskType1);
@@ -128,7 +127,7 @@ public class TaskDaoImplTest extends DomainAwareBase {
         Task task2 = new Task("Task BETA", taskType1);
         taskDao.add(task2);
 
-        List<Task> found = taskDao.list();
+        List<Task> found = taskDao.findAll();
         
         assertEquals(tasks.size() + 2, found.size());
         assertTrue(found.contains(task1));
