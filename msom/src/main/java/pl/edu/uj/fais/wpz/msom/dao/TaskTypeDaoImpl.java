@@ -16,7 +16,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
  * @author jaroslaw
  */
 @Repository(value = "taskTypeDao")
-public class TaskTypeDaoImpl extends HibernateDao<TaskType, Long> implements TaskTypeDao {
+public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements TaskTypeDao {
 
     @Override
     public boolean removeTaskType(TaskType taskType) {

@@ -11,7 +11,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Task;
  *
  * @author jaroslaw
  */
-public interface TaskDao extends GenericDao<Task, Long> {
+public interface TaskDao extends IDao<Task, Long> {
 
     /**
      * Tries to remove task from the system.

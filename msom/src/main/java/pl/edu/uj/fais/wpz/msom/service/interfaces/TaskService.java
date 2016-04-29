@@ -5,14 +5,12 @@
  */
 package pl.edu.uj.fais.wpz.msom.service.interfaces;
 
-import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 
 /**
  *
  * @author jaroslaw
  */
-public interface TaskService {
-    
-    List<Task> getTasksList();
+public interface TaskService extends IService<Task> {
+
 }

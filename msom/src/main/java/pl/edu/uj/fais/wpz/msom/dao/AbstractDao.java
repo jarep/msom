@@ -13,7 +13,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import pl.edu.uj.fais.wpz.msom.dao.interfaces.GenericDao;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 
 /**
  * Basic DAO operations dependent with Hibernate's specific classes
@@ -24,12 +24,12 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.GenericDao;
  * @author jaroslaw
  */
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-public class HibernateDao<E, K extends Serializable> implements GenericDao<E, K> {
+public abstract class AbstractDao<E, K extends Serializable> implements IDao<E, K> {
 
     private SessionFactory sessionFactory;
     protected Class<? extends E> daoType;
 
-    public HibernateDao() {
+    public AbstractDao() {
         daoType = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
@@ -70,7 +70,13 @@ public class HibernateDao<E, K extends Serializable> implements GenericDao<E, K>
     }
 
     @Override
-    public List<E> list() {
+    public List<E> findAll() {
         return getCurrentSession().createCriteria(daoType).list();
     }
+
+    @Override
+    public void refresh(E entity) {
+        getCurrentSession().refresh(entity);
+    }
+
 }
