@@ -22,6 +22,8 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 @Entity
 public class Module extends AbstractEntity {
 
+    /** Module custom name */
+    private String name;
     /** Number of servers cores */
     private Integer cores;
     /** Server's efficiency value */
@@ -36,10 +38,27 @@ public class Module extends AbstractEntity {
     public Module() {}
 
     public Module(Integer cores, Integer efficiency) {
+        this.name = "";
         this.cores = cores;
         this.efficiency = efficiency;
     }
 
+    public Module(String name, Integer cores, Integer efficiency) {
+        this.name = name;
+        this.cores = cores;
+        this.efficiency = efficiency;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
+    
     public Integer getCores() {
         return cores;
     }

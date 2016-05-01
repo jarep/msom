@@ -90,6 +90,7 @@ public class ModuleDaoImplTest extends DomainAwareBase {
     public void testUpdate() {
         int cores = 4;
         int eff = 8000;
+        String name = "module_name";
         // add task types 
         TaskType type = new TaskType("Typ ALFA", 30);
         TaskType newType = new TaskType("Typ BETA", 50);
@@ -101,11 +102,13 @@ public class ModuleDaoImplTest extends DomainAwareBase {
         moduleDao.add(module);
 
         // update task
+        module.setName(name);
         module.setCores(cores);
         module.setEfficiency(eff);
         moduleDao.update(module);
 
         Module found = moduleDao.find(module.getId());
+        assertTrue(found.getName().equals(name));
         assertTrue(found.getCores().equals(cores));
         assertTrue(found.getEfficiency().equals(eff));
     }
