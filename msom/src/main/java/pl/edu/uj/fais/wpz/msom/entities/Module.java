@@ -9,13 +9,15 @@ import javax.persistence.Entity;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- *
+ * Basic Module (Single server) entity structure
  * @author paweldylag
  */
 @Entity
 public class Module extends AbstractEntity {
 
+    /** Number of servers cores */
     private Integer cores;
+    /** Server's efficiency value */
     private Integer efficiency;
     
     public Module() {}
