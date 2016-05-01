@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -25,12 +26,12 @@ public class Module extends AbstractEntity {
     private Integer cores;
     /** Server's efficiency value */
     private Integer efficiency;
-    
-    @ManyToMany(cascade = {CascadeType.ALL})
+    /** Possible task types to process */
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(name="task_types_per_module", 
                 joinColumns={@JoinColumn(name="module_id")}, 
                 inverseJoinColumns={@JoinColumn(name="tasktype_id")})
-    private Set<TaskType> taskTypes = new HashSet<TaskType>();
+    private Set<TaskType> taskTypes = new HashSet<>(0);
     
     public Module() {}
 
@@ -55,6 +56,18 @@ public class Module extends AbstractEntity {
         this.efficiency = efficiency;
     }
 
+    public boolean addTaskType(TaskType taskType) {
+        return this.taskTypes.add(taskType);
+    }
+    
+    public boolean removeTaskType(TaskType taskType) {
+        return this.taskTypes.remove(taskType);
+    }
+    
+    public boolean containsTaskType(TaskType taskType) {
+        return this.taskTypes.contains(taskType);
+    }
+   
     public Set<TaskType> getTaskTypes() {
         return taskTypes;
     }
