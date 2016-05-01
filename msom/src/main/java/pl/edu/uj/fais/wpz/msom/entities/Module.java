@@ -5,7 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
@@ -19,6 +25,12 @@ public class Module extends AbstractEntity {
     private Integer cores;
     /** Server's efficiency value */
     private Integer efficiency;
+    
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name="task_types_per_module", 
+                joinColumns={@JoinColumn(name="module_id")}, 
+                inverseJoinColumns={@JoinColumn(name="tasktype_id")})
+    private Set<TaskType> taskTypes = new HashSet<TaskType>();
     
     public Module() {}
 
@@ -42,10 +54,14 @@ public class Module extends AbstractEntity {
     public void setEfficiency(Integer efficiency) {
         this.efficiency = efficiency;
     }
-    
-    
-    
-    
+
+    public Set<TaskType> getTaskTypes() {
+        return taskTypes;
+    }
+
+    public void setTaskTypes(Set<TaskType> taskTypes) {
+        this.taskTypes = taskTypes;
+    }   
     
     
    
