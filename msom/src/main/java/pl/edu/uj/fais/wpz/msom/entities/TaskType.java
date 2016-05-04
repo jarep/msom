@@ -5,9 +5,7 @@
  */
 package pl.edu.uj.fais.wpz.msom.entities;
 
-import java.util.ArrayList;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**

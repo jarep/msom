@@ -5,30 +5,32 @@
  */
 package pl.edu.uj.fais.wpz.msom.entities;
 
+import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
+ * Entity represents controller unit
  *
- * @author jaroslaw
+ * @author jarep
  */
 @Entity
-public class Task extends AbstractEntity {
+public class ControllerUnit extends AbstractEntity {
 
+    /**
+     * Controller unit custom name
+     */
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "tasktype_id")
-    private TaskType taskType;
+    @OneToMany
+    private List<Module> modules;
 
-    public Task() {
+    public ControllerUnit() {
     }
 
-    public Task(String name, TaskType taskType) {
+    public ControllerUnit(String name) {
         this.name = name;
-        this.taskType = taskType;
     }
 
     public String getName() {
@@ -39,12 +41,12 @@ public class Task extends AbstractEntity {
         this.name = name;
     }
 
-    public TaskType getTaskType() {
-        return taskType;
+    public List<Module> getModules() {
+        return modules;
     }
 
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
     }
 
 }
