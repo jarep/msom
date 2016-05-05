@@ -23,7 +23,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  * @author paweldylag
  */
 @Controller
-public class ModuleController {
+public class ModulesController {
    
     @Autowired
     private ModuleService moduleService;
