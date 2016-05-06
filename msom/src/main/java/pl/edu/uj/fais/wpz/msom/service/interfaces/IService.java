@@ -48,7 +48,7 @@ public interface IService<T extends AbstractEntity> {
      * Delete entity from database
      *
      * @param entity Entity to delete
-     * @return 
+     * @return
      */
     public boolean remove(T entity);
 

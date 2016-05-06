@@ -18,10 +18,10 @@ import pl.edu.uj.fais.wpz.msom.web.helpers.EntityGenerator;
  */
 @Controller
 public class FakeDataGeneratorController {
-    
+
     @Autowired
     private EntityGenerator entityGenerator;
-    
+
     @RequestMapping(value = "/fakedatagenerator", method = RequestMethod.GET)
     public String generateFakeData(Model model) {
         entityGenerator.deleteDomain();

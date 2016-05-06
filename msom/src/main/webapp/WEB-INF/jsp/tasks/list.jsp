@@ -26,10 +26,10 @@
             <td>${task.taskType.difficulty}</td>
             <td><a href="tasks/${task.id}">Edit</a></td>
             <td>
-        <sf:form action="tasks/remove/${task.id}" method="post">
-            <input type="submit" class="btn-sm btn-danger" value="Delete" />
-        </sf:form>
-    </td>
-</tr>
-</c:forEach>
+                <sf:form action="tasks/remove/${task.id}" method="post">
+                    <input type="submit" class="btn-sm btn-danger" value="Delete" />
+                </sf:form>
+            </td>
+        </tr>
+    </c:forEach>
 </table>

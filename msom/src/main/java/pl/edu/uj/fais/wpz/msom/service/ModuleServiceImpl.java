@@ -21,7 +21,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 @Service(value = "moduleService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class ModuleServiceImpl extends AbstractService<Module> implements ModuleService {
-    
+
     @Autowired
     private ModuleDao moduleDao;
 
@@ -29,5 +29,5 @@ public class ModuleServiceImpl extends AbstractService<Module> implements Module
     public IDao getDao() {
         return this.moduleDao;
     }
-    
+
 }

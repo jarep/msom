@@ -5,7 +5,6 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao;
 
-
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -29,16 +28,16 @@ import pl.edu.uj.fais.wpz.msom.integration.DomainAwareBase;
  */
 @ContextConfiguration("/testApplicationContext.xml")
 public class ModuleDaoImplTest extends DomainAwareBase {
-    
+
     @Autowired
     private ModuleDao moduleDao;
-     
+
     @Autowired
     private TaskTypeDao taskTypeDao;
 
     public ModuleDaoImplTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
@@ -46,20 +45,20 @@ public class ModuleDaoImplTest extends DomainAwareBase {
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     public void setUp() {
         Module module1 = new Module(2, 2000);
         Module module2 = new Module(4, 4000);
         Module module3 = new Module(8, 8000);
         Module module4 = new Module(16, 16000);
-        
+
         TaskType type1 = new TaskType("Typ a", 50);
         taskTypeDao.add(type1);
         TaskType type2 = new TaskType("Typ b", 10);
         taskTypeDao.add(type2);
         TaskType type3 = new TaskType("Typ c", 70);
         taskTypeDao.add(type3);
-        
+
         module1.getTaskTypes().add(type1);
         module2.getTaskTypes().add(type2);
         module3.getTaskTypes().add(type3);
@@ -112,7 +111,7 @@ public class ModuleDaoImplTest extends DomainAwareBase {
         assertTrue(found.getCores().equals(cores));
         assertTrue(found.getEfficiency().equals(eff));
     }
-    
+
     @Test
     public void testAddingNewTaskTypes() {
         // add task types 
@@ -134,7 +133,7 @@ public class ModuleDaoImplTest extends DomainAwareBase {
         assertTrue(found.getTaskTypes().size() == 2);
         assertTrue(found.containsTaskType(newType));
     }
-    
+
     @Test
     public void testRemovingTaskTypes() {
         // add task types 
@@ -174,28 +173,27 @@ public class ModuleDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testList() {
-       List<Module> modules = moduleDao.findAll();
-       Module module1 = new Module(2, 4000);
-       Module module2 = new Module(4, 8000);
-       moduleDao.add(module1);
-       moduleDao.add(module2);
-       
-       List<Module> freshModules = moduleDao.findAll();
-       assertTrue(modules.size() + 2 == freshModules.size());
-       assertTrue(freshModules.contains(module1));
-       assertTrue(freshModules.contains(module2));
+        List<Module> modules = moduleDao.findAll();
+        Module module1 = new Module(2, 4000);
+        Module module2 = new Module(4, 8000);
+        moduleDao.add(module1);
+        moduleDao.add(module2);
+
+        List<Module> freshModules = moduleDao.findAll();
+        assertTrue(modules.size() + 2 == freshModules.size());
+        assertTrue(freshModules.contains(module1));
+        assertTrue(freshModules.contains(module2));
     }
 
     @Test
     public void testRemove() {
-       Module module = new Module(2, 4000);
-       moduleDao.add(module);
-       // check if added
-       assertTrue(moduleDao.find(module.getId()) != null);
-       moduleDao.remove(module);
-       // check if removed
-       assertTrue(moduleDao.find(module.getId()) == null);
+        Module module = new Module(2, 4000);
+        moduleDao.add(module);
+        // check if added
+        assertTrue(moduleDao.find(module.getId()) != null);
+        moduleDao.remove(module);
+        // check if removed
+        assertTrue(moduleDao.find(module.getId()) == null);
     }
-    
-    
+
 }

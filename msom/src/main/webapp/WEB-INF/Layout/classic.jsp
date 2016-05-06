@@ -18,10 +18,10 @@
     </head>
     <body>
         <tiles:insertAttribute name="header"></tiles:insertAttribute>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9">
-                    <h1 class="page-header"><tiles:getAsString name="title" /></h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h1 class="page-header"><tiles:getAsString name="title" /></h1>
                     <tiles:insertAttribute name="body" />
                 </div>
                 <div class="col-md-3">

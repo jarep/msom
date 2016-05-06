@@ -12,6 +12,5 @@ import pl.edu.uj.fais.wpz.msom.entities.Module;
  * @author paweldylag
  */
 public interface ModuleService extends IService<Module> {
-    
-    
+
 }

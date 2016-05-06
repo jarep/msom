@@ -11,9 +11,9 @@
             <ul class="nav">
                 <li><a href="/msom/tasktypes">Task Types</a></li>
                 <li><a href="/msom/tasks">Tasks</a></li>
+                <li><a href="/msom/modules">Modules</a></li>
             </ul>
         </li>
-        <li><a href="#">Modules Management</a></li>
         <li><a href="#">Probability Management</a></li>
     </ul>
 </nav>

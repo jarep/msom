@@ -17,25 +17,37 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
  * Basic Module (Single server) entity structure
+ *
  * @author paweldylag
  */
 @Entity
 public class Module extends AbstractEntity {
 
-    /** Module custom name */
+    /**
+     * Module custom name
+     */
     private String name;
-    /** Number of servers cores */
+    /**
+     * Number of servers cores
+     */
     private Integer cores;
-    /** Server's efficiency value */
+    /**
+     * Server's efficiency value
+     */
     private Integer efficiency;
-    /** Possible task types to process */
+    /**
+     * Possible task types to process
+     */
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinTable(name="task_types_per_module", 
-                joinColumns={@JoinColumn(name="module_id")}, 
-                inverseJoinColumns={@JoinColumn(name="tasktype_id")})
+    @JoinTable(name = "task_types_per_module",
+            joinColumns = {
+                @JoinColumn(name = "module_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "tasktype_id")})
     private Set<TaskType> taskTypes = new HashSet<>(0);
-    
-    public Module() {}
+
+    public Module() {
+    }
 
     public Module(Integer cores, Integer efficiency) {
         this.name = "";
@@ -56,9 +68,7 @@ public class Module extends AbstractEntity {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
-    
+
     public Integer getCores() {
         return cores;
     }
@@ -78,23 +88,21 @@ public class Module extends AbstractEntity {
     public boolean addTaskType(TaskType taskType) {
         return this.taskTypes.add(taskType);
     }
-    
+
     public boolean removeTaskType(TaskType taskType) {
         return this.taskTypes.remove(taskType);
     }
-    
+
     public boolean containsTaskType(TaskType taskType) {
         return this.taskTypes.contains(taskType);
     }
-   
+
     public Set<TaskType> getTaskTypes() {
         return taskTypes;
     }
 
     public void setTaskTypes(Set<TaskType> taskTypes) {
         this.taskTypes = taskTypes;
-    }   
-    
-    
-   
+    }
+
 }

@@ -12,8 +12,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
  *
  * @author paweldylag
  */
-public interface ModuleDao extends IDao<Module, Long>{
-   
+public interface ModuleDao extends IDao<Module, Long> {
+
     // nothing special here
-    
 }

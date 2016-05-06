@@ -13,10 +13,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import org.springframework.test.jdbc.JdbcTestUtils;
- 
+
 /**
  * Base makes sure that before any test empty database is available.
-  * @author jaroslaw
+ *
+ * @author jaroslaw
  */
 @ContextConfiguration("/testApplicationContext.xml")
 public abstract class DomainAwareBase extends AbstractJUnit4SpringContextTests {
