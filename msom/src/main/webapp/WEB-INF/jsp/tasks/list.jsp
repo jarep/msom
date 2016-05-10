@@ -2,13 +2,13 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
 <p class="lead">
-    Zadanie aktualnie posiada tylko nazwę i typ zadania.
+    Each task has a name and a type.
 </p>
 <p class="lead">
-    <a class="btn btn-default" href="tasks/new">Dodaj nowe zadanie</a>
+    <a class="btn btn-default" href="tasks/new">Add new task</a>
 </p>
 
-<h2>Zadania w systemie</h2>
+<h2>All tasks</h2>
 <table class="table">
     <tr>
         <th>Id</th>

@@ -1,10 +1,10 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
-<p class="lead">Typ zadania pozwala określić złożoność zadania. 
-    Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
-    obsługiwać zadania konkretnego typu.
+<p class="lead">Task types allows to assess its complexity.
+    Each task has a type assigned.     
+    Specific processing modules can handle a specific type of task.
 </p>
-<h3>Edycja typu zadań</h2>
+<h3>Edit task type</h2>
     <sf:form method="post" modelAttribute="taskType" id="taskTypeForm" action="update">
         <sf:hidden path="id" />
     <div class="form-group">

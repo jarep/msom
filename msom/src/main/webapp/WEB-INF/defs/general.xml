@@ -21,7 +21,7 @@
     </definition>
   
     <definition name="tasks" extends="common">
-        <put-attribute name="title" value="Zarządzanie zadaniami." />
+        <put-attribute name="title" value="Task Management." />
         <put-list-attribute name="javascripts">
             <add-attribute value="/resources/js/tasks.js" />
         </put-list-attribute>
@@ -40,7 +40,7 @@
     </definition>
   
     <definition name="tasktypes" extends="common">
-        <put-attribute name="title" value="Zarządzanie typami zadań." />
+        <put-attribute name="title" value="Task Type Management." />
         <put-list-attribute name="javascripts">
             <add-attribute value="/resources/js/tasktypes.js" />
         </put-list-attribute>
@@ -59,7 +59,7 @@
     </definition>
   
     <definition name="modules" extends="common">
-        <put-attribute name="title" value="Zarządzanie modułami." />
+        <put-attribute name="title" value="Modules Management." />
         <put-list-attribute name="javascripts">
             <add-attribute value="/resources/js/modules.js" />
         </put-list-attribute>
