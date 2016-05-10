@@ -60,8 +60,9 @@ public abstract class AbstractDao<E, K extends Serializable> implements IDao<E, 
     }
 
     @Override
-    public void remove(E entity) {
+    public boolean remove(E entity) {
         getCurrentSession().delete(entity);
+        return true;
     }
 
     @Override

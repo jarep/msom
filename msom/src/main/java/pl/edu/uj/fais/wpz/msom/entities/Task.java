@@ -5,6 +5,7 @@
  */
 package pl.edu.uj.fais.wpz.msom.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,7 +22,7 @@ public class Task extends AbstractEntity {
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "tasktype_id")
     private TaskType taskType;
 

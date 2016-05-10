@@ -6,7 +6,13 @@
 package pl.edu.uj.fais.wpz.msom.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
@@ -20,7 +26,7 @@ public class TaskType extends AbstractEntity {
 
     private String name;
     private Integer difficulty;
-
+    
     public TaskType() {
     }
 

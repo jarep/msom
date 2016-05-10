@@ -13,8 +13,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModuleDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
+import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.integration.DomainAwareBase;
@@ -31,6 +33,9 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
 
     @Autowired
     private TaskTypeDao taskTypeDao;
+    
+    @Autowired
+    private ModuleDao moduleDao;
 
     public TaskTypeDaoImplTest() {
     }
@@ -120,15 +125,16 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
         taskDao.add(task);
 
         // try to remove -> shouldn't work
-        boolean result = taskTypeDao.removeTaskType(type);
+        boolean result = taskTypeDao.remove(type);
         assertFalse(result);
 
         // remove stuff
         taskDao.remove(task);
 
         // should work -> employee is now free
-        assertTrue(taskTypeDao.removeTaskType(type));
+        assertTrue(taskTypeDao.remove(type));
 
     }
+       
 
 }

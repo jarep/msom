@@ -29,7 +29,7 @@ public class Module extends AbstractEntity {
     /** Server's efficiency value */
     private Integer efficiency;
     /** Possible task types to process */
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, })
     @JoinTable(name="task_types_per_module", 
                 joinColumns={@JoinColumn(name="module_id")}, 
                 inverseJoinColumns={@JoinColumn(name="tasktype_id")})
@@ -56,8 +56,6 @@ public class Module extends AbstractEntity {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
     
     public Integer getCores() {
         return cores;
