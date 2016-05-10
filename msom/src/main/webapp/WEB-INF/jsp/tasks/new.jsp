@@ -4,7 +4,7 @@
     Zadanie aktualnie posiada tylko nazwę i typ zadania.
 </p>
 <h3>Dodawanie nowego zadania</h2>
-    <sf:form method="post" action="new" modelAttribute="task">
+    <sf:form id="taskForm" method="post" action="new" modelAttribute="task">
     <div class="form-group">
         <label for="name">Name of task</label>
         <sf:input path="name" class="form-control" />
@@ -15,4 +15,3 @@
     </sf:select>    
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>
-

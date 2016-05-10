@@ -5,7 +5,7 @@
     obsługiwać zadania konkretnego typu.
 </p>
 <h3>Edycja typu zadań</h2>
-    <sf:form method="post" modelAttribute="taskType" action="update">
+    <sf:form method="post" modelAttribute="taskType" id="taskTypeForm" action="update">
         <sf:hidden path="id" />
     <div class="form-group">
         <label for="name">Name of type</label>

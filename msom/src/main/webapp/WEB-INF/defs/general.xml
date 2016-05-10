@@ -6,6 +6,8 @@
     <definition name="common" template="/WEB-INF/Layout/classic.jsp">
         <put-attribute name="header" value="/WEB-INF/Layout/header.jsp" />
         <put-attribute name="menu" value="/WEB-INF/Layout/menu.jsp" />
+        <put-list-attribute name="javascripts">
+        </put-list-attribute>
     </definition>
   
     <definition name="index" extends="common">
@@ -20,6 +22,9 @@
   
     <definition name="tasks" extends="common">
         <put-attribute name="title" value="Zarządzanie zadaniami." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/tasks.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="tasks/list" extends="tasks">
@@ -36,6 +41,9 @@
   
     <definition name="tasktypes" extends="common">
         <put-attribute name="title" value="Zarządzanie typami zadań." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/tasktypes.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="tasktypes/list" extends="tasktypes">
@@ -52,6 +60,9 @@
   
     <definition name="modules" extends="common">
         <put-attribute name="title" value="Zarządzanie modułami." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/modules.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="modules/list" extends="modules">
