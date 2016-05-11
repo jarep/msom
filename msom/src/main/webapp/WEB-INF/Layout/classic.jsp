@@ -18,7 +18,8 @@
         <link rel="stylesheet" href="/msom/resources/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="/msom/resources/css/style.css" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>  
+        <script type="text/javascript" src="/msom/resources/js/scripts.js"></script>
         <title>MSOM</title>
     </head>
     <body>

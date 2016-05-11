@@ -8,6 +8,7 @@ package pl.edu.uj.fais.wpz.msom.web;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,15 +39,17 @@ public class TaskTypesController {
      * Deletes taskType with specified ID
      *
      * @param id taskType's ID
+     * @param model
      * @return redirects to tasktypes if everything was ok
      */
     @RequestMapping(value = "/tasktypes/remove/{id}", method = RequestMethod.POST)
-    public String deleteTaskType(@PathVariable("id") long id) {
+    public String deleteTaskType(@PathVariable("id") long id, Model model) {
 
         TaskType toDelete = taskTypeService.find(id);
         boolean wasDeleted = taskTypeService.remove(toDelete);
 
         if (!wasDeleted) {
+             model.addAttribute("error", "CannotDelete");
             // nie mozna usunac, 
             // należy obsłużyć wyjątek i przekazać odpowiedni komunikat użytkownikowi
         }

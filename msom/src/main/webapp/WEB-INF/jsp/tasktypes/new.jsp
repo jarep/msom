@@ -11,7 +11,8 @@
     </div>
     <div class="form-group">
         <label for="difficulty">Difficulty (Number)</label>
-        <sf:input name="difficulty" path="difficulty" class="form-control"/>
-    </div>
+        <sf:input id="taskTypeDifficulty" onkeypress="return isNumber(event)" name="difficulty" path="difficulty" class="form-control"/>
+    </div> 
+    <span id="wrongValue" class="alert alert-danger small " style="display: none">Błędna wartość. </span>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>

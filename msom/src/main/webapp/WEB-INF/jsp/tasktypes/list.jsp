@@ -1,11 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
+<script>
+    $( document ).ready(function() {
+        var error = location.search.split('error=')[1];
+        if (error === "CannotDelete")
+        $('#CannotDeleteMessage').show();
+});
+        
+</script>
+
 <p class="lead">Typ zadania pozwala określić złożoność zadania. 
     Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
     obsługiwać zadania konkretnego typu.
 </p>
-
+<div id="CannotDeleteMessage" class="alert alert-danger" style="display: none">Cannot Delete Type </div>
 <p class="lead">
     <a class="btn btn-default" href="tasktypes/new">Dodaj nowy typ</a>
 </p>
