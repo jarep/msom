@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.DistributionDao;
 import pl.edu.uj.fais.wpz.msom.entities.Distribution;
+import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.integration.DomainAwareBase;
 
 /**
@@ -43,30 +44,30 @@ public class DistributionDaoImplTest extends DomainAwareBase{
     @Test
     public void testAdd() {
         int size = distributionDao.findAll().size();
-        Distribution distribution = new Distribution("Gaussian");
+        Distribution distribution = new Distribution(DistributionType.GAUSSIAN);
         distributionDao.add(distribution);
         assertTrue(size < distributionDao.findAll().size());
     }
 
     @Test
     public void testUpdate() {
-        String name = "Poisson";
+        DistributionType dt = DistributionType.LINEAR;
         
         // add distribution
-        Distribution distribution = new Distribution("Linear");
+        Distribution distribution = new Distribution(DistributionType.GAUSSIAN);
         distributionDao.add(distribution);
 
         // update distribution
-        distribution.setName(name);
+        distribution.setType(dt);
         distributionDao.update(distribution);
 
         Distribution found = distributionDao.find(distribution.getId());
-        assertTrue(found.getName().equals(name));
+        assertTrue(found.getType().equals(dt));
     }
 
     @Test
     public void testFind() {
-        Distribution distribution = new Distribution("Linear");
+        Distribution distribution = new Distribution(DistributionType.LINEAR);
         distributionDao.add(distribution);
 
         distributionDao.add(distribution);
@@ -78,8 +79,8 @@ public class DistributionDaoImplTest extends DomainAwareBase{
     @Test
     public void testList() {
        List<Distribution> distributions = distributionDao.findAll();
-       Distribution d1 = new Distribution("Gaussian");
-       Distribution d2 = new Distribution("Linear");
+       Distribution d1 = new Distribution(DistributionType.LINEAR);
+       Distribution d2 = new Distribution(DistributionType.GAUSSIAN);
        distributionDao.add(d1);
        distributionDao.add(d2);
        
@@ -91,7 +92,7 @@ public class DistributionDaoImplTest extends DomainAwareBase{
 
     @Test
     public void testRemove() {
-       Distribution distribution = new Distribution("Rozklad Dylaga");
+       Distribution distribution = new Distribution(DistributionType.LINEAR);
        distributionDao.add(distribution);
        // check if added
        assertTrue(distributionDao.find(distribution.getId()) != null);

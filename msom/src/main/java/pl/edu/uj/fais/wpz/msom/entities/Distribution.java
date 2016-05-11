@@ -6,6 +6,8 @@
 package pl.edu.uj.fais.wpz.msom.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
@@ -15,22 +17,25 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 @Entity
 public class Distribution extends AbstractEntity {
     
-    /** Distribution name */
-    private String name;
+    
+    
+    /** Distribution type name */
+    @Enumerated(EnumType.STRING)
+    private DistributionType type;
 
-    public Distribution(String name) {
-        this.name = name;
+    public Distribution(DistributionType type) {
+        this.type = type;
     }
 
     public Distribution() {
     }
     
-    public String getName() {
-        return name;
+    public DistributionType getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(DistributionType type) {
+        this.type = type;
     }
     
 }
