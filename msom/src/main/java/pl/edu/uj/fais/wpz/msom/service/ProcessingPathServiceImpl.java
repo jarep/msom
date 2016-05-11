@@ -5,13 +5,16 @@
  */
 package pl.edu.uj.fais.wpz.msom.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ProcessingPathDao;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 
 /**
@@ -32,6 +35,46 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
     @Override
     public IDao getDao() {
         return getProcessingPathDao();
+    }
+
+    @Override
+    public List<ProcessingPath> getProcessingPathsByControllerUnit(ControllerUnit controllerUnit) {
+        return processingPathDao.getProcessingPathsByControllerUnit(controllerUnit);
+    }
+
+    @Override
+    public List<ProcessingPath> getProcessingPathsLeadingToTheControllerUnit(ControllerUnit controllerUnit) {
+        return processingPathDao.getProcessingPathsLeadingToTheControllerUnit(controllerUnit);
+    }
+
+    @Override
+    public List<ProcessingPath> getProcessingPathsComingOutFromTheControllerUnit(ControllerUnit controllerUnit) {
+        return processingPathDao.getProcessingPathsComingOutFromTheControllerUnit(controllerUnit);
+    }
+
+    @Override
+    public ProcessingPath getProcessingPathByTaskTypeAndControllerUnit(ControllerUnit controllerUnit, TaskType taskType) {
+        return processingPathDao.getProcessingPathByTaskTypeAndControllerUnit(controllerUnit, taskType);
+    }
+
+    @Override
+    public List<TaskType> getTaskTypesToProcessingByControllerUnit(ControllerUnit controllerUnit) {
+        return processingPathDao.getTaskTypesToProcessingByControllerUnit(controllerUnit);
+    }
+
+    @Override
+    public List<TaskType> getTaskTypesToFinishedByControllerUnit(ControllerUnit controllerUnit) {
+        return processingPathDao.getTaskTypesToFinishedByControllerUnit(controllerUnit);
+    }
+
+    @Override
+    public boolean removeProcessingPathsByControllerUnit(ControllerUnit controllerUnit) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean removeProcessingPathsByNextControllerUnit(ControllerUnit nextControllerUnit) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

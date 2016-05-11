@@ -6,31 +6,24 @@
 package pl.edu.uj.fais.wpz.msom.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- * Entity represents controller unit
  *
  * @author jarep
  */
 @Entity
-public class ControllerUnit extends AbstractEntity {
+public class Model extends AbstractEntity {
 
     /**
-     * Controller unit custom name
+     * Model custom name
      */
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "model_id")
-    private Model model;
-
-    public ControllerUnit() {
+    public Model() {
     }
 
-    public ControllerUnit(String name) {
+    public Model(String name) {
         this.name = name;
     }
 
@@ -40,14 +33,6 @@ public class ControllerUnit extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Model getModel() {
-        return model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
     }
 
 }
