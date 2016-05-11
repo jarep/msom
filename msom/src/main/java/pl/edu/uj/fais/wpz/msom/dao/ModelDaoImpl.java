@@ -24,7 +24,6 @@ public class ModelDaoImpl extends AbstractDao<Model, Long> implements ModelDao {
             return false;
         }
         getCurrentSession().delete(model);
-        getCurrentSession().clear();
         return true;
     }
 

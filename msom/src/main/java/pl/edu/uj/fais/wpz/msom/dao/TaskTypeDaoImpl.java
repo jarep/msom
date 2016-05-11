@@ -26,7 +26,6 @@ public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements Task
 
         // ok, remove as usual
         getCurrentSession().delete(taskType);
-        getCurrentSession().clear();
         return true;
     }
 
