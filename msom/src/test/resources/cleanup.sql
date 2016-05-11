@@ -5,3 +5,4 @@ delete from controllerunit;
 delete from model;
 delete from task;
 delete from tasktype;
+delete from distribution;
