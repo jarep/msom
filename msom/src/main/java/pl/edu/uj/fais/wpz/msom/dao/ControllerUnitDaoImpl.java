@@ -44,7 +44,7 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
                 + "WHERE controller.id = :id");
         Long controllerUnitId = controllerUnit.getId();
         modulesByControllerUnitQuery.setParameter("id", controllerUnitId);
-//        modulesByControllerUnitQuery.setMaxResults(1);
+        modulesByControllerUnitQuery.setMaxResults(1);
 
         List list = modulesByControllerUnitQuery.list();
         return !list.isEmpty();
@@ -58,8 +58,7 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
                 + "JOIN p.controllerUnit AS controller "
                 + "WHERE controller.id = :id");
         pathsByControllerUnitQuery.setParameter("id", controllerUnitId);
-//        pathsByControllerUnitQuery.setMaxResults(1);
-//        Integer firstResult = pathsByControllerUnitQuery.getFirstResult();
+        pathsByControllerUnitQuery.setMaxResults(1);
         List pathsByController = pathsByControllerUnitQuery.list();
 
         Query pathsByNextControllerUnitQuery = getCurrentSession().createQuery(
@@ -67,8 +66,7 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
                 + "JOIN p.nextControllerUnit AS controller "
                 + "WHERE controller.id = :id");
         pathsByNextControllerUnitQuery.setParameter("id", controllerUnitId);
-//        pathsByNextControllerUnitQuery.setMaxResults(1);
-//        Integer firstResult = pathsByNextControllerUnitQuery.getFirstResult();
+        pathsByNextControllerUnitQuery.setMaxResults(1);
         List pathsByNextController = pathsByNextControllerUnitQuery.list();
 
         return !pathsByController.isEmpty() || !pathsByNextController.isEmpty();
@@ -77,12 +75,12 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
     @Override
     public ControllerUnit getNextControllerUnit(ControllerUnit controllerUnit, TaskType taskType) {
         Query nextControllerUnits = getCurrentSession().createQuery(
-                "SELECT controller"
+                "SELECT nextController"
                 + " FROM ProcessingPath AS path"
-                + " JOIN path.taskType AS type"
+                + " JOIN path.taskType AS taskType"
                 + " JOIN path.nextControllerUnit AS nextController"
                 + " JOIN path.controllerUnit AS controller"
-                + " WHERE type.id = :typeId AND controller.id = :controllerId");
+                + " WHERE taskType.id = :typeId AND controller.id = :controllerId");
         nextControllerUnits.setParameter("typeId", taskType.getId());
         nextControllerUnits.setParameter("controllerId", controllerUnit.getId());
 
@@ -98,13 +96,15 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
     @Override
     public List<TaskType> getAvailableTaskTypesToProcessingInControllerUnit(ControllerUnit controllerUnit) {
         Query distinctTaskTypesAvailableToProcecessingQuery = getCurrentSession().createQuery(
-                "SELECT DISTINCT type"
+                "SELECT DISTINCT taskType"
                 + " FROM Module AS m"
-                + " JOIN ControllerUnit AS controller"
-                + " JOIN TaskType AS type"
+                + " JOIN m.taskTypes AS taskType"
+                + " JOIN m.controllerUnit AS controller"
                 + " WHERE controller.id = :id");
         distinctTaskTypesAvailableToProcecessingQuery.setParameter("id", controllerUnit.getId());
-        return distinctTaskTypesAvailableToProcecessingQuery.list();
+        
+        List list = distinctTaskTypesAvailableToProcecessingQuery.list();
+        return list;
     }
 
 }
