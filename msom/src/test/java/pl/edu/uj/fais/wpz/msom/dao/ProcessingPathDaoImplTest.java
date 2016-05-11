@@ -202,7 +202,8 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
     @Test
     public void testGetProcessingPathsByControllerUnit() {
         List<ProcessingPath> paths1 = processingPathDao.getProcessingPathsByControllerUnit(controllers.get(0));
-        assertTrue(paths1.equals(pathsFromController1));
+        assertTrue(paths1.size() == pathsFromController1.size());
+        assertTrue(paths1.containsAll(pathsFromController1));
 
         List<ProcessingPath> paths2 = processingPathDao.getProcessingPathsByControllerUnit(controllers.get(1));
         List<ProcessingPath> allPaths2 = getDistinctPathList(pathsFromController2, pathsToController2);
