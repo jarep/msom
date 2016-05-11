@@ -22,7 +22,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.integration.DomainAwareBase;
 
 /**
- *
+ * 100 lat Jarku :D
  * @author jaroslaw
  */
 @ContextConfiguration("/testApplicationContext.xml")
