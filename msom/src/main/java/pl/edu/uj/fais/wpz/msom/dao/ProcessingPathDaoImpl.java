@@ -26,7 +26,7 @@ public class ProcessingPathDaoImpl extends AbstractDao<ProcessingPath, Long> imp
                 "SELECT path"
                 + " FROM ProcessingPath AS path"
                 + " JOIN path.nextControllerUnit AS nextController"
-                + " JOIN path.controllerUnit AS controlle"
+                + " JOIN path.controllerUnit AS controller"
                 + " WHERE nextController.id = :id OR controller.id = :id");
         pathsByControllerQuery.setParameter("id", controllerUnit.getId());
 
@@ -102,7 +102,7 @@ public class ProcessingPathDaoImpl extends AbstractDao<ProcessingPath, Long> imp
                 + " JOIN path.taskType AS type"
                 + " JOIN path.nextControllerUnit AS nextController"
                 + " JOIN path.controllerUnit AS controller"
-                + " WEHRE nextController.id = :id AND controller.id = :id");
+                + " WHERE nextController.id = :id AND controller.id = :id");
         taskTypesToFinished.setParameter("id", controllerUnit.getId());
 
         List types = taskTypesToFinished.list();

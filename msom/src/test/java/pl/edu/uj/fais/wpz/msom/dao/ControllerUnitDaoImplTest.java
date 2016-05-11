@@ -5,7 +5,6 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,7 +15,6 @@ import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
-import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModelDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModuleDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ProcessingPathDao;
@@ -66,20 +64,8 @@ public class ControllerUnitDaoImplTest extends DomainAwareBase {
     public void setUp() {
     }
 
-    private <T> void addAll(IDao<T, Long> dao, T... entites) {
-        for (T e : entites) {
-            dao.add(e);
-        }
-    }
-
     @After
     public void tearDown() {
-    }
-
-    private <T> void removeAll(IDao<T, Long> dao, T... entites) {
-        for (T e : entites) {
-            dao.remove(e);
-        }
     }
 
     /**
@@ -125,7 +111,7 @@ public class ControllerUnitDaoImplTest extends DomainAwareBase {
         assertTrue(controllerUnitDao.removeControllerUnit(c2));
         assertTrue(controllerUnitDao.removeControllerUnit(c3));
         assertTrue(controllerUnitDao.removeControllerUnit(c4));
-        
+
         removeAll(taskTypeDao, taskType1, taskType2);
     }
 

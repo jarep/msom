@@ -13,10 +13,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import org.springframework.test.jdbc.JdbcTestUtils;
- 
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
+
 /**
  * Base makes sure that before any test empty database is available.
-  * @author jaroslaw
+ *
+ * @author jaroslaw
  */
 @ContextConfiguration("/testApplicationContext.xml")
 public abstract class DomainAwareBase extends AbstractJUnit4SpringContextTests {
@@ -30,5 +32,17 @@ public abstract class DomainAwareBase extends AbstractJUnit4SpringContextTests {
     public void deleteAllDomainEntities() {
         JdbcTestUtils.executeSqlScript(jdbcTemplate,
                 new FileSystemResource(deleteScript), false);
+    }
+
+    protected <T> void addAll(IDao<T, Long> dao, T... entities) {
+        for (T e : entities) {
+            dao.add(e);
+        }
+    }
+
+    protected <T> void removeAll(IDao<T, Long> dao, T... entities) {
+        for (T e : entities) {
+            dao.remove(e);
+        }
     }
 }
