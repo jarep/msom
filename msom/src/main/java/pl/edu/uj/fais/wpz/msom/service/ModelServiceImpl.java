@@ -31,7 +31,7 @@ public class ModelServiceImpl extends AbstractService<Model> implements ModelSer
 
     @Override
     public boolean remove(Model model) {
-        return modelDao.removeModel(model);
+        return modelDao.remove(model);
     }
 
 }

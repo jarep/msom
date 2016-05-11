@@ -19,11 +19,12 @@ import pl.edu.uj.fais.wpz.msom.entities.Model;
 public class ModelDaoImpl extends AbstractDao<Model, Long> implements ModelDao {
 
     @Override
-    public boolean removeModel(Model model) {
+    public boolean remove(Model model) {
         if (isReferenced(model)) {
             return false;
         }
-        remove(model);
+        getCurrentSession().delete(model);
+        getCurrentSession().clear();
         return true;
     }
 
@@ -35,7 +36,7 @@ public class ModelDaoImpl extends AbstractDao<Model, Long> implements ModelDao {
                 + " WHERE model.id = :id");
         Long modelId = model.getId();
         controllersByModel.setParameter("id", modelId);
-//        controllersByModel.setMaxResults(1);
+        controllersByModel.setMaxResults(1);
 
         List list = controllersByModel.list();
         return !list.isEmpty();

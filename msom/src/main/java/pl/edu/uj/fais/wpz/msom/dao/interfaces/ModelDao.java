@@ -20,6 +20,7 @@ public interface ModelDao extends IDao<Model, Long> {
      * @return {@code true} if model is not assigned to any controller unit,
      * else {@code false}.
      */
-    public boolean removeModel(Model model);
+    @Override
+    public boolean remove(Model model);
 
 }

@@ -39,9 +39,9 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
 
     private boolean isReferencedToAnyModule(ControllerUnit controllerUnit) {
         Query modulesByControllerUnitQuery = getCurrentSession().createQuery(
-                "SELECT m FROM Module AS m "
-                + "JOIN m.controllerUnit AS controller "
-                + "WHERE controller.id = :id");
+                "SELECT m FROM Module AS m"
+                + " JOIN m.controllerUnit AS controller"
+                + " WHERE controller.id = :id");
         Long controllerUnitId = controllerUnit.getId();
         modulesByControllerUnitQuery.setParameter("id", controllerUnitId);
         modulesByControllerUnitQuery.setMaxResults(1);
@@ -54,17 +54,17 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
         Long controllerUnitId = controllerUnit.getId();
 
         Query pathsByControllerUnitQuery = getCurrentSession().createQuery(
-                "SELECT p FROM ProcessingPath AS p "
-                + "JOIN p.controllerUnit AS controller "
-                + "WHERE controller.id = :id");
+                "SELECT p FROM ProcessingPath AS p"
+                + " JOIN p.controllerUnit AS controller"
+                + " WHERE controller.id = :id");
         pathsByControllerUnitQuery.setParameter("id", controllerUnitId);
         pathsByControllerUnitQuery.setMaxResults(1);
         List pathsByController = pathsByControllerUnitQuery.list();
 
         Query pathsByNextControllerUnitQuery = getCurrentSession().createQuery(
-                "SELECT p FROM ProcessingPath AS p "
-                + "JOIN p.nextControllerUnit AS controller "
-                + "WHERE controller.id = :id");
+                "SELECT p FROM ProcessingPath AS p"
+                + " JOIN p.nextControllerUnit AS controller"
+                + " WHERE controller.id = :id");
         pathsByNextControllerUnitQuery.setParameter("id", controllerUnitId);
         pathsByNextControllerUnitQuery.setMaxResults(1);
         List pathsByNextController = pathsByNextControllerUnitQuery.list();

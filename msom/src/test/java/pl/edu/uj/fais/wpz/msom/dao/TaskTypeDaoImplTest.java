@@ -33,7 +33,7 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
 
     @Autowired
     private TaskTypeDao taskTypeDao;
-    
+
     @Autowired
     private ModuleDao moduleDao;
 
@@ -117,7 +117,7 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testRemove() {
-
+        /* Remove task types related to some tasks */
         TaskType type = new TaskType("Typ xyz", 48);
         taskTypeDao.add(type);
 
@@ -125,16 +125,31 @@ public class TaskTypeDaoImplTest extends DomainAwareBase {
         taskDao.add(task);
 
         // try to remove -> shouldn't work
-        boolean result = taskTypeDao.remove(type);
-        assertFalse(result);
+        assertFalse(taskTypeDao.remove(type));
 
         // remove stuff
         taskDao.remove(task);
 
-        // should work -> employee is now free
+        // should work
         assertTrue(taskTypeDao.remove(type));
 
+        /* Remove task types related to some modules */
+        TaskType type2 = new TaskType("Typ abc", 12);
+        taskTypeDao.add(type2);
+
+        Module module = new Module("M1", 4, 1800);
+        module.addTaskType(type2);
+        moduleDao.add(module);
+
+        // try to remove -> shouldn't work
+        assertFalse(taskTypeDao.remove(type2));
+
+        // remove stuff
+        moduleDao.remove(module);
+
+        // should work
+        assertTrue(taskTypeDao.remove(type2));
+
     }
-       
 
 }
