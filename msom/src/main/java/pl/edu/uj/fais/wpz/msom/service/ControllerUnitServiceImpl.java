@@ -13,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
+import pl.edu.uj.fais.wpz.msom.entities.Module;
+import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 
 /**
  *
@@ -26,6 +30,12 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
 
     @Autowired
     private ControllerUnitDao controllerUnitDao;
+
+    @Autowired
+    private ProcessingPathService processingPathService;
+
+    @Autowired
+    private ModuleService moduleService;
 
     public ControllerUnitDao getControllerUnitDao() {
         return controllerUnitDao;
@@ -40,10 +50,21 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
     public boolean remove(ControllerUnit controllerUnit) {
         return controllerUnitDao.removeControllerUnit(controllerUnit);
     }
-    
+
     @Override
     public boolean removeWithModulesAndPaths(ControllerUnit controllerUnit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ProcessingPath> allPaths = processingPathService.getProcessingPathsByControllerUnit(controllerUnit);
+        for (ProcessingPath p : allPaths) {
+            processingPathService.remove(p);
+        }
+
+        List<Module> modules = moduleService.getModulesByControllerUnit(controllerUnit);
+        for (Module m : modules) {
+            moduleService.remove(m);
+        }
+
+        return processingPathService.getProcessingPathsByControllerUnit(controllerUnit).isEmpty()
+                && moduleService.getModulesByControllerUnit(controllerUnit).isEmpty();
     }
 
     @Override
@@ -53,7 +74,7 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
 
     @Override
     public List<TaskType> getAvailableTaskTypesToProcessingInControllerUnit(ControllerUnit controllerUnit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return controllerUnitDao.getAvailableTaskTypesToProcessingInControllerUnit(controllerUnit);
     }
 
     @Override
@@ -65,5 +86,5 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
     public boolean validateControllerUnitPathDefinitions(ControllerUnit controllerUnit) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

@@ -69,12 +69,20 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
 
     @Override
     public boolean removeProcessingPathsByControllerUnit(ControllerUnit controllerUnit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ProcessingPath> paths = getProcessingPathsComingOutFromTheControllerUnit(controllerUnit);
+        for (ProcessingPath p : paths) {
+            processingPathDao.remove(p);
+        }
+        return true;
     }
 
     @Override
     public boolean removeProcessingPathsByNextControllerUnit(ControllerUnit nextControllerUnit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ProcessingPath> paths = getProcessingPathsLeadingToTheControllerUnit(nextControllerUnit);
+        for (ProcessingPath p : paths) {
+            processingPathDao.remove(p);
+        }
+        return true;
     }
 
 }

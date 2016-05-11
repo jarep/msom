@@ -5,14 +5,22 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao.interfaces;
 
+import java.util.List;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 
 /**
  *
  * @author paweldylag
  */
-public interface ModuleDao extends IDao<Module, Long>{
-   
-    // nothing special here
-    
+public interface ModuleDao extends IDao<Module, Long> {
+
+    /**
+     * Get all modules assigned to given controller unit.
+     *
+     * @param controllerUnit
+     * @return founded modules
+     */
+    List<Module> getModulesByControllerUnit(ControllerUnit controllerUnit);
+
 }
