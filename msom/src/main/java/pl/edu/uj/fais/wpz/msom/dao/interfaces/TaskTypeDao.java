@@ -13,12 +13,15 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
  */
 public interface TaskTypeDao extends IDao<TaskType, Long> {
 
-    /**
+     /**
      * Tries to remove typeTask from the system.
      *
      * @param taskType Type of task to remove
      * @return {@code true} if taskType is not assigned to any task, else
      * {@code false}.
      */
-    boolean removeTaskType(TaskType taskType);
+    @Override
+    boolean remove(TaskType taskType);
+    
+    
 }

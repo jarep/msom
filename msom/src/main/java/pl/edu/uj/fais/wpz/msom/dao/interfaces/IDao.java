@@ -50,7 +50,7 @@ public interface IDao<E, K> {
      *
      * @param entity Entity to delete
      */
-    public void remove(E entity);
+    public boolean remove(E entity);
 
     /**
      * Gets the current data from database and refresh local entity

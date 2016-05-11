@@ -6,7 +6,10 @@
 package pl.edu.uj.fais.wpz.msom.dao;
 
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.hibernate.Query;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Repository;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -19,7 +22,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements TaskTypeDao {
 
     @Override
-    public boolean removeTaskType(TaskType taskType) {
+    public boolean remove(TaskType taskType) {
         Query tasksByTaskTypeQuery = getCurrentSession().createQuery(
                 "SELECT t FROM Task AS t "
                 + "JOIN t.taskType AS type "
@@ -31,10 +34,11 @@ public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements Task
         List list = tasksByTaskTypeQuery.list();
         if (!list.isEmpty()) {
             return false;
-        }
+        } 
 
         // ok, remove as usual
-        remove(taskType);
+        getCurrentSession().delete(taskType);
+        getCurrentSession().clear();
         return true;
 
     }
