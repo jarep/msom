@@ -165,6 +165,7 @@ public class ModuleDaoImplTest extends DomainAwareBase {
     public void testFind() {
         Module module = new Module(2, 4000);
         TaskType type = new TaskType("Typ ALFA", 30);
+        taskTypeDao.add(type);
         module.getTaskTypes().add(type);
         moduleDao.add(module);
 

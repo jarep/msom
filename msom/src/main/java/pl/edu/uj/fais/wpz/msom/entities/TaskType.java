@@ -18,7 +18,7 @@ public class TaskType extends AbstractEntity {
 
     private String name;
     private Integer difficulty;
-
+    
     public TaskType() {
     }
 

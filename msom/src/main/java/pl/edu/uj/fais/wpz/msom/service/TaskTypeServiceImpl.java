@@ -37,7 +37,7 @@ public class TaskTypeServiceImpl extends AbstractService<TaskType> implements Ta
     
     @Override
     public boolean remove(TaskType taskType){
-        return taskTypeDao.removeTaskType(taskType);
+        return taskTypeDao.remove(taskType);
     }
 
 
