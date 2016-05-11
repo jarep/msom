@@ -14,6 +14,6 @@
             </ul>
         </li>
         <li><a href="#">Modules Management</a></li>
-        <li><a href="#">Probability Management</a></li>
+        <li><a href="/msom/distributions">Probability Management</a></li>
     </ul>
 </nav>

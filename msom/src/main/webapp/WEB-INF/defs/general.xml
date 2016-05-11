@@ -30,7 +30,7 @@
     <put-attribute name="body" value="/WEB-INF/jsp/tasks/new.jsp" />
   </definition>
   
-    <definition name="tasks/view" extends="tasks">
+  <definition name="tasks/view" extends="tasks">
     <put-attribute name="body" value="/WEB-INF/jsp/tasks/view.jsp" />
   </definition>
   
@@ -38,7 +38,7 @@
     <put-attribute name="title" value="Zarządzanie typami zadań." />
   </definition>
   
-    <definition name="tasktypes/list" extends="tasktypes">
+  <definition name="tasktypes/list" extends="tasktypes">
     <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/list.jsp" />
   </definition>
   
@@ -46,7 +46,23 @@
     <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/new.jsp" />
   </definition>
   
-    <definition name="tasktypes/view" extends="tasktypes">
+  <definition name="tasktypes/view" extends="tasktypes">
     <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/view.jsp" />
+  </definition>
+  
+  <definition name="distributions" extends="common">
+    <put-attribute name="title" value="Zarządzanie typami rozkładami prawdopodobieństwa." />
+  </definition>
+  
+  <definition name="distributions/list" extends="distributions">
+    <put-attribute name="body" value="/WEB-INF/jsp/distributions/list.jsp" />
+  </definition>
+  
+  <definition name="distributions/new" extends="distributions">
+    <put-attribute name="body" value="/WEB-INF/jsp/distributions/new.jsp" />
+  </definition>
+  
+  <definition name="distributions/view" extends="distributions">
+    <put-attribute name="body" value="/WEB-INF/jsp/distributions/view.jsp" />
   </definition>
 </tiles-definitions>
