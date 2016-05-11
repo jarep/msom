@@ -5,10 +5,12 @@
  */
 package pl.edu.uj.fais.wpz.msom.service.interfaces;
 
+import pl.edu.uj.fais.wpz.msom.entities.Distribution;
+
 /**
  *
  * @author paweldylag
  */
-public interface DistributionService extends IService {
+public interface DistributionService extends IService<Distribution> {
     
 }

@@ -21,6 +21,9 @@ public class Distribution extends AbstractEntity {
     public Distribution(String name) {
         this.name = name;
     }
+
+    public Distribution() {
+    }
     
     public String getName() {
         return name;

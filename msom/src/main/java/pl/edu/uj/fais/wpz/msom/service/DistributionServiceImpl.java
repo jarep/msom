@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.DistributionDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
+import pl.edu.uj.fais.wpz.msom.entities.Distribution;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 
 /**
@@ -19,7 +20,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
  */
 @Service(value = "distributionService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-public class DistributionServiceImpl extends AbstractService implements DistributionService {
+public class DistributionServiceImpl extends AbstractService<Distribution> implements DistributionService {
     
     @Autowired
     private DistributionDao distributionDao;
