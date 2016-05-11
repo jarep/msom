@@ -22,7 +22,7 @@ public class Task extends AbstractEntity {
 
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "tasktype_id")
     private TaskType taskType;
 
