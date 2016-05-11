@@ -6,29 +6,25 @@
 package pl.edu.uj.fais.wpz.msom.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
  *
- * @author jaroslaw
+ * @author jarep
  */
 @Entity
-public class Task extends AbstractEntity {
+public class Model extends AbstractEntity {
 
+    /**
+     * Model custom name
+     */
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "tasktype_id")
-    private TaskType taskType;
-
-    public Task() {
+    public Model() {
     }
 
-    public Task(String name, TaskType taskType) {
+    public Model(String name) {
         this.name = name;
-        this.taskType = taskType;
     }
 
     public String getName() {
@@ -37,14 +33,6 @@ public class Task extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public TaskType getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
     }
 
 }

@@ -6,10 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.dao;
 
 import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.hibernate.Query;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Repository;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -23,24 +20,45 @@ public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements Task
 
     @Override
     public boolean remove(TaskType taskType) {
+        if (isUsed(taskType)) {
+            return false;
+        }
+
+        // ok, remove as usual
+        getCurrentSession().delete(taskType);
+        getCurrentSession().clear();
+        return true;
+    }
+
+    private boolean isUsed(TaskType taskType) {
+        return (isUsedByAnyTask(taskType) || isUsedByAnyModule(taskType));
+    }
+
+    private boolean isUsedByAnyTask(TaskType taskType) {
         Query tasksByTaskTypeQuery = getCurrentSession().createQuery(
                 "SELECT t FROM Task AS t "
                 + "JOIN t.taskType AS type "
                 + "WHERE type.id = :id");
         Long taskTypeId = taskType.getId();
         tasksByTaskTypeQuery.setParameter("id", taskTypeId);
+        tasksByTaskTypeQuery.setMaxResults(1);
 
-        // type mustn't be assigned on no task
         List list = tasksByTaskTypeQuery.list();
-        if (!list.isEmpty()) {
-            return false;
-        } 
+        return !list.isEmpty();
+    }
 
-        // ok, remove as usual
-        getCurrentSession().delete(taskType);
-        getCurrentSession().clear();
-        return true;
+    private boolean isUsedByAnyModule(TaskType taskType) {
+        Query modulesByTaskTypeQuery = getCurrentSession().createQuery(
+                "SELECT m"
+                + " FROM Module AS m"
+                + " JOIN m.taskTypes AS taskType"
+                + " WHERE taskType.id = :id");
+        Long taskTypeId = taskType.getId();
+        modulesByTaskTypeQuery.setParameter("id", taskTypeId);
+        modulesByTaskTypeQuery.setMaxResults(1);
 
+        List list = modulesByTaskTypeQuery.list();
+        return !list.isEmpty();
     }
 
 }

@@ -5,7 +5,7 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao;
 
-
+import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,9 +15,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModuleDao;
 
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -29,16 +31,19 @@ import pl.edu.uj.fais.wpz.msom.integration.DomainAwareBase;
  */
 @ContextConfiguration("/testApplicationContext.xml")
 public class ModuleDaoImplTest extends DomainAwareBase {
-    
+
     @Autowired
     private ModuleDao moduleDao;
-     
+
     @Autowired
     private TaskTypeDao taskTypeDao;
 
+    @Autowired
+    private ControllerUnitDao controllerUnitDao;
+
     public ModuleDaoImplTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
@@ -46,20 +51,20 @@ public class ModuleDaoImplTest extends DomainAwareBase {
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     public void setUp() {
         Module module1 = new Module(2, 2000);
         Module module2 = new Module(4, 4000);
         Module module3 = new Module(8, 8000);
         Module module4 = new Module(16, 16000);
-        
+
         TaskType type1 = new TaskType("Typ a", 50);
         taskTypeDao.add(type1);
         TaskType type2 = new TaskType("Typ b", 10);
         taskTypeDao.add(type2);
         TaskType type3 = new TaskType("Typ c", 70);
         taskTypeDao.add(type3);
-        
+
         module1.getTaskTypes().add(type1);
         module2.getTaskTypes().add(type2);
         module3.getTaskTypes().add(type3);
@@ -112,7 +117,7 @@ public class ModuleDaoImplTest extends DomainAwareBase {
         assertTrue(found.getCores().equals(cores));
         assertTrue(found.getEfficiency().equals(eff));
     }
-    
+
     @Test
     public void testAddingNewTaskTypes() {
         // add task types 
@@ -134,7 +139,7 @@ public class ModuleDaoImplTest extends DomainAwareBase {
         assertTrue(found.getTaskTypes().size() == 2);
         assertTrue(found.containsTaskType(newType));
     }
-    
+
     @Test
     public void testRemovingTaskTypes() {
         // add task types 
@@ -175,28 +180,46 @@ public class ModuleDaoImplTest extends DomainAwareBase {
 
     @Test
     public void testList() {
-       List<Module> modules = moduleDao.findAll();
-       Module module1 = new Module(2, 4000);
-       Module module2 = new Module(4, 8000);
-       moduleDao.add(module1);
-       moduleDao.add(module2);
-       
-       List<Module> freshModules = moduleDao.findAll();
-       assertTrue(modules.size() + 2 == freshModules.size());
-       assertTrue(freshModules.contains(module1));
-       assertTrue(freshModules.contains(module2));
+        List<Module> modules = moduleDao.findAll();
+        Module module1 = new Module(2, 4000);
+        Module module2 = new Module(4, 8000);
+        moduleDao.add(module1);
+        moduleDao.add(module2);
+
+        List<Module> freshModules = moduleDao.findAll();
+        assertTrue(modules.size() + 2 == freshModules.size());
+        assertTrue(freshModules.contains(module1));
+        assertTrue(freshModules.contains(module2));
     }
 
     @Test
     public void testRemove() {
-       Module module = new Module(2, 4000);
-       moduleDao.add(module);
-       // check if added
-       assertTrue(moduleDao.find(module.getId()) != null);
-       moduleDao.remove(module);
-       // check if removed
-       assertTrue(moduleDao.find(module.getId()) == null);
+        Module module = new Module(2, 4000);
+        moduleDao.add(module);
+        // check if added
+        assertTrue(moduleDao.find(module.getId()) != null);
+        moduleDao.remove(module);
+        // check if removed
+        assertTrue(moduleDao.find(module.getId()) == null);
     }
-    
-    
+
+    @Test
+    public void testGetModulesByControllerUnit() {
+        ControllerUnit c = new ControllerUnit("C1");
+        controllerUnitDao.add(c);
+
+        Module m1 = new Module("M1", 16, 2400, c);
+        Module m2 = new Module("M2", 16, 2400, c);
+        Module m3 = new Module("M3", 16, 2400, c);
+
+        addAll(moduleDao, m1, m2, m3);
+
+        List<Module> modulesByControllerUnit = moduleDao.getModulesByControllerUnit(c);
+        assertTrue(modulesByControllerUnit.size() == 3);
+        assertTrue(modulesByControllerUnit.containsAll(Arrays.asList(m1, m2, m3)));
+
+        removeAll(moduleDao, m1, m2, m3);
+        controllerUnitDao.remove(c);
+    }
+
 }

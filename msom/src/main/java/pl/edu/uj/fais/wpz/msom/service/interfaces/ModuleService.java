@@ -5,6 +5,8 @@
  */
 package pl.edu.uj.fais.wpz.msom.service.interfaces;
 
+import java.util.List;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 
 /**
@@ -13,5 +15,11 @@ import pl.edu.uj.fais.wpz.msom.entities.Module;
  */
 public interface ModuleService extends IService<Module> {
     
-    
+    /**
+     * Get all modules assigned to given controller unit.
+     * 
+     * @param controllerUnit
+     * @return founded modules
+     */
+    List<Module> getModulesByControllerUnit(ControllerUnit controllerUnit);
 }
