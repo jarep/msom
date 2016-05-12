@@ -5,10 +5,10 @@
     <!-- [opis] -->
 </p>
 <p class="lead">
-    <a class="btn btn-default" href="modules/new">Dodaj nowy moduł</a>
+    <a class="btn btn-default" href="modules/new">Add new module</a>
 </p>
 
-<h2>All modules</h2>
+<h2>Available modules</h2>
 <table class="table">
     <tr>
         <th>Id</th>

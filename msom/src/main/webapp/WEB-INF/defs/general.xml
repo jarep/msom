@@ -3,55 +3,63 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
-  <definition name="common" template="/WEB-INF/Layout/classic.jsp">
-    <put-attribute name="header" value="/WEB-INF/Layout/header.jsp" />
-    <put-attribute name="menu" value="/WEB-INF/Layout/menu.jsp" />
-  </definition>
+    <definition name="common" template="/WEB-INF/Layout/classic.jsp">
+        <put-attribute name="header" value="/WEB-INF/Layout/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/Layout/menu.jsp" />
+        <put-list-attribute name="javascripts">
+        </put-list-attribute>
+    </definition>
   
-  <definition name="index" extends="common">
-    <put-attribute name="title" value="MSOM" />
-    <put-attribute name="body" value="/WEB-INF/jsp/index.jsp" />
-  </definition>
+    <definition name="index" extends="common">
+        <put-attribute name="title" value="MSOM" />
+        <put-attribute name="body" value="/WEB-INF/jsp/index.jsp" />
+    </definition>
   
-  <definition name="fakedatagenerator" extends="common">
-    <put-attribute name="title" value="MSOM" />
-    <put-attribute name="body" value="/WEB-INF/jsp/fakedatagenerator.jsp" />
-  </definition>
+    <definition name="fakedatagenerator" extends="common">
+        <put-attribute name="title" value="MSOM" />
+        <put-attribute name="body" value="/WEB-INF/jsp/fakedatagenerator.jsp" />
+    </definition>
   
-   <definition name="tasks" extends="common">
-    <put-attribute name="title" value="Zarządzanie zadaniami." />
-  </definition>
+    <definition name="tasks" extends="common">
+        <put-attribute name="title" value="Task Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/tasks.js" />
+        </put-list-attribute>
+    </definition>
   
-  <definition name="tasks/list" extends="tasks">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasks/list.jsp" />
-  </definition>
+    <definition name="tasks/list" extends="tasks">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasks/list.jsp" />
+    </definition>
   
-  <definition name="tasks/new" extends="tasks">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasks/new.jsp" />
-  </definition>
+    <definition name="tasks/new" extends="tasks">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasks/new.jsp" />
+    </definition>
   
   <definition name="tasks/view" extends="tasks">
     <put-attribute name="body" value="/WEB-INF/jsp/tasks/view.jsp" />
   </definition>
   
-  <definition name="tasktypes" extends="common">
-    <put-attribute name="title" value="Zarządzanie typami zadań." />
-  </definition>
+    <definition name="tasktypes" extends="common">
+        <put-attribute name="title" value="Task Type Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/tasktypes.js" />
+        </put-list-attribute>
+    </definition>
   
   <definition name="tasktypes/list" extends="tasktypes">
     <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/list.jsp" />
   </definition>
   
-  <definition name="tasktypes/new" extends="tasktypes">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/new.jsp" />
-  </definition>
+    <definition name="tasktypes/new" extends="tasktypes">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/new.jsp" />
+    </definition>
   
   <definition name="tasktypes/view" extends="tasktypes">
     <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/view.jsp" />
   </definition>
   
   <definition name="distributions" extends="common">
-    <put-attribute name="title" value="Zarządzanie typami rozkładami prawdopodobieństwa." />
+    <put-attribute name="title" value="Distribution Management." />
   </definition>
   
   <definition name="distributions/list" extends="distributions">
@@ -67,7 +75,7 @@
   </definition>
   
     <definition name="modules" extends="common">
-    <put-attribute name="title" value="Zarządzanie modułami." />
+    <put-attribute name="title" value="Modules Management." />
   </definition>
   
   <definition name="modules/list" extends="modules">

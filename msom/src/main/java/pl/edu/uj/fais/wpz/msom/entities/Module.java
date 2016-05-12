@@ -24,11 +24,17 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 @Entity
 public class Module extends AbstractEntity {
 
-    /** Module custom name */
+    /**
+     * Module custom name
+     */
     private String name;
-    /** Number of servers cores */
+    /**
+     * Number of servers cores
+     */
     private Integer cores;
-    /** Server's efficiency value */
+    /**
+     * Server's efficiency value
+     */
     private Integer efficiency;
     /** Possible task types to process */
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, })

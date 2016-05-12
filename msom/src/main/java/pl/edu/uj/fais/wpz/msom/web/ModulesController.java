@@ -41,6 +41,7 @@ public class ModulesController {
 
     /**
      * Creates new form for module
+     *
      * @param model
      * @return module/new
      */
@@ -52,6 +53,7 @@ public class ModulesController {
 
     /**
      * Saves new module to database
+     *
      * @param module
      * @return redirects to list
      */

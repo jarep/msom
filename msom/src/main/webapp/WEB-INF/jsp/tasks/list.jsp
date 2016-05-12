@@ -2,13 +2,13 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
 <p class="lead">
-    Zadanie aktualnie posiada tylko nazwę i typ zadania.
+    Each task has a name and a type.
 </p>
 <p class="lead">
-    <a class="btn btn-default" href="tasks/new">Dodaj nowe zadanie</a>
+    <a class="btn btn-default" href="tasks/new">Add new task</a>
 </p>
 
-<h2>Zadania w systemie</h2>
+<h2>Available tasks</h2>
 <table class="table">
     <tr>
         <th>Id</th>
@@ -26,10 +26,10 @@
             <td>${task.taskType.difficulty}</td>
             <td><a href="tasks/${task.id}">Edit</a></td>
             <td>
-        <sf:form action="tasks/remove/${task.id}" method="post">
-            <input type="submit" class="btn-sm btn-danger" value="Delete" />
-        </sf:form>
-    </td>
-</tr>
-</c:forEach>
+                <sf:form action="tasks/remove/${task.id}" method="post">
+                    <input type="submit" class="btn-sm btn-danger" value="Delete" />
+                </sf:form>
+            </td>
+        </tr>
+    </c:forEach>
 </table>

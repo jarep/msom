@@ -1,15 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
-<p class="lead">Typ zadania pozwala określić złożoność zadania. 
-    Każde zadanie ma przypisany typ. Poszczególne moduły przetwarzające potrafią 
-    obsługiwać zadania konkretnego typu.
+<p class="lead">Type of the task is an assessment of its complexity.
+    Each task needs to have a type assigned. 
+    Specific processing modules can handle a specific type of task.
 </p>
 
 <p class="lead">
-    <a class="btn btn-default" href="tasktypes/new">Dodaj nowy typ</a>
+    <a class="btn btn-default" href="tasktypes/new">Add new task type</a>
 </p>
-<h2>Dostępne typy</h2>
+<h2>Available types</h2>
 <table class="table">
     <tr>
         <th>Id</th>
@@ -32,7 +32,7 @@
         </tr>
     </c:forEach>
 </table>
-<p>
-    <em>Uwaga - można usunąc tylko te typy, które nie mają 
-        powiązanych zadań (dla przykładowych danych "Type D")</em>
-</p>
+<div class="alert alert-warning" role="alert">
+    <em>Warning - you are allowed to delete only types which are not linked to any tasks (for seed data it would be "Type D")
+</div>
+

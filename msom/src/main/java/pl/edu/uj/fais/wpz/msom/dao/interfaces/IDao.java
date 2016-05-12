@@ -26,7 +26,7 @@ public interface IDao<E, K> {
 
     /**
      * Save entity in database
-     * 
+     *
      * @param entity to save
      */
     public void add(E entity);
