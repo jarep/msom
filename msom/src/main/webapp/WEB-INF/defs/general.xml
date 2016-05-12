@@ -35,9 +35,9 @@
         <put-attribute name="body" value="/WEB-INF/jsp/tasks/new.jsp" />
     </definition>
   
-  <definition name="tasks/view" extends="tasks">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasks/view.jsp" />
-  </definition>
+    <definition name="tasks/view" extends="tasks">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasks/view.jsp" />
+    </definition>
   
     <definition name="tasktypes" extends="common">
         <put-attribute name="title" value="Task Type Management." />
@@ -46,47 +46,64 @@
         </put-list-attribute>
     </definition>
   
-  <definition name="tasktypes/list" extends="tasktypes">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/list.jsp" />
-  </definition>
+    <definition name="tasktypes/list" extends="tasktypes">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/list.jsp" />
+    </definition>
   
     <definition name="tasktypes/new" extends="tasktypes">
         <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/new.jsp" />
     </definition>
   
-  <definition name="tasktypes/view" extends="tasktypes">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/view.jsp" />
-  </definition>
+    <definition name="tasktypes/view" extends="tasktypes">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/view.jsp" />
+    </definition>
   
-  <definition name="distributions" extends="common">
-    <put-attribute name="title" value="Distribution Management." />
-  </definition>
+    <definition name="distributions" extends="common">
+        <put-attribute name="title" value="Distribution Management." />
+    </definition>
   
-  <definition name="distributions/list" extends="distributions">
-    <put-attribute name="body" value="/WEB-INF/jsp/distributions/list.jsp" />
-  </definition>
+    <definition name="distributions/list" extends="distributions">
+        <put-attribute name="body" value="/WEB-INF/jsp/distributions/list.jsp" />
+    </definition>
   
-  <definition name="distributions/new" extends="distributions">
-    <put-attribute name="body" value="/WEB-INF/jsp/distributions/new.jsp" />
-  </definition>
+    <definition name="distributions/new" extends="distributions">
+        <put-attribute name="body" value="/WEB-INF/jsp/distributions/new.jsp" />
+    </definition>
   
-  <definition name="distributions/view" extends="distributions">
-    <put-attribute name="body" value="/WEB-INF/jsp/distributions/view.jsp" />
-  </definition>
+    <definition name="distributions/view" extends="distributions">
+        <put-attribute name="body" value="/WEB-INF/jsp/distributions/view.jsp" />
+    </definition>
   
     <definition name="modules" extends="common">
-    <put-attribute name="title" value="Modules Management." />
-  </definition>
+        <put-attribute name="title" value="Modules Management." />
+    </definition>
   
-  <definition name="modules/list" extends="modules">
-    <put-attribute name="body" value="/WEB-INF/jsp/modules/list.jsp" />
-  </definition>
+    <definition name="modules/list" extends="modules">
+        <put-attribute name="body" value="/WEB-INF/jsp/modules/list.jsp" />
+    </definition>
   
-  <definition name="modules/new" extends="modules">
-    <put-attribute name="body" value="/WEB-INF/jsp/modules/new.jsp" />
-  </definition>
+    <definition name="modules/new" extends="modules">
+        <put-attribute name="body" value="/WEB-INF/jsp/modules/new.jsp" />
+    </definition>
   
-  <definition name="modules/view" extends="modules">
-    <put-attribute name="body" value="/WEB-INF/jsp/modules/view.jsp" />
-  </definition>
+    <definition name="modules/view" extends="modules">
+        <put-attribute name="body" value="/WEB-INF/jsp/modules/view.jsp" />
+    </definition>
+  
+    <!--Controller Units-->
+    <definition name="controllerunits" extends="common">
+        <put-attribute name="title" value="Controller Units Management" />
+    </definition>
+    
+    <definition name="controllerunits/list" extends="controllerunits">
+        <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/list.jsp" />
+    </definition>
+    
+    <definition name="controllerunits/new" extends="controllerunits">
+        <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/new.jsp" />
+    </definition>
+    
+    <definition name="controllerunits/view" extends="controllerunits">
+        <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/view.jsp" />
+    </definition>
 </tiles-definitions>

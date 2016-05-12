@@ -13,6 +13,7 @@
                 <li><a href="/msom/tasks">Tasks</a></li>
                 <li><a href="/msom/modules">Modules Management</a></li>
                 <li><a href="/msom/distributions">Probability Management</a></li>
+                <li><a href="/msom/controllerunits">Controller Units</a></li>
             </ul>
         </li>
     </ul>
