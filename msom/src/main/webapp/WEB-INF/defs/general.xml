@@ -65,4 +65,20 @@
   <definition name="distributions/view" extends="distributions">
     <put-attribute name="body" value="/WEB-INF/jsp/distributions/view.jsp" />
   </definition>
+  
+    <definition name="modules" extends="common">
+    <put-attribute name="title" value="Zarządzanie modułami." />
+  </definition>
+  
+  <definition name="modules/list" extends="modules">
+    <put-attribute name="body" value="/WEB-INF/jsp/modules/list.jsp" />
+  </definition>
+  
+  <definition name="modules/new" extends="modules">
+    <put-attribute name="body" value="/WEB-INF/jsp/modules/new.jsp" />
+  </definition>
+  
+  <definition name="modules/view" extends="modules">
+    <put-attribute name="body" value="/WEB-INF/jsp/modules/view.jsp" />
+  </definition>
 </tiles-definitions>
