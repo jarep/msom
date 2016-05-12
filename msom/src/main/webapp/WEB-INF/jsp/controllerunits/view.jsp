@@ -28,7 +28,7 @@
                 <td>${path.id}</td>
                 <td>${path.controllerUnit.name}</td>
                 <td>${path.nextControllerUnit.name}</td>
-                <td>${path.nextControllerUnit.name}</td>
+                <td>${path.taskType.name}</td>
             </tr>
         </c:forEach>
     </table>
@@ -47,7 +47,7 @@
                 <td>${path.id}</td>
                 <td>${path.controllerUnit.name}</td>
                 <td>${path.nextControllerUnit.name}</td>
-                <td>${path.nextControllerUnit.name}</td>
+                <td>${path.taskType.name}</td>
             </tr>
         </c:forEach>
     </table>
