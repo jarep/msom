@@ -7,6 +7,7 @@ package pl.edu.uj.fais.wpz.msom.service.interfaces;
 
 import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
+import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -26,6 +27,16 @@ public interface ControllerUnitService extends IService<ControllerUnit> {
      */
     @Override
     public boolean remove(ControllerUnit controllerUnit);
+
+    /**
+     * Update Controller Unit with validate. Check that new Model equals old
+     * Model or not defined any Processing Path for this Controller Unit.
+     *
+     * @param controllerUnit Controller Unit to update
+     * @return {@code true} if success, else {@code false}.
+     */
+    @Override
+    public boolean update(ControllerUnit controllerUnit);
 
     /**
      * Tries to remove Controller Unit and referenced Modules and Processing
@@ -63,12 +74,29 @@ public interface ControllerUnitService extends IService<ControllerUnit> {
     public List<TaskType> getAvailableTaskTypesToProcessingInControllerUnit(ControllerUnit controllerUnit);
 
     /**
+     * Get Task Types which are have not specified Processing Path from given
+     * Controller Unit.
+     *
+     * @param controllerUnit Controller Unit
+     * @return List of founded types
+     */
+    public List<TaskType> getTypesWithUnspecifiedPathFromContoller(ControllerUnit controllerUnit);
+
+    /**
+     * Get all Controller Units assigned to given Model.
+     *
+     * @param model Model
+     * @return List of founded Controller Units
+     */
+    public List<ControllerUnit> getControllersByModel(Model model);
+
+    /**
      * Check that given Controller Unit can processing all types (posses
      * required modules) which should be processed in this Controller based on
      * Processing Paths.
      *
      * @param controllerUnit Controller Unit to validate
-     * @return
+     * @return {@code true} if success, else {@code false}.
      */
     public boolean validateControllerUnitProcessingPotentiality(ControllerUnit controllerUnit);
 
@@ -77,7 +105,7 @@ public interface ControllerUnitService extends IService<ControllerUnit> {
      * Path.
      *
      * @param controllerUnit Controller Unit to validate
-     * @return
+     * @return {@code true} if success, else {@code false}.
      */
     public boolean validateControllerUnitPathDefinitions(ControllerUnit controllerUnit);
 

@@ -13,12 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
+import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
  *
@@ -37,6 +39,9 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
     @Autowired
     private ModuleService moduleService;
 
+    @Autowired
+    private TaskTypeService taskTypeService;
+
     public ControllerUnitDao getControllerUnitDao() {
         return controllerUnitDao;
     }
@@ -49,6 +54,16 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
     @Override
     public boolean remove(ControllerUnit controllerUnit) {
         return controllerUnitDao.removeControllerUnit(controllerUnit);
+    }
+
+    @Override
+    public boolean update(ControllerUnit controllerUnit) {
+        List<ProcessingPath> paths = processingPathService.getProcessingPathsByControllerUnit(controllerUnit);
+        if (controllerUnit.getModel().equals(controllerUnitDao.find(controllerUnit.getId()).getModel()) || paths.isEmpty()) {
+            controllerUnitDao.update(controllerUnit);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -85,6 +100,22 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
     @Override
     public boolean validateControllerUnitPathDefinitions(ControllerUnit controllerUnit) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<TaskType> getTypesWithUnspecifiedPathFromContoller(ControllerUnit controllerUnit) {
+        List<ProcessingPath> processingPathsComingOutFromTheControllerUnit = processingPathService.getProcessingPathsComingOutFromTheControllerUnit(controllerUnit);
+        List<TaskType> taskTypes = taskTypeService.findAll();
+
+        for (ProcessingPath p : processingPathsComingOutFromTheControllerUnit) {
+            taskTypes.remove(p.getTaskType());
+        }
+        return taskTypes;
+    }
+
+    @Override
+    public List<ControllerUnit> getControllersByModel(Model model) {
+        return controllerUnitDao.getControllersByModel(model);
     }
 
 }
