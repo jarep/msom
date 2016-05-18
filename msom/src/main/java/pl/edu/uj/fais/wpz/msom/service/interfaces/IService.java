@@ -27,15 +27,17 @@ public interface IService<T extends AbstractEntity> {
      * Add entity to database
      *
      * @param entity Entity to add
+     * @return {@code true} if success, else {@code false}.
      */
-    public void add(T entity);
+    public boolean add(T entity);
 
     /**
      * Save or update entity in database
      *
      * @param entity Entity to update
+     * @return {@code true} if success, else {@code false}.
      */
-    public void update(T entity);
+    public boolean update(T entity);
 
     /**
      * Find all entities
@@ -48,7 +50,7 @@ public interface IService<T extends AbstractEntity> {
      * Delete entity from database
      *
      * @param entity Entity to delete
-     * @return
+     * @return {@code true} if success, else {@code false}.
      */
     public boolean remove(T entity);
 
