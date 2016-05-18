@@ -106,4 +106,23 @@
     <definition name="controllerunits/view" extends="controllerunits">
         <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/view.jsp" />
     </definition>
+    
+    <!--Processing Paths-->
+    <definition name="processingpaths" extends="common">
+        <put-attribute name="title" value="Processing Paths Management" />
+    </definition>
+    
+    <definition name="processingpaths/new" extends="processingpaths">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingpaths/new.jsp" />
+    </definition>
+    
+    <!--Error page-->
+    <definition name="error" extends="common">
+        <put-attribute name="title" value="Error page" />
+    </definition>
+    
+    <definition name="errorpage" extends="error">
+        <put-attribute name="body" value="/WEB-INF/jsp/errorpage.jsp" />
+    </definition>
+    
 </tiles-definitions>

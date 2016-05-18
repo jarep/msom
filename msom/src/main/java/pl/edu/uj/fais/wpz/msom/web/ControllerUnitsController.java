@@ -50,6 +50,10 @@ public class ControllerUnitsController {
         List<ProcessingPath> pathsToController = processingPathService.getProcessingPathsLeadingToTheControllerUnit(controller);
 
         model.addAttribute("controller", controller);
+
+        List<pl.edu.uj.fais.wpz.msom.entities.Model> models = modelService.findAll();
+        model.addAttribute("modelsList", models);
+
         model.addAttribute("pathsFromControllerList", pathsFromController);
         model.addAttribute("pathsToControllerList", pathsToController);
 
@@ -73,22 +77,25 @@ public class ControllerUnitsController {
     }
 
     @RequestMapping(value = "/controllerunits/remove/{id}", method = RequestMethod.POST)
-    public String deleteDistribution(@PathVariable("id") long id) {
+    public String deleteControllerUnit(@PathVariable("id") long id, Model model) {
 
         ControllerUnit controller = controllerUnitService.find(id);
         boolean wasDeleted = controllerUnitService.remove(controller);
 
         if (!wasDeleted) {
-            // exception to handle
+            model.addAttribute("errorMsg", "Can not remove this Controller Unit...");
+            return "errorpage";
         }
 
-        // everything OK, see remaining distributions
         return "redirect:/controllerunits";
     }
 
     @RequestMapping(value = "/controllerunits/update", method = RequestMethod.POST)
-    public String updateControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller) {
-        controllerUnitService.update(controller);
+    public String updateControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller, Model model) {
+        if (!controllerUnitService.update(controller)) {
+            model.addAttribute("errorMsg", "Can not change Model for this controller unit... ");
+            return "errorpage";
+        }
         return "redirect:/controllerunits";
     }
 

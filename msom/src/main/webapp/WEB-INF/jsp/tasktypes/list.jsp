@@ -33,6 +33,6 @@
     </c:forEach>
 </table>
 <div class="alert alert-warning" role="alert">
-    <em>Warning - you are allowed to delete only types which are not linked to any tasks (for seed data it would be "Type D")
+    <em>Warning - you are allowed to delete only types which are not linked to any tasks (for seed data it would be "Type Y")</em>
 </div>
 
