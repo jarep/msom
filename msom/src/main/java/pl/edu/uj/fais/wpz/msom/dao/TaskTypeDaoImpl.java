@@ -30,7 +30,7 @@ public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements Task
     }
 
     private boolean isUsed(TaskType taskType) {
-        return (isUsedByAnyTask(taskType) || isUsedByAnyModule(taskType));
+        return (isUsedByAnyTask(taskType) || isUsedByAnyModule(taskType) || isUsedByAnyProcessingPath(taskType));
     }
 
     private boolean isUsedByAnyTask(TaskType taskType) {
@@ -57,6 +57,19 @@ public class TaskTypeDaoImpl extends AbstractDao<TaskType, Long> implements Task
         modulesByTaskTypeQuery.setMaxResults(1);
 
         List list = modulesByTaskTypeQuery.list();
+        return !list.isEmpty();
+    }
+
+    private boolean isUsedByAnyProcessingPath(TaskType taskType) {
+        Query pathsByTaskTypeQuery = getCurrentSession().createQuery(
+                "SELECT type"
+                + " FROM ProcessingPath AS p"
+                + " JOIN p.taskType AS type"
+                + " WHERE type.id = :id");
+        pathsByTaskTypeQuery.setParameter("id", taskType.getId());
+        pathsByTaskTypeQuery.setMaxResults(1);
+
+        List list = pathsByTaskTypeQuery.list();
         return !list.isEmpty();
     }
 
