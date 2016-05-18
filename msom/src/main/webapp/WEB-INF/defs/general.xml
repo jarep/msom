@@ -125,4 +125,21 @@
         <put-attribute name="body" value="/WEB-INF/jsp/errorpage.jsp" />
     </definition>
     
+    <!--Models-->
+    <definition name="models" extends="common">
+        <put-attribute name="title" value="Models Management" />
+    </definition>
+    
+    <definition name="models/list" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/list.jsp" />
+    </definition>
+    
+    <definition name="models/new" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/new.jsp" />
+    </definition>
+    
+    <definition name="models/view" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
+    </definition>
+    
 </tiles-definitions>
