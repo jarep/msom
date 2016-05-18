@@ -85,4 +85,14 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
         return true;
     }
 
+    @Override
+    public boolean add(ProcessingPath processingPath) {
+        if (processingPath.getControllerUnit().getModel().equals(processingPath.getNextControllerUnit().getModel())) {
+            add(processingPath);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
