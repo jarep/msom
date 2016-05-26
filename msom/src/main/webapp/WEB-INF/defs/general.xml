@@ -142,4 +142,17 @@
         <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
     </definition>
     
+    <!--Processing Systems-->
+    <definition name="processingsystem" extends="common">
+        <put-attribute name="title" value="Processing Systems" />
+    </definition>
+    
+    <definition name="processingsystem/list" extends="processingsystem">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/list.jsp" />
+    </definition>
+    
+    <definition name="processingsystem/view" extends="processingsystem">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/view.jsp" />
+    </definition>
+    
 </tiles-definitions>
