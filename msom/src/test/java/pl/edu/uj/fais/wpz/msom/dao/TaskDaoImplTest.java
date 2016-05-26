@@ -128,7 +128,7 @@ public class TaskDaoImplTest extends DomainAwareBase {
         taskDao.add(task2);
 
         List<Task> found = taskDao.findAll();
-        
+
         assertEquals(tasks.size() + 2, found.size());
         assertTrue(found.contains(task1));
         assertTrue(found.contains(task2));

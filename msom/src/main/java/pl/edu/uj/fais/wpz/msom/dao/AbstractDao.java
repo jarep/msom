@@ -56,7 +56,7 @@ public abstract class AbstractDao<E, K extends Serializable> implements IDao<E, 
 
     @Override
     public void update(E entity) {
-        getCurrentSession().saveOrUpdate(entity);
+        getCurrentSession().merge(entity);
     }
 
     @Override

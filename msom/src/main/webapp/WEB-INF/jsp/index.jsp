@@ -1,9 +1,11 @@
 <h2>Modelowanie Systemów Obsługi Masowej</h2>
 <p class="lead">
-    System jest w początkowej fazie - aktualnie działa tylko 
-    zarządzanie typami zadań -> Link "Task Types" w menu po prawej
-    oraz lista zadań -> Link "Tasks"
+    System provides powerful tools to manage tasks, task types and modules.
+    Probability management is currently unavailable.
 </p>
-<hr />
-<h3>Wyczyszczenie bazy danych i utworzenie przykładowych danych</h3>         
-<a class="btn btn-danger" href="/msom/fakedatagenerator">Generuj przykładowe dane</a>
+<hr /> 
+<div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span>Cleaning and seeding database with sample data</span>
+    <a class="btn btn-default" href="/msom/fakedatagenerator">Generate sample data</a>
+</div>

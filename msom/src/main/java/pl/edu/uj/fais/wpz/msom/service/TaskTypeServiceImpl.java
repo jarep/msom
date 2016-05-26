@@ -22,7 +22,6 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class TaskTypeServiceImpl extends AbstractService<TaskType> implements TaskTypeService {
 
-
     @Autowired
     private TaskTypeDao taskTypeDao;
 
@@ -34,11 +33,10 @@ public class TaskTypeServiceImpl extends AbstractService<TaskType> implements Ta
     public IDao getDao() {
         return getTaskTypeDao();
     }
-    
+
     @Override
     public boolean remove(TaskType taskType){
         return taskTypeDao.remove(taskType);
     }
-
 
 }

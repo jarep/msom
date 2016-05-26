@@ -95,4 +95,14 @@ public interface ProcessingPathService extends IService<ProcessingPath> {
      */
     public boolean removeProcessingPathsByNextControllerUnit(ControllerUnit nextControllerUnit);
 
+    /**
+     * Add processing path if Controller Unit and Next Controller Unit are
+     * assigned to the same Model.
+     *
+     * @param processingPath
+     * @return {@code true} if success, else {@code false}.
+     */
+    @Override
+    public boolean add(ProcessingPath processingPath);
+
 }

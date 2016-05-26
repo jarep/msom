@@ -7,6 +7,7 @@ package pl.edu.uj.fais.wpz.msom.dao.interfaces;
 
 import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
+import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
@@ -46,5 +47,13 @@ public interface ControllerUnitDao extends IDao<ControllerUnit, Long> {
      * @return List of available types
      */
     public List<TaskType> getAvailableTaskTypesToProcessingInControllerUnit(ControllerUnit controllerUnit);
+
+    /**
+     * Get all Controller Units assigned to given Model.
+     *
+     * @param model Model
+     * @return List of founded Controller Units
+     */
+    public List<ControllerUnit> getControllersByModel(Model model);
 
 }

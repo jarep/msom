@@ -25,8 +25,9 @@ public abstract class AbstractService<T extends AbstractEntity> implements IServ
     }
 
     @Override
-    public void update(T entity) {
+    public boolean update(T entity) {
         getDao().update(entity);
+        return true;
     }
 
     @Override
@@ -46,8 +47,9 @@ public abstract class AbstractService<T extends AbstractEntity> implements IServ
     }
 
     @Override
-    public void add(T entity) {
+    public boolean add(T entity) {
         getDao().add(entity);
+        return true;
     }
 
 }

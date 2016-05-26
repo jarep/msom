@@ -3,50 +3,143 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
-  <definition name="common" template="/WEB-INF/Layout/classic.jsp">
-    <put-attribute name="header" value="/WEB-INF/Layout/header.jsp" />
-    <put-attribute name="menu" value="/WEB-INF/Layout/menu.jsp" />
-  </definition>
+    <definition name="common" template="/WEB-INF/Layout/classic.jsp">
+        <put-attribute name="header" value="/WEB-INF/Layout/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/Layout/menu.jsp" />
+        <put-list-attribute name="javascripts">
+        </put-list-attribute>
+    </definition>
   
-  <definition name="index" extends="common">
-    <put-attribute name="title" value="MSOM" />
-    <put-attribute name="body" value="/WEB-INF/jsp/index.jsp" />
-  </definition>
+    <definition name="index" extends="common">
+        <put-attribute name="title" value="MSOM" />
+        <put-attribute name="body" value="/WEB-INF/jsp/index.jsp" />
+    </definition>
   
-  <definition name="fakedatagenerator" extends="common">
-    <put-attribute name="title" value="MSOM" />
-    <put-attribute name="body" value="/WEB-INF/jsp/fakedatagenerator.jsp" />
-  </definition>
+    <definition name="fakedatagenerator" extends="common">
+        <put-attribute name="title" value="MSOM" />
+        <put-attribute name="body" value="/WEB-INF/jsp/fakedatagenerator.jsp" />
+    </definition>
   
-   <definition name="tasks" extends="common">
-    <put-attribute name="title" value="Zarządzanie zadaniami." />
-  </definition>
+    <definition name="tasks" extends="common">
+        <put-attribute name="title" value="Task Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/tasks.js" />
+        </put-list-attribute>
+    </definition>
   
-  <definition name="tasks/list" extends="tasks">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasks/list.jsp" />
-  </definition>
+    <definition name="tasks/list" extends="tasks">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasks/list.jsp" />
+    </definition>
   
-  <definition name="tasks/new" extends="tasks">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasks/new.jsp" />
-  </definition>
+    <definition name="tasks/new" extends="tasks">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasks/new.jsp" />
+    </definition>
   
     <definition name="tasks/view" extends="tasks">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasks/view.jsp" />
-  </definition>
+        <put-attribute name="body" value="/WEB-INF/jsp/tasks/view.jsp" />
+    </definition>
   
-  <definition name="tasktypes" extends="common">
-    <put-attribute name="title" value="Zarządzanie typami zadań." />
-  </definition>
+    <definition name="tasktypes" extends="common">
+        <put-attribute name="title" value="Task Type Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/tasktypes.js" />
+        </put-list-attribute>
+    </definition>
   
     <definition name="tasktypes/list" extends="tasktypes">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/list.jsp" />
-  </definition>
+        <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/list.jsp" />
+    </definition>
   
-  <definition name="tasktypes/new" extends="tasktypes">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/new.jsp" />
-  </definition>
+    <definition name="tasktypes/new" extends="tasktypes">
+        <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/new.jsp" />
+    </definition>
   
     <definition name="tasktypes/view" extends="tasktypes">
-    <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/view.jsp" />
-  </definition>
+        <put-attribute name="body" value="/WEB-INF/jsp/tasktypes/view.jsp" />
+    </definition>
+  
+    <definition name="distributions" extends="common">
+        <put-attribute name="title" value="Distribution Management." />
+    </definition>
+  
+    <definition name="distributions/list" extends="distributions">
+        <put-attribute name="body" value="/WEB-INF/jsp/distributions/list.jsp" />
+    </definition>
+  
+    <definition name="distributions/new" extends="distributions">
+        <put-attribute name="body" value="/WEB-INF/jsp/distributions/new.jsp" />
+    </definition>
+  
+    <definition name="distributions/view" extends="distributions">
+        <put-attribute name="body" value="/WEB-INF/jsp/distributions/view.jsp" />
+    </definition>
+  
+    <definition name="modules" extends="common">
+        <put-attribute name="title" value="Modules Management." />
+    </definition>
+  
+    <definition name="modules/list" extends="modules">
+        <put-attribute name="body" value="/WEB-INF/jsp/modules/list.jsp" />
+    </definition>
+  
+    <definition name="modules/new" extends="modules">
+        <put-attribute name="body" value="/WEB-INF/jsp/modules/new.jsp" />
+    </definition>
+  
+    <definition name="modules/view" extends="modules">
+        <put-attribute name="body" value="/WEB-INF/jsp/modules/view.jsp" />
+    </definition>
+  
+    <!--Controller Units-->
+    <definition name="controllerunits" extends="common">
+        <put-attribute name="title" value="Controller Units Management" />
+    </definition>
+    
+    <definition name="controllerunits/list" extends="controllerunits">
+        <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/list.jsp" />
+    </definition>
+    
+    <definition name="controllerunits/new" extends="controllerunits">
+        <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/new.jsp" />
+    </definition>
+    
+    <definition name="controllerunits/view" extends="controllerunits">
+        <put-attribute name="body" value="/WEB-INF/jsp/controllerunits/view.jsp" />
+    </definition>
+    
+    <!--Processing Paths-->
+    <definition name="processingpaths" extends="common">
+        <put-attribute name="title" value="Processing Paths Management" />
+    </definition>
+    
+    <definition name="processingpaths/new" extends="processingpaths">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingpaths/new.jsp" />
+    </definition>
+    
+    <!--Error page-->
+    <definition name="error" extends="common">
+        <put-attribute name="title" value="Error page" />
+    </definition>
+    
+    <definition name="errorpage" extends="error">
+        <put-attribute name="body" value="/WEB-INF/jsp/errorpage.jsp" />
+    </definition>
+    
+    <!--Models-->
+    <definition name="models" extends="common">
+        <put-attribute name="title" value="Models Management" />
+    </definition>
+    
+    <definition name="models/list" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/list.jsp" />
+    </definition>
+    
+    <definition name="models/new" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/new.jsp" />
+    </definition>
+    
+    <definition name="models/view" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
+    </definition>
+    
 </tiles-definitions>

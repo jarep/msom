@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.edu.uj.fais.wpz.msom.entities.Distribution;
+import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 
 /**
@@ -26,23 +27,24 @@ public class DistributionController {
     @Autowired
     private DistributionService distributionService;
     
-    @RequestMapping(value = "/distribution", method = RequestMethod.GET)
+    @RequestMapping(value = "/distributions", method = RequestMethod.GET)
     public String showAllDistributions(Model model) {
         List<Distribution> distributionList = distributionService.findAll();
         model.addAttribute("distributionList", distributionList);
 
-        return "distribution/list";
+        return "distributions/list";
     }
     
     /**
     * Creates new form for distribution
     * @param model
-    * @return distribution/new
+    * @return distributions/new
     */
-    @RequestMapping(value = "/distribution/new", method = RequestMethod.GET)
+    @RequestMapping(value = "/distributions/new", method = RequestMethod.GET)
     public String createDistribution(Model model) {
         model.addAttribute("distribution", new Distribution());
-        return "distribution/new";
+        model.addAttribute("distributionTypes", DistributionType.values());
+        return "distributions/new";
     }
     
     /**
@@ -50,10 +52,10 @@ public class DistributionController {
     * @param distribution
     * @return redirects to list
     */
-    @RequestMapping(value = "/distribution/new", method = RequestMethod.POST)
+    @RequestMapping(value = "/distributions/new", method = RequestMethod.POST)
     public String addDistribution(@ModelAttribute(value = "distribution") Distribution distribution) {
         distributionService.add(distribution);
-        return "redirect:/distribution";
+        return "redirect:/distributions";
     }
     
     /**
@@ -61,14 +63,14 @@ public class DistributionController {
      *
      * @param id distribution ID
      * @param model Model to put distribution to
-     * @return distribution/view
+     * @return distributions/view
      */
-    @RequestMapping(value = "/distribution/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/distributions/{id}", method = RequestMethod.GET)
     public String getDistribution(@PathVariable("id") long id, Model model) {
         Distribution distribution = distributionService.find(id);
         model.addAttribute("distribution", distribution);
-
-        return "distribution/view";
+        model.addAttribute("distributionTypes", DistributionType.values());
+        return "distributions/view";
     }
     
     /**
@@ -77,7 +79,7 @@ public class DistributionController {
      * @param id distribution's ID
      * @return redirects to distribution if everything ok
      */
-    @RequestMapping(value = "/distribution/remove/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/distributions/remove/{id}", method = RequestMethod.POST)
     public String deleteDistribution(@PathVariable("id") long id) {
 
         Distribution distribution = distributionService.find(id);
@@ -88,8 +90,12 @@ public class DistributionController {
         }
 
         // everything OK, see remaining distributions
-        return "redirect:/distribution";
+        return "redirect:/distributions";
     }
     
-    
+    @RequestMapping(value = "/distributions/update", method = RequestMethod.POST)
+    public String updateDistribution(@ModelAttribute(value = "distribution") Distribution distribution) {
+        distributionService.update(distribution);
+        return "redirect:/distributions";
+    }
 }
