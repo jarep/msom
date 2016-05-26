@@ -1,0 +1,8 @@
+msom/target/msom-1.0-SNAPSHOT/WEB-INF/lib/
+msom/target/msom-1.0-SNAPSHOT/WEB-INF/jsp/
+*.class
+*.lst
+msom/target/msom-1.0-SNAPSHOT/
+msom/target/msom-1.0-SNAPSHOT.war
+msom/target/surefire-reports/
+msom/target/
