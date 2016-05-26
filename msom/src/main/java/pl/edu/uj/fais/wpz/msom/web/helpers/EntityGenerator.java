@@ -61,8 +61,9 @@ public class EntityGenerator {
         TaskType taskType3 = new TaskType("Typ C", 30);
         TaskType taskType4 = new TaskType("Typ D", 40);
         TaskType taskType5 = new TaskType("Typ E", 50);
-        addAll(taskTypeDao, taskType1, taskType2, taskType3, taskType4, taskType5);
+        TaskType taskType6 = new TaskType("Typ Y", 50);
 
+        addAll(taskTypeDao, taskType1, taskType2, taskType3, taskType4, taskType5, taskType6);
         // Create some Tasks
         Task task1 = new Task("Task 1", taskType1);
         Task task2 = new Task("Task 2", taskType1);

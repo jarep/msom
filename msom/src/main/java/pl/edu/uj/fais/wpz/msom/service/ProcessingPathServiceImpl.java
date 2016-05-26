@@ -15,6 +15,7 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.ProcessingPathDao;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 
 /**
@@ -27,6 +28,9 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
 
     @Autowired
     private ProcessingPathDao processingPathDao;
+
+    @Autowired
+    private ControllerUnitService controllerUnitService;
 
     public ProcessingPathDao getProcessingPathDao() {
         return processingPathDao;
@@ -83,6 +87,19 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
             processingPathDao.remove(p);
         }
         return true;
+    }
+
+    @Override
+    public boolean add(ProcessingPath processingPath) {
+        ControllerUnit controllerUnit = controllerUnitService.find(processingPath.getControllerUnit().getId());
+        ControllerUnit nextControllerUnit = controllerUnitService.find(processingPath.getNextControllerUnit().getId());
+
+        if (controllerUnit.getModel().equals(nextControllerUnit.getModel())) {
+            processingPathDao.add(processingPath);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -10,6 +10,7 @@ import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
+import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
@@ -102,9 +103,20 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
                 + " JOIN m.controllerUnit AS controller"
                 + " WHERE controller.id = :id");
         distinctTaskTypesAvailableToProcecessingQuery.setParameter("id", controllerUnit.getId());
-        
+
         List list = distinctTaskTypesAvailableToProcecessingQuery.list();
         return list;
+    }
+
+    @Override
+    public List<ControllerUnit> getControllersByModel(Model model) {
+        Query controllersByModelQuery = getCurrentSession().createQuery(
+                "SELECT controller"
+                + " FROM ControllerUnit AS controller"
+                + " JOIN controller.model AS model"
+                + " WHERE model.id = :id");
+        controllersByModelQuery.setParameter("id", model.getId());
+        return controllersByModelQuery.list();
     }
 
 }
