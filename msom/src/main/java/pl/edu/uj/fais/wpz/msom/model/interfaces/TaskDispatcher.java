@@ -19,6 +19,20 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
 public interface TaskDispatcher {
 
     /**
+     * Set name for this Task Dispatcher
+     *
+     * @param name Task Dispatcher name
+     */
+    public void setName(String name);
+
+    /**
+     * Get name of this Task Dispatcher
+     *
+     * @return Task Dispatcher name
+     */
+    public String getName();
+
+    /**
      * Create new Processing Unit for this Task Dispatcher.
      *
      * @param name Name of Processing Unit

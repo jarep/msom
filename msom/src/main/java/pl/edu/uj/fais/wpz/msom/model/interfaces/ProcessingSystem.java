@@ -27,6 +27,20 @@ public interface ProcessingSystem {
     public void setName(String name);
 
     /**
+     * Get name of this Processing System
+     *
+     * @return Processing System name
+     */
+    public String getName();
+
+    /**
+     * Return identity number for this Processing System
+     *
+     * @return Processing System ID
+     */
+    public Long getId();
+
+    /**
      * Start simulation. Validate Processing System before start.
      *
      * @return {@code true} if successfully started, otherwise {@code false}

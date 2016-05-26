@@ -15,6 +15,48 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 public interface ProcessingUnit {
 
     /**
+     * Set name for this Processing Unit
+     *
+     * @param name Processing Unit name
+     */
+    public void setName(String name);
+
+    /**
+     * Get name of this Processing Unit
+     *
+     * @return Processing Unit name
+     */
+    public String getName();
+
+    /**
+     * Set Processing Unit efficiency
+     *
+     * @param efficiency Processing Unit efficiency
+     */
+    public void setEfficiency(Integer efficiency);
+
+    /**
+     * Get Processing Unit efficiency
+     *
+     * @return Processing Unit efficiency
+     */
+    public Integer getEfficiency();
+
+    /**
+     * Set number of cores in Processing Units
+     *
+     * @param cores Number of cores
+     */
+    public void setCores(Integer cores);
+
+    /**
+     * Get number of cores in Processing Units
+     *
+     * @return Number of cores
+     */
+    public Integer getCores();
+
+    /**
      * Set given type as supported by this Processing Unit.
      *
      * @param type Type to support
