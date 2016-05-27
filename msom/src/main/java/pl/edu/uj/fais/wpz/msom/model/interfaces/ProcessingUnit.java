@@ -27,6 +27,13 @@ public interface ProcessingUnit {
      * @return Processing Unit name
      */
     public String getName();
+    
+    /**
+     * Return identity number for this Processing Unit
+     *
+     * @return Processing Unit ID
+     */
+    public Long getId();
 
     /**
      * Set Processing Unit efficiency

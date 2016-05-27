@@ -29,7 +29,7 @@ public class ProcessingUnitMockup implements ProcessingUnit {
     private final TaskTypeService taskTypeService;
 
     private Module entityObject;
-    
+
     private final Random generator = new Random();
     private int fakeQueueLength;
     private int fakeTaskDifficulty;
@@ -57,6 +57,11 @@ public class ProcessingUnitMockup implements ProcessingUnit {
     @Override
     public String getName() {
         return entityObject.getName();
+    }
+
+    @Override
+    public Long getId() {
+        return entityObject.getId();
     }
 
     @Override

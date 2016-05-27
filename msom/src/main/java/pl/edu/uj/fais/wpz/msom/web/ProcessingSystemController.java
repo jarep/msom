@@ -71,6 +71,22 @@ public class ProcessingSystemController {
         return "processingsystem/view";
     }
 
+    @RequestMapping(value = "/processingsystem/simulate/{id}", method = RequestMethod.GET)
+    public String simulateProcessingSystem(@PathVariable("id") long id, Model model) {
+        setProcessingSystemTool();
+
+        ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
+
+        if (processingSystem == null) {
+            model.addAttribute("errorMsg", "404 Bad Request...");
+            return "errorpage";
+        }
+
+        model.addAttribute("processingSystem", processingSystem);
+
+        return "processingsystem/simulate";
+    }
+
     @RequestMapping(value = "/processingsystem/reset/{id}", method = RequestMethod.GET)
     public String resetProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemTool();
