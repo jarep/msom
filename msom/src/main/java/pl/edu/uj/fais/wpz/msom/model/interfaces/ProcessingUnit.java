@@ -15,7 +15,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
  * @author jarep
  */
 public interface ProcessingUnit extends IModelObject<Module> {
-    
+
     /**
      * Set name for this Processing Unit
      *
@@ -35,6 +35,7 @@ public interface ProcessingUnit extends IModelObject<Module> {
      *
      * @return Processing Unit ID
      */
+    @Override
     public Long getId();
 
     /**
@@ -116,5 +117,47 @@ public interface ProcessingUnit extends IModelObject<Module> {
      * @return Queue value
      */
     public int getQueueValue();
+
+    /**
+     * Get list of waiting tasks in this processing unit
+     *
+     * @return list of tasks
+     */
+    public List<Task> getWaitingTasks();
+
+    /**
+     * Get list of currently processing tasks
+     *
+     * @return list of tasks
+     */
+    public List<Task> getProcessingTasks();
+
+    /**
+     * Get number of currently processing tasks
+     *
+     * @return No. of processing tasks
+     */
+    public int getNumberOfProcessingTasks();
+
+    /**
+     * Get average percentage of execution currently processing tasks.
+     *
+     * @return execution percentage
+     */
+    public double getPercentOfExecutionCurrentTasks();
+
+    /**
+     * Get average waiting time in the queue
+     *
+     * @return average waiting time
+     */
+    public int getAvgWaitingTime();
+
+    /**
+     * Get average processing time.
+     *
+     * @return average processing time
+     */
+    public int getAvgProcessingTime();
 
 }

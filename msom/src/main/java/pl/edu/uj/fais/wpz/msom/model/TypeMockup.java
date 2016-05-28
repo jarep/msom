@@ -28,21 +28,6 @@ public class TypeMockup extends AbstractModelObject<TaskType> implements Type {
     }
 
     @Override
-    public Integer getDifficulty() {
-        return getEntityObject().getDifficulty();
-    }
-
-    @Override
-    public Integer getAvgProcessingTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Integer getAvgWaitingTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void reload() {
         reloadEntityObcject();
     }
@@ -62,6 +47,11 @@ public class TypeMockup extends AbstractModelObject<TaskType> implements Type {
         if (getEntityObject() != null) {
             taskTypeService.update(getEntityObject());
         }
+    }
+
+    @Override
+    public int getDifficulty() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

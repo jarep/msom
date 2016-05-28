@@ -89,5 +89,15 @@ public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.enti
     public ProcessingUnit getLastProcessingUnit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public int getExecutionCounter() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getPercentageOfCurrentExecution() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
    
 }

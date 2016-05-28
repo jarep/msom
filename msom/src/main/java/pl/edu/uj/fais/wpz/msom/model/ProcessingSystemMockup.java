@@ -16,6 +16,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
@@ -163,6 +164,26 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     @Override
     public boolean isLocked() {
         return locked;
+    }
+
+    @Override
+    public double getAvgProcessingTimeByType(Type type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getAvgWaitingTimeByType(Type type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getNumberOfGeneratedTasksByType(Type type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getNumberOfFinishedTasksByType(Type type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

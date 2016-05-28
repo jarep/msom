@@ -25,23 +25,6 @@ public interface Type extends IModelObject<TaskType> {
      *
      * @return Integer value represents difficulty
      */
-    public Integer getDifficulty();
-
-    /**
-     * Get the average processing time for tasks of this type in current
-     * simulation.
-     *
-     * @return The number of milliseconds
-     */
-    public Integer getAvgProcessingTime();
-
-    /**
-     * Get the average waiting time for tasks of this type in current
-     * simulation.
-     *
-     *
-     * @return The number of milliseconds
-     */
-    public Integer getAvgWaitingTime();
+    public int getDifficulty();
 
 }

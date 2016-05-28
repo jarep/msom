@@ -76,7 +76,7 @@ public interface TaskDispatcher  extends IModelObject<ControllerUnit> {
     public void definePath(Path path);
 
     /**
-     * Get processing paths coming out form this task dispatcher.
+     * Get processing paths coming out from this task dispatcher.
      *
      * @return List of paths
      */
