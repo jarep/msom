@@ -1,0 +1,54 @@
+  <header id="tmp-header">
+
+</header>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <h1 class="page-header">Processing Systems</h1>
+      <p class="lead"></p>
+      <h3>Processing System <strong>${processingSystem.name}</strong></h3>
+      <span>Temporary buttons:</span>
+      <a href="/msom/processingsystem/reset/${processingSystem.id}">Reset</a> |
+      <a href="/msom/processingsystem/simulate/${processingSystem.id}">Next simulation step</a>
+      <br/>
+      <span>Proposed buttons:</span>
+      <a href="#">Start simulation</a> |
+      <a href="#">Stop simulation</a> |
+      <a href="#">Clean simulation data and unlock processing system</a>
+
+      <div class="processing-container">
+        <div class="task-dispatcher">
+          <h4>name</h4>
+          <div class="processing-units">
+            <h5>Processing units:</h5>
+            <ul>
+              <li>
+                <p><strong>${processingUnit.name}</strong> cores efficiency</p>
+                <p class="simulation-parameters">
+                  Fake simulation:
+                  <span> Queue Length: <em>${processingUnit.queueLength}</em> </span>
+                  <span> Queue Value: <em>${processingUnit.queueValue}</em> </span>
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <nav id="tmp-nav">
+        <ul class="nav">
+          <li><a href="http://localhost:8080/msom/index.html">Home</a></li>
+          <li><a href="http://localhost:8080/msom/tasktypes">Task Types</a></li>
+          <li><a href="http://localhost:8080/msom/tasks">Tasks</a></li>
+          <li><a href="http://localhost:8080/msom/modules">Modules Management</a></li>
+          <li><a href="http://localhost:8080/msom/distributions">Probability Management</a></li>
+          <li><a href="http://localhost:8080/msom/controllerunits">Controller Units</a></li>
+          <li><a href="http://localhost:8080/msom/models">Models</a></li>
+          <li class="nav-divider"></li>
+          <li><a href="http://localhost:8080/msom/processingsystem">Processing Systems</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
