@@ -48,7 +48,7 @@ public class ProcessingSystemController {
 
     @RequestMapping(value = "/processingsystem", method = RequestMethod.GET)
     public String showAllProcessingSystems(Model model) {
-        setProcessingSystemTool();
+        setProcessingSystemToolIfDoesNotExist();
 
         List<ProcessingSystem> processingSystems = processingSystemTool.getAllProcessingSystems();
         model.addAttribute("processingSystems", processingSystems);
@@ -57,7 +57,7 @@ public class ProcessingSystemController {
 
     @RequestMapping(value = "/processingsystem/view/{id}", method = RequestMethod.GET)
     public String viewProcessingSystem(@PathVariable("id") long id, Model model) {
-        setProcessingSystemTool();
+        setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
@@ -89,7 +89,7 @@ public class ProcessingSystemController {
 
     @RequestMapping(value = "/processingsystem/reset/{id}", method = RequestMethod.GET)
     public String resetProcessingSystem(@PathVariable("id") long id, Model model) {
-        setProcessingSystemTool();
+        setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.reloadProcessingSystem(id);
 
@@ -103,10 +103,12 @@ public class ProcessingSystemController {
         return "processingsystem/simulate";
     }
 
-    private void setProcessingSystemTool() {
+    private void setProcessingSystemToolIfDoesNotExist() {
         if (processingSystemTool == null) {
-            processingSystemTool = new ProcessingSystemTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            setProcessingSystemTool();
         }
     }
-
+    private void setProcessingSystemTool() {
+            processingSystemTool = new ProcessingSystemTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+    }
 }
