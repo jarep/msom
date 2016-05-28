@@ -69,8 +69,7 @@ public class ProcessingSystemTool {
         for (Model m : models) {
             Long id = m.getId();
             if (!isProcessingSystemOnLocalList(id)) {
-                ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-                processingSystem.setEntityObject(m);
+                ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
                 localProcessingSystems.add(processingSystem);
             }
         }
