@@ -5,6 +5,8 @@
  */
 package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
+import java.util.List;
+import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 
 /**
@@ -12,7 +14,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
  *
  * @author jarep
  */
-public interface ProcessingUnit {
+public interface ProcessingUnit extends IModelObject<Module> {
 
     /**
      * Set name for this Processing Unit
@@ -27,6 +29,14 @@ public interface ProcessingUnit {
      * @return Processing Unit name
      */
     public String getName();
+
+    /**
+     * Return identity number for this Processing Unit
+     *
+     * @return Processing Unit ID
+     */
+    @Override
+    public Long getId();
 
     /**
      * Set Processing Unit efficiency
@@ -71,6 +81,13 @@ public interface ProcessingUnit {
     public void removeType(Type type);
 
     /**
+     * Get list of types which can be processed in this processing unit.
+     *
+     * @return Available types
+     */
+    public List<Type> getAvailableTypes();
+
+    /**
      * Assign given Task Dispatcher to this Processing Unit.
      *
      * @param taskDispatcher
@@ -100,5 +117,47 @@ public interface ProcessingUnit {
      * @return Queue value
      */
     public int getQueueValue();
+
+    /**
+     * Get list of waiting tasks in this processing unit
+     *
+     * @return list of tasks
+     */
+    public List<Task> getWaitingTasks();
+
+    /**
+     * Get list of currently processing tasks
+     *
+     * @return list of tasks
+     */
+    public List<Task> getProcessingTasks();
+
+    /**
+     * Get number of currently processing tasks
+     *
+     * @return No. of processing tasks
+     */
+    public int getNumberOfProcessingTasks();
+
+    /**
+     * Get average percentage of execution currently processing tasks.
+     *
+     * @return execution percentage
+     */
+    public double getPercentOfExecutionCurrentTasks();
+
+    /**
+     * Get average waiting time in the queue
+     *
+     * @return average waiting time
+     */
+    public int getAvgWaitingTime();
+
+    /**
+     * Get average processing time.
+     *
+     * @return average processing time
+     */
+    public int getAvgProcessingTime();
 
 }

@@ -7,6 +7,7 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
 import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
+import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
@@ -17,7 +18,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
  *
  * @author jarep
  */
-public interface ProcessingSystem {
+public interface ProcessingSystem extends IModelObject<Model> {
 
     /**
      * Set name for this Processing System
@@ -34,13 +35,6 @@ public interface ProcessingSystem {
     public String getName();
 
     /**
-     * Return identity number for this Processing System
-     *
-     * @return Processing System ID
-     */
-    public Long getId();
-
-    /**
      * Start simulation. Validate Processing System before start.
      *
      * @return {@code true} if successfully started, otherwise {@code false}
@@ -51,6 +45,13 @@ public interface ProcessingSystem {
      * Stop simulation.
      */
     public void stopSimulation();
+
+    /**
+     * Check that this Processing System can be modified.
+     *
+     * @return {@code true} if locked, otherwise {@code false}
+     */
+    public boolean isLocked();
 
     /**
      * Create new Task Dispatcher and assign to this Processing System.
@@ -126,5 +127,39 @@ public interface ProcessingSystem {
      * @return Type of distribution
      */
     public DistributionType getDistributionType();
+
+    /**
+     * Get the average processing time for tasks of given type in current
+     * simulation.
+     *
+     * @param type Type of task
+     * @return The number of milliseconds
+     */
+    public double getAvgProcessingTimeByType(Type type);
+
+    /**
+     * Get the average waiting time for tasks of given type in current
+     * simulation.
+     *
+     * @param type Type of task
+     * @return The number of milliseconds
+     */
+    public double getAvgWaitingTimeByType(Type type);
+
+    /**
+     * Get number of generated tasks of given type.
+     *
+     * @param type Type of task
+     * @return
+     */
+    public int getNumberOfGeneratedTasksByType(Type type);
+
+    /**
+     * Get number of finished tasks of given type.
+     *
+     * @param type Type of task
+     * @return
+     */
+    public int getNumberOfFinishedTasksByType(Type type);
 
 }

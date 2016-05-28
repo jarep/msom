@@ -13,6 +13,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.Path;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
@@ -29,7 +30,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class TaskDispatcherMockup implements TaskDispatcher {
+public class TaskDispatcherMockup extends AbstractModelObject<ControllerUnit> implements TaskDispatcher {
 
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
@@ -39,11 +40,9 @@ public class TaskDispatcherMockup implements TaskDispatcher {
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
-    private ControllerUnit entityObject;
-
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
 
-    public TaskDispatcherMockup(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    public TaskDispatcherMockup(ControllerUnit entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
@@ -51,39 +50,58 @@ public class TaskDispatcherMockup implements TaskDispatcher {
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        setEntityObject(entityObject);
     }
 
-    public ControllerUnit getEntityObject() {
-        return entityObject;
+    @Override
+    public void reload() {
+        reloadEntityObcject();
+        reloadProcessingUnits();
     }
 
-    public void setEntityObject(ControllerUnit entityObject) {
-        this.entityObject = entityObject;
-        reloadTaskDispatcher();
+    private void reloadEntityObcject() {
+        if (getEntityObject() != null) {
+            controllerUnitService.refresh(getEntityObject());
+        }
     }
 
-    public void reloadTaskDispatcher() {
-        if (entityObject != null) {
-            List<Module> modulesByControllerUnit = moduleService.getModulesByControllerUnit(entityObject);
-            processingUnits.clear();
+    private void reloadProcessingUnits() {
+        processingUnits.clear();
+        if (getEntityObject() != null) {
+            List<Module> modulesByControllerUnit = moduleService.getModulesByControllerUnit(getEntityObject());
             for (Module m : modulesByControllerUnit) {
-                ProcessingUnitMockup p = new ProcessingUnitMockup(controllerUnitService, moduleService, taskService, taskTypeService);
-                p.setEntityObject(m);
+                ProcessingUnitMockup p = new ProcessingUnitMockup(m, controllerUnitService, moduleService, taskService, taskTypeService);
                 processingUnits.add(p);
             }
         }
     }
 
     @Override
+    public void save() {
+        saveEntityObject();
+        saveProcessingUnits();
+    }
+
+    private void saveEntityObject() {
+        if (getEntityObject() != null) {
+            controllerUnitService.update(getEntityObject());
+        }
+    }
+
+    private void saveProcessingUnits() {
+        for(ProcessingUnit p : processingUnits){
+            p.save();
+        }
+    }
+
+    @Override
     public void setName(String name) {
-        entityObject.setName(name);
-        // update ...
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        getEntityObject().setName(name);
     }
 
     @Override
     public String getName() {
-        return entityObject.getName();
+        return getEntityObject().getName();
     }
 
     @Override
@@ -159,6 +177,16 @@ public class TaskDispatcherMockup implements TaskDispatcher {
 
     @Override
     public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void definePath(Path path) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Path> getComingOutPaths() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

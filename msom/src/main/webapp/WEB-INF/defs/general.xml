@@ -155,4 +155,8 @@
         <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/view.jsp" />
     </definition>
     
+    <definition name="processingsystem/simulate" extends="processingsystem">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/simulate.jsp" />
+    </definition>
+    
 </tiles-definitions>
