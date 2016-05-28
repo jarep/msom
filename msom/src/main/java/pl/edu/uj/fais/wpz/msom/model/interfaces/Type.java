@@ -5,11 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+
 /**
  *
  * @author jarep
  */
-public interface Type {
+public interface Type extends IModelObject<TaskType> {
 
     /**
      * Get name of type

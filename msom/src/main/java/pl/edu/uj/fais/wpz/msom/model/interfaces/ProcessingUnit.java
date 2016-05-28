@@ -5,6 +5,8 @@
  */
 package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
+import java.util.List;
+import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 
 /**
@@ -12,8 +14,8 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
  *
  * @author jarep
  */
-public interface ProcessingUnit {
-
+public interface ProcessingUnit extends IModelObject<Module> {
+    
     /**
      * Set name for this Processing Unit
      *
@@ -27,7 +29,7 @@ public interface ProcessingUnit {
      * @return Processing Unit name
      */
     public String getName();
-    
+
     /**
      * Return identity number for this Processing Unit
      *
@@ -76,6 +78,13 @@ public interface ProcessingUnit {
      * @param type Type to not support
      */
     public void removeType(Type type);
+
+    /**
+     * Get list of types which can be processed in this processing unit.
+     *
+     * @return Available types
+     */
+    public List<Type> getAvailableTypes();
 
     /**
      * Assign given Task Dispatcher to this Processing Unit.

@@ -23,9 +23,9 @@
                         <a class=" btn-primary btn-sm" href="#">Edit unit</a>
                         <h6>Available types</h6>
                         <ul>
-                            <li>Type A < <a href="#">Remove</a> > </li>
-                            <li>Type B < <a href="#">Remove</a> > </li>
-                            <li> Add new {select} ... </li>
+                            <c:forEach items="${processingUnit.getAvailableTypes()}" var="availableType">
+                                <li>${availableType.name} <a href="#">Remove</a> ></li>
+                            </c:forEach>
                         </ul>
                     </div>
                 </c:forEach>

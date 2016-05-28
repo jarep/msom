@@ -5,8 +5,12 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
@@ -21,32 +25,60 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingUnitMockup implements ProcessingUnit {
+public class ProcessingUnitMockup extends AbstractModelObject<Module> implements ProcessingUnit {
 
     private final ControllerUnitService controllerUnitService;
     private final ModuleService moduleService;
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
-    private Module entityObject;
-
     private final Random generator = new Random();
     private int fakeQueueLength;
     private int fakeTaskDifficulty;
 
-    public ProcessingUnitMockup(ControllerUnitService controllerUnitService, ModuleService moduleService, TaskService taskService, TaskTypeService taskTypeService) {
+    private final List<Type> availableTypes = new ArrayList<>();
+
+    public ProcessingUnitMockup(Module entityObject, ControllerUnitService controllerUnitService, ModuleService moduleService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.moduleService = moduleService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        setEntityObject(entityObject);
     }
 
-    public Module getEntityObject() {
-        return entityObject;
+    @Override
+    public void reload() {
+        reloadEntityObcject();
+        reloadAvailableTypes();
     }
 
-    public void setEntityObject(Module entityObject) {
-        this.entityObject = entityObject;
+    private void reloadEntityObcject() {
+        if (getEntityObject() != null) {
+            moduleService.refresh(getEntityObject());
+        }
+    }
+
+    private void reloadAvailableTypes() {
+        availableTypes.clear();
+        if (getEntityObject() != null) {
+            Set<TaskType> taskTypes = getEntityObject().getTaskTypes();
+            for (TaskType t : taskTypes) {
+                TypeMockup type = new TypeMockup(t, taskTypeService);
+                availableTypes.add(type);
+            }
+        }
+    }
+
+    @Override
+    public void save() {
+        saveEntityObject();
+//        saveTaskTypes();
+    }
+
+    private void saveEntityObject() {
+        if (getEntityObject() != null) {
+            moduleService.update(getEntityObject());
+        }
     }
 
     @Override
@@ -56,12 +88,7 @@ public class ProcessingUnitMockup implements ProcessingUnit {
 
     @Override
     public String getName() {
-        return entityObject.getName();
-    }
-
-    @Override
-    public Long getId() {
-        return entityObject.getId();
+        return getEntityObject().getName();
     }
 
     @Override
@@ -71,7 +98,7 @@ public class ProcessingUnitMockup implements ProcessingUnit {
 
     @Override
     public Integer getEfficiency() {
-        return entityObject.getEfficiency();
+        return getEntityObject().getEfficiency();
     }
 
     @Override
@@ -81,7 +108,7 @@ public class ProcessingUnitMockup implements ProcessingUnit {
 
     @Override
     public Integer getCores() {
-        return entityObject.getCores();
+        return getEntityObject().getCores();
     }
 
     @Override
@@ -95,6 +122,11 @@ public class ProcessingUnitMockup implements ProcessingUnit {
     }
 
     @Override
+    public List<Type> getAvailableTypes() {
+        return availableTypes;
+    }
+
+    @Override
     public void setTaskDispatcher(TaskDispatcher taskDispatcher) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -104,13 +136,18 @@ public class ProcessingUnitMockup implements ProcessingUnit {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * For now it is only mockup - should be implemented
+     */
     @Override
     public int getQueueLength() {
         fakeQueueLength++;
-//        fakeQueueLength = generator.nextInt(15);
         return fakeQueueLength;
     }
 
+    /**
+     * For now it is only mockup - should be implemented
+     */
     @Override
     public int getQueueValue() {
         fakeTaskDifficulty = generator.nextInt(50);

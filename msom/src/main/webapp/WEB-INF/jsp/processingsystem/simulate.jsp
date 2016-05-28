@@ -6,7 +6,7 @@
 <h3>Processing System <strong>${processingSystem.name}</strong></h3>
 <span>Temporary buttons:</span>
 <a href="/msom/processingsystem/reset/${processingSystem.id}">Reset</a> |
-<a href="/msom/processingsystem/view/${processingSystem.id}">Next simulation step</a>
+<a href="/msom/processingsystem/simulate/${processingSystem.id}">Next simulation step</a>
 <br/>
 <span>Proposed buttons:</span>
 <a href="#">Start simulation</a> |
@@ -24,7 +24,10 @@
                     <div class="single-unit">
                         <h6><strong>${processingUnit.name}</strong> [cores: ${processingUnit.cores}] [eff: ${processingUnit.efficiency}]</h6> 
                         <p class="unit-details">
-                            Available types: A, B, C
+                            Available types: 
+                            <c:forEach items="${processingUnit.getAvailableTypes()}" var="availableType">
+                                <span>${availableType.name}, </span>
+                            </c:forEach>
                         </p>
                         <div class="tasks-box">
                             <p class="simulation-parameters">

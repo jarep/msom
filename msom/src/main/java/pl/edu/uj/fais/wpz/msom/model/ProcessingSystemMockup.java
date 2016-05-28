@@ -28,7 +28,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingSystemMockup implements ProcessingSystem {
+public class ProcessingSystemMockup extends AbstractModelObject<Model> implements ProcessingSystem {
 
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
@@ -38,11 +38,10 @@ public class ProcessingSystemMockup implements ProcessingSystem {
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
-    private Model entityObject;
-
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
+    private boolean locked = false;
 
-    public ProcessingSystemMockup(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    public ProcessingSystemMockup(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
@@ -50,55 +49,75 @@ public class ProcessingSystemMockup implements ProcessingSystem {
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        setEntityObject(entityObject);
     }
 
-    public Model getEntityObject() {
-        return entityObject;
+    @Override
+    public void reload() {
+        reloadEntityObcject();
+        reloadTaskDispatchers();
     }
 
-    public void setEntityObject(Model entityObject) {
-        this.entityObject = entityObject;
-        reloadProcessingSystem();
+    private void reloadEntityObcject() {
+        if (getEntityObject() != null) {
+            modelService.refresh(getEntityObject());
+        }
     }
 
-    public void reloadProcessingSystem() {
-        if (entityObject != null) {
-            taskDispatchers.clear();
-
-            List<ControllerUnit> controllersByModel = controllerUnitService.getControllersByModel(entityObject);
+    private void reloadTaskDispatchers() {
+        taskDispatchers.clear();
+        if (getEntityObject() != null) {
+            List<ControllerUnit> controllersByModel = controllerUnitService.getControllersByModel(getEntityObject());
             for (ControllerUnit controllerUnit : controllersByModel) {
-                TaskDispatcherMockup td = new TaskDispatcherMockup(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-                td.setEntityObject(controllerUnit);
+                TaskDispatcherMockup td = new TaskDispatcherMockup(controllerUnit, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
                 taskDispatchers.add(td);
             }
         }
     }
 
     @Override
-    public void setName(String name) {
-        entityObject.setName(name);
-        // update ...
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save() {
+        saveEntityObject();
+        saveTaskDispatchers();
+    }
+
+    private void saveEntityObject() {
+        if (getEntityObject() != null) {
+            modelService.update(getEntityObject());
+        }
+    }
+
+    private void saveTaskDispatchers() {
+        for (TaskDispatcher td : taskDispatchers) {
+            td.save();
+        }
     }
 
     @Override
-    public Long getId() {
-        return entityObject.getId();
+    public void setName(String name) {
+        getEntityObject().setName(name);
     }
 
     @Override
     public String getName() {
-        return entityObject.getName();
+        return getEntityObject().getName();
     }
 
+    /**
+     * For now it is only mockup - should be implemented
+     */
     @Override
     public boolean startSimulation() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        locked = true;
+        return locked;
     }
 
+    /**
+     * For now it is only mockup - should be implemented
+     */
     @Override
     public void stopSimulation() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        locked = false;
     }
 
     @Override
@@ -139,6 +158,11 @@ public class ProcessingSystemMockup implements ProcessingSystem {
     @Override
     public DistributionType getDistributionType() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isLocked() {
+        return locked;
     }
 
 }

@@ -57,8 +57,7 @@ public class ProcessingSystemTool {
         localProcessingSystems.clear();
         List<Model> models = modelService.findAll();
         for (Model m : models) {
-            ProcessingSystemMockup p = new ProcessingSystemMockup(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-            p.setEntityObject(m);
+            ProcessingSystemMockup p = new ProcessingSystemMockup(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
             localProcessingSystems.add(p);
         }
     }
@@ -68,8 +67,7 @@ public class ProcessingSystemTool {
 
         Model model = modelService.find(id);
         if (model != null) {
-            ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-            processingSystem.setEntityObject(model);
+            ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
             localProcessingSystems.add(processingSystem);
             return processingSystem;
         }
@@ -94,8 +92,7 @@ public class ProcessingSystemTool {
         }
         Model model = modelService.find(id);
         if (model != null) {
-            ProcessingSystemMockup system = new ProcessingSystemMockup(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-            system.setEntityObject(model);
+            ProcessingSystemMockup system = new ProcessingSystemMockup(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
             localProcessingSystems.add(system);
             return system;
         }

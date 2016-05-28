@@ -100,7 +100,7 @@ public class ProcessingSystemController {
 
         model.addAttribute("processingSystem", processingSystem);
 
-        return "processingsystem/view";
+        return "processingsystem/simulate";
     }
 
     private void setProcessingSystemTool() {
