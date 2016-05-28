@@ -11,7 +11,7 @@ import { SimulateComponent} from './+simulate/simulate.component'
   directives: [ROUTER_DIRECTIVES ]
 })
 @Routes([
-  {path: '/simulate', component: SimulateComponent},
+  {path: '/simulate/:id', component: SimulateComponent},
   {path: '*',        component: SimulateComponent}
 ])
 
@@ -20,7 +20,6 @@ export class MsomAngular2AppComponent {
 
   }
   ngOnInit() {
-    this.router.navigate(['/simulate']);
   }
   title = 'msom-angular2 works!';
 }
