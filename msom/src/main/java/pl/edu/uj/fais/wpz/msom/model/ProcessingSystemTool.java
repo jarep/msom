@@ -46,11 +46,61 @@ public class ProcessingSystemTool {
     }
 
     public List<ProcessingSystem> getAllProcessingSystems() {
+        updateProcessingSystemsList();
         return localProcessingSystems;
     }
 
     public ProcessingSystem reloadProcessingSystem(ProcessingSystem processingSystemToReload) {
         return reloadProcessingSystemFromDatabase(processingSystemToReload.getId());
+    }
+
+    /**
+     * Get new models from database if exist and remove no longer exist models.
+     * Does not change local data for processing systems if still exist in
+     * database.
+     */
+    private void updateProcessingSystemsList() {
+        getNewProcessingSystemsFromDatabase();
+        removeDoesNotExistsProcessingSystems();;
+    }
+
+    private void getNewProcessingSystemsFromDatabase() {
+        List<Model> models = modelService.findAll();
+        for (Model m : models) {
+            Long id = m.getId();
+            if (!isProcessingSystemOnLocalList(id)) {
+                ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+                processingSystem.setEntityObject(m);
+                localProcessingSystems.add(processingSystem);
+            }
+        }
+    }
+
+    private void removeDoesNotExistsProcessingSystems() {
+        List<ProcessingSystem> systemsToRemove = new ArrayList<>();
+        for (ProcessingSystem p : localProcessingSystems) {
+            if (!isProcessingSystemInDatabase(p.getId())) {
+                systemsToRemove.add(p);
+            }
+        }
+        localProcessingSystems.removeAll(systemsToRemove);
+    }
+
+    private boolean isProcessingSystemOnLocalList(Long id) {
+        for (ProcessingSystem p : localProcessingSystems) {
+            if (Objects.equals(p.getId(), id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isProcessingSystemInDatabase(Long id) {
+        Model find = modelService.find(id);
+        if (find != null) {
+            return true;
+        }
+        return false;
     }
 
     private void reloadProcessingSystemsFromDatabase() {

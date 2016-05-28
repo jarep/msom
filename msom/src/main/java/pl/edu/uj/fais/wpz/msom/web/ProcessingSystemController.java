@@ -48,7 +48,7 @@ public class ProcessingSystemController {
 
     @RequestMapping(value = "/processingsystem", method = RequestMethod.GET)
     public String showAllProcessingSystems(Model model) {
-        setProcessingSystemTool();
+        setProcessingSystemToolIfDoesNotExist();
 
         List<ProcessingSystem> processingSystems = processingSystemTool.getAllProcessingSystems();
         model.addAttribute("processingSystems", processingSystems);
