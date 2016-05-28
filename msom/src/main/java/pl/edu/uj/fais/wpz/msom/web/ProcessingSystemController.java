@@ -88,9 +88,7 @@ public class ProcessingSystemController {
     }
 
     private void setProcessingSystemTool() {
-        if (processingSystemTool == null) {
             processingSystemTool = new ProcessingSystemTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-        }
     }
 
 }
