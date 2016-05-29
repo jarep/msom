@@ -31,13 +31,8 @@
       </div>
       <div id="monitoring">
         <h4>Types statistics</h4>
-        <div *ngFor="let tasks of getTasksByType()" class="type">
-          <h4>Type A</h4>
-          <p>Generated tasks: <strong>75</strong></p>
-          <p>Finished tasks: <strong>37</strong></p>
-          <p>Avg. waiting time: <strong>485.2</strong></p>
-          <p>Avg. processing time: <strong>3.5</strong></p>
-        </div>
+        <app-task-stats *ngFor="let tasks of getTasksByType()" [tasks]="tasks" class="type">
+        </app-task-stats>
       </div>
       <div id="footer">
         <h4>Explanation of shortcuts</h4>

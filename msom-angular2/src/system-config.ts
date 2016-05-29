@@ -25,6 +25,7 @@ const barrels: string[] = [
 
   // Thirdparty barrels.
   'rxjs',
+  'lodash',
 
   // App specific barrels.
   'app',
@@ -47,7 +48,8 @@ System.config({
   map: {
     '@angular': 'vendor/@angular',
     'rxjs': 'vendor/rxjs',
-    'main': 'main.js'
+    'main': 'main.js',
+    'lodash' : 'vendor/lodash'
   },
   packages: cliSystemConfigPackages
 });

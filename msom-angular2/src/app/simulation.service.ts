@@ -50,7 +50,7 @@ var getTaskDispatcher : () => TaskDispatcher = () => {
 var getTask : () => Task = () => {
     return {
         id: "10",
-        type: Math.random() > 0.33 ? "A" : Math.random() > 0.5 ? "B" : "C" ,
+        type: Math.random() > 0.66 ? "A" : Math.random() > 0.5 ? "B" : "C" ,
         processed : +(Math.random() * 100).toFixed(2),
         totalWaitingTime : +(Math.random() * 100).toFixed(2),
         totalProcessingTime :+(Math.random() * 100).toFixed(2),

@@ -5,7 +5,7 @@ import { ROUTER_PROVIDERS } from '@angular/router';
 import { SimulationService } from './app/simulation.service'
 import {HTTP_PROVIDERS } from '@angular/http'
 import "rxjs/Rx";
-
+import "lodash";
 if (environment.production) {
   enableProdMode();
 }

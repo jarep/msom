@@ -14,7 +14,8 @@ module.exports = function(defaults) {
       '@angular/**/*.+(js|js.map)',  
       'bootstrap/dist/**/*.+(js|css|)',
       'bootstrap/dist/fonts/*',
-      'jquery/dist/jquery.js'
+      'jquery/dist/jquery.js',
+      'lodash/**/*.js'
     ]
   });
 };
