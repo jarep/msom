@@ -16,7 +16,7 @@ export class SimulationService {
           //        return res.json()
           //    }
           //)
-          return Observable.interval(1000).map(x => 
+          return Observable.interval(500).map(() => 
               getProcessingSystem()
           )
       }
@@ -32,7 +32,7 @@ var getProcessingSystem : () => ProcessingSystem = () => {
 var getTaskDispatcher : () => TaskDispatcher = () => {
     return {
         id : "123",
-        name : "some name",
+        name : "Controller 1",
         processingUnits : [
             {
                 id : "567",
@@ -40,7 +40,7 @@ var getTaskDispatcher : () => TaskDispatcher = () => {
                 cores : 3,
                 efficiency : 7,
                 availableTypes : ["A","B","C"],
-                tasks: [getTask(), getTask(),getTask()]
+                tasks: [getTask(), getTask(),getTask(),getTask(),getTask(),getTask()]
             }
             
         ]
@@ -49,12 +49,12 @@ var getTaskDispatcher : () => TaskDispatcher = () => {
 
 var getTask : () => Task = () => {
     return {
-        id: (Math.round(Math.random() * 100)).toString(),
-        type: "A",
+        id: "10",
+        type: Math.random() > 0.33 ? "A" : Math.random() > 0.5 ? "B" : "C" ,
         processed : +(Math.random() * 100).toFixed(2),
         totalWaitingTime : +(Math.random() * 100).toFixed(2),
         totalProcessingTime :+(Math.random() * 100).toFixed(2),
-        processingCount : 2,
-        inProgress: true
+        processingCount : +Math.round(Math.random() * 10),
+        inProgress: Math.random() > 0.5 ? true : false
     }
 }

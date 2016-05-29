@@ -23,56 +23,20 @@
                 Available types:
                 <span *ngFor="let type of processingUnit.availableTypes">{{type}}, </span>
               </p>
-              <div class="tasks-box">
-                <p class="simulation-parameters">
-                  <span> Tasks in progress <em>4</em> </span> <br/>
-                  <span> Processed  <em>51.50 %</em> </span> <br/>
-                  <span> Avg. processing time: <em>48</em> </span>
-                </p>
-                <p class="details-toogle"> - Show/hide details - </p>
-                <ul class="tasks-list">
-                  <li *ngFor="let task of processingUnit.tasks">ID {{task.id}} - Task1 [{{task.type}}] {{task.processed}}% {TWT: {{task.totalWaitingTime}}; TPT: {{task.totalProcessingTime}}; PC: {{task.processingCount}}}</li>
-                </ul>
-              </div>
-              <div class="tasks-box">
-                <p class="simulation-parameters">
-                  <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
-                  <span> Queue Value: <em>${processingUnit.queueValue}</em> </span> <br/>
-                  <span> Avg. waiting time: <em>48</em> </span>
-                </p>
-                <p class="details-toogle"> - Show/hide details - </p>
-                <ul class="tasks-list">
-                  <li *ngFor="let task of processingUnit.tasks">ID {{task.id}} - Task1 [{{task.type}}] {{task.processed}}% {TWT: {{task.totalWaitingTime}}; TPT: {{task.totalProcessingTime}}; PC: {{task.processingCount}}}</li>
-                </ul>
-              </div>
+              <app-task-box [tasks]="getTasksInProgress(processingUnit.tasks)" ></app-task-box>
+              <app-queue-box [tasks]="getTasksInQueue(processingUnit.tasks)"> </app-queue-box>
             </div>
           </div>
         </div>
       </div>
       <div id="monitoring">
         <h4>Types statistics</h4>
-        <div class="type">
+        <div *ngFor="let tasks of getTasksByType()" class="type">
           <h4>Type A</h4>
           <p>Generated tasks: <strong>75</strong></p>
           <p>Finished tasks: <strong>37</strong></p>
           <p>Avg. waiting time: <strong>485.2</strong></p>
           <p>Avg. processing time: <strong>3.5</strong></p>
-        </div>
-
-        <div class="type">
-          <h4>Type B</h4>
-          <p>Generated tasks: <strong>456</strong></p>
-          <p>Finished tasks: <strong>357</strong></p>
-          <p>Avg. waiting time: <strong>127</strong></p>
-          <p>Avg. processing time: <strong>0.5</strong></p>
-        </div>
-
-        <div class="type">
-          <h4>Type C</h4>
-          <p>Generated tasks: <strong>3</strong></p>
-          <p>Finished tasks: <strong>1</strong></p>
-          <p>Avg. waiting time: <strong>245</strong></p>
-          <p>Avg. processing time: <strong>55.2</strong></p>
         </div>
       </div>
       <div id="footer">
