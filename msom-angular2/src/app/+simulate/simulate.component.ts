@@ -19,6 +19,9 @@ export class SimulateComponent implements OnInit, OnActivate {
  routerOnActivate(curr: RouteSegment): void {
     let id = curr.getParam('id');
     console.log(id);
-    this.simulationService.getSimulationState(id).subscribe(x => this.processingSystem = x);
+    this.simulationService.getSimulationState(id).subscribe(x => {
+            console.log(x);
+      this.processingSystem = x;
+    });
   }
 }

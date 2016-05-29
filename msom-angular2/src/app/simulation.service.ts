@@ -16,10 +16,9 @@ export class SimulationService {
           //        return res.json()
           //    }
           //)
-          return Observable.create((subscriber) => {
-              subscriber.next(getProcessingSystem());
-              subscriber.complete();
-          })
+          return Observable.interval(1000).map(x => 
+              getProcessingSystem()
+          )
       }
 }
 var getProcessingSystem : () => ProcessingSystem = () => {
