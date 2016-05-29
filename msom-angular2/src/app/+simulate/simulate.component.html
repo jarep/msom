@@ -1,7 +1,7 @@
  <h1 class="page-header">Processing Systems</h1>
       <p class="lead">
       </p>
-      <h3>Processing System <strong>${processingSystem.name}</strong></h3>
+      <h3>Processing System <strong>{{processingSystem.name}}</strong></h3>
       <span>Temporary buttons:</span>
       <a href="/msom/processingsystem/reset/${processingSystem.id}">Reset</a> |
       <a href="/msom/processingsystem/simulate/${processingSystem.id}">Next simulation step</a>
@@ -11,21 +11,16 @@
       <a href="#">Stop simulation</a> |
       <a href="#">Clean simulation data and unlock processing system</a>
 
-
       <div class="processing-container">
-        <!-- <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher"> -->
-        <div class="task-dispatcher">
-          <h4>${taskDispatcher.name}</h4>
+        <div *ngFor="let taskDispatcher of processingSystem.taskDispatchers" class="task-dispatcher">
+          <h4>{{taskDispatcher.name}}</h4>
           <div class="processing-units">
             <h5>Processing units:</h5>
-            <!--  <c:forEach items="${taskDispatcher.getProcessingUnits()}" var="processingUnit"> -->
-            <div class="single-unit">
-              <h6><strong>${processingUnit.name}</strong> [cores: ${processingUnit.cores}] [eff: ${processingUnit.efficiency}]</h6>
+            <div class="single-unit" *ngFor="let processingUnit of taskDispatcher.processingUnits">
+              <h6><strong>{{processingUnit.name}}</strong> [cores: {{processingUnit.cores}}] [eff: {{processingUnit.efficiency}}]</h6>
               <p class="unit-details">
                 Available types:
-                <!--  <c:forEach items="${processingUnit.getAvailableTypes()}" var="availableType"> -->
-                <span>${availableType.name}, </span>
-                <!--  </c:forEach> -->
+                <span *ngFor="let type of processingUnit.availableTypes">{{type}}, </span>
               </p>
               <div class="tasks-box">
                 <p class="simulation-parameters">
@@ -35,10 +30,7 @@
                 </p>
                 <p class="details-toogle"> - Show/hide details - </p>
                 <ul class="tasks-list">
-                  <li>ID 47 - Task1 [A] 55.01% {TWT: 254; TPT: 0; PC: 0}</li>
-                  <li>ID 48 - Task2 [B] 05.54% {TWT: 124; TPT: 7; PC: 1}</li>
-                  <li>ID 50 - Task1 [A] 78.12% {TWT: 455; TPT: 0; PC: 0}</li>
-                  <li>ID 57 - Task5 [A] 38.14% {TWT: 156; TPT: 12; PC: 2}</li>
+                  <li *ngFor="let task of processingUnit.tasks">ID {{task.id}} - Task1 [{{task.type}}] {{task.processed}}% {TWT: {{task.totalWaitingTime}}; TPT: {{task.totalProcessingTime}}; PC: {{task.processingCount}}}</li>
                 </ul>
               </div>
               <div class="tasks-box">
@@ -49,21 +41,12 @@
                 </p>
                 <p class="details-toogle"> - Show/hide details - </p>
                 <ul class="tasks-list">
-                  <li>ID 65 - Task1 [A] {TWT: 2155; TPT: 0; PC: 0}</li>
-                  <li>ID 66 - Task2 [B] {TWT: 123; TPT: 0; PC: 0}</li>
-                  <li>ID 67 - Task1 [A] {TWT: 456; TPT: 125; PC: 3}</li>
-                  <li>ID 69 - Task5 [A] {TWT: 68; TPT: 0; PC: 0}</li>
-                  <li>ID 72 - Task1 [A] {TWT: 1544; TPT: 356; PC: 2}</li>
-                  <li>ID 73 - Task5 [A] {TWT: 14; TPT: 0; PC: 0}</li>
-                  <li> - - - - - - ................. - - - - - - </li>
+                  <li *ngFor="let task of processingUnit.tasks">ID {{task.id}} - Task1 [{{task.type}}] {{task.processed}}% {TWT: {{task.totalWaitingTime}}; TPT: {{task.totalProcessingTime}}; PC: {{task.processingCount}}}</li>
                 </ul>
               </div>
-
             </div>
-            <!--  </c:forEach> -->
           </div>
         </div>
-        <!--   </c:forEach>-->
       </div>
       <div id="monitoring">
         <h4>Types statistics</h4>

@@ -1,3 +1,8 @@
+export interface ProcessingSystem{
+    id: string;
+    name: string;
+    taskDispatchers : TaskDispatcher []
+}
 export interface TaskDispatcher{
     id: string;
     name: string;
@@ -5,13 +10,11 @@ export interface TaskDispatcher{
 }
 export interface ProcessingUnit{
     id: string;
+    name: string;
     cores : number;
     efficiency : number;
-    availableTypes : AvailableType[]
+    availableTypes : string[]
     tasks : Task[]
-}
-export interface AvailableType{
-    name: string;
 }
 export interface Task{
     id: string;
@@ -20,5 +23,5 @@ export interface Task{
     totalWaitingTime : number;
     totalProcessingTime :number;
     processingCount : number;
-    isProgress: boolean;
+    inProgress: boolean;
 }
