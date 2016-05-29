@@ -10,8 +10,8 @@ export class SimulationService {
   }
   getSimulationState(id : string) : Observable<TaskDispatcher[]>{
           return this.http.get(
-              `http://localhost:8080/msom/processingsystem/simulate?id=${id}`
-          ).map(
+              `http://localhost:8080/msom/processingsystem/simulate/${id}`
+              ).map(
               (res:Response) => {
                   return res.json()
               }

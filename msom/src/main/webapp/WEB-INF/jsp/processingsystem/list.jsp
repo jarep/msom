@@ -16,7 +16,7 @@
         <tr>
             <td>${processingSystem.name}</td>
             <td><a href="/msom/processingsystem/view/${processingSystem.id}">View / Edit</a></td>
-            <td><a href="/msom/processingsystem/simulate/${processingSystem.id}">Simulate</a></td>
+            <td><a href="http://localhost:4200/simulate/${processingSystem.id}">Simulate</a></td>
         </tr>
     </c:forEach>
 </tr>

@@ -6,8 +6,9 @@ import { SimulateComponent} from './+simulate/simulate.component'
 @Component({
   moduleId: module.id,
   selector: 'msom-angular2-app',
-  templateUrl: 'msom-angular2.component.html',
-  styleUrls: ['msom-angular2.component.css'],
+  template : `
+        <router-outlet></router-outlet>
+      <a [routerLink]="['/simulate',12]"></a>`,
   directives: [ROUTER_DIRECTIVES ]
 })
 @Routes([
@@ -21,5 +22,4 @@ export class MsomAngular2AppComponent {
   }
   ngOnInit() {
   }
-  title = 'msom-angular2 works!';
 }

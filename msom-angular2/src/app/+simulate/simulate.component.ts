@@ -6,8 +6,7 @@ import { OnActivate, Router, RouteSegment } from '@angular/router';
 @Component({
   moduleId: module.id,
   selector: 'app-simulate',
-  templateUrl: 'simulate.component.html',
-  styleUrls: ['simulate.component.css']
+  templateUrl: 'simulate.component.html'
 })
 export class SimulateComponent implements OnInit, OnActivate {
   taskDispatchers : Observable<TaskDispatcher[]>;
@@ -19,6 +18,6 @@ export class SimulateComponent implements OnInit, OnActivate {
  routerOnActivate(curr: RouteSegment): void {
     let id = curr.getParam('id');
     console.log(id);
-    this.taskDispatchers = this.simulationService.getSimulationState(id);
+    this.simulationService.getSimulationState(id).subscribe(console.log);
   }
 }
