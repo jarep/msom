@@ -35,8 +35,6 @@ export class SimulateComponent implements OnInit, OnActivate {
   getTasksByType(){
     var processingUnits = Array<ProcessingUnit>().concat([],...this.processingSystem.taskDispatchers.map(td => td.processingUnits));
     var tasks = Array<Task>().concat([],...processingUnits.map(x => x.tasks));
-    console.log(_.values(_.groupBy(tasks , (t) => t.type)));
-    //return _.groupBy(tasks , (t) => t.type);
-    return _.values(_.groupBy(tasks , (t) => t.type));
+    return _.values(_.groupBy(_.sortBy(tasks,x => x.type) , (t) => t.type));
   }
 }
