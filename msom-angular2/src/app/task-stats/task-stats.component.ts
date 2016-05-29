@@ -5,7 +5,7 @@ import {processingTimeAvg, tasksWaitingTimeAvg} from '../shared/utils'
   moduleId: module.id,
   selector: 'app-task-stats',
   template: `          <div>
-            <h4>Type A</h4>
+            <h4>Type {{getType()}}</h4>
             <p>Generated tasks: <strong>{{tasks.length}}</strong></p>
             <p>Finished tasks: <strong>{{getFinishedTasksCount()}}</strong></p>
             <p>Avg. waiting time: <strong>{{getAvgWaitingTime()}}</strong></p>
@@ -29,5 +29,8 @@ export class TaskStatsComponent implements OnInit {
   getTasksProcessingTimeAvg() {
     let value = processingTimeAvg(this.tasks);
     return isNaN(+value) ? 0 : value;
+  }
+  getType(){
+    if(this.tasks) return this.tasks[0].type;
   }
 }
