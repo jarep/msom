@@ -37,6 +37,8 @@ public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.enti
     public void reload() {
         reloadEntityObcject();
         currentState = State.IDLE;
+        timeInQueue = 0;
+        timeOfProcessing = 0;
     }
 
     private void reloadEntityObcject() {

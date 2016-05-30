@@ -5,10 +5,14 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
@@ -26,17 +30,25 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  * @author jarep
  */
 public class ProcessingUnitMockup extends AbstractModelObject<Module> implements ProcessingUnit {
+    
+    public enum State {IDLE, PROCESSING}
 
+    // services
     private final ControllerUnitService controllerUnitService;
     private final ModuleService moduleService;
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
-    private final Random generator = new Random();
+    // Simulation tools
+    private State currentState = State.IDLE;
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+    
+    // Mockups
+    private final Random randomGenerator = new Random();
     private int fakeQueueLength;
     private int fakeTaskDifficulty;
 
-    private final List<Type> availableTypes = new ArrayList<>();
+    private final Set<Type> availableTypes = new HashSet();
 
     public ProcessingUnitMockup(Module entityObject, ControllerUnitService controllerUnitService, ModuleService moduleService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
@@ -83,7 +95,10 @@ public class ProcessingUnitMockup extends AbstractModelObject<Module> implements
 
     @Override
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getEntityObject() != null) {
+            getEntityObject().setName(name);
+            moduleService.update(getEntityObject());
+        }
     }
 
     @Override
@@ -93,7 +108,10 @@ public class ProcessingUnitMockup extends AbstractModelObject<Module> implements
 
     @Override
     public void setEfficiency(Integer efficiency) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getEntityObject() != null) {
+               getEntityObject().setEfficiency(efficiency);
+               moduleService.update(getEntityObject());
+           }  
     }
 
     @Override
@@ -103,7 +121,10 @@ public class ProcessingUnitMockup extends AbstractModelObject<Module> implements
 
     @Override
     public void setCores(Integer cores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getEntityObject() != null) {
+               getEntityObject().setCores(cores);
+               moduleService.update(getEntityObject());
+           } 
     }
 
     @Override
@@ -113,22 +134,29 @@ public class ProcessingUnitMockup extends AbstractModelObject<Module> implements
 
     @Override
     public void addType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getEntityObject() != null) {
+               getEntityObject().addTaskType(taskTypeService.find(type.getId()));
+               moduleService.update(getEntityObject());
+        } 
     }
 
     @Override
     public void removeType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       if (getEntityObject() != null) {
+               getEntityObject().removeTaskType(taskTypeService.find(type.getId()));
+               moduleService.update(getEntityObject());
+        }
     }
 
     @Override
     public List<Type> getAvailableTypes() {
-        return availableTypes;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void setTaskDispatcher(TaskDispatcher taskDispatcher) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        getEntityObject().setControllerUnit(controllerUnitService.find(taskDispatcher.getId()));
+        moduleService.update(getEntityObject());
     }
 
     @Override
@@ -150,7 +178,7 @@ public class ProcessingUnitMockup extends AbstractModelObject<Module> implements
      */
     @Override
     public int getQueueValue() {
-        fakeTaskDifficulty = generator.nextInt(50);
+        fakeTaskDifficulty = randomGenerator.nextInt(50);
         fakeTaskDifficulty++;
         return fakeQueueLength * fakeTaskDifficulty;
     }

@@ -31,6 +31,11 @@ public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task
      * @return Integer value represents difficulty
      */
     public Integer getDifficulty();
+    
+    /**
+     * Puts this task to Queued state.
+     */
+    public void queueTask();
 
     /**
      * Process task.
