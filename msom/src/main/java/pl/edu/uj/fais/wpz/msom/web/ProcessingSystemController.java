@@ -73,7 +73,7 @@ public class ProcessingSystemController {
 
     @RequestMapping(value = "/processingsystem/simulate/{id}", method = RequestMethod.GET)
     public String simulateProcessingSystem(@PathVariable("id") long id, Model model) {
-        setProcessingSystemTool();
+        setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
