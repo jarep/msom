@@ -19,11 +19,19 @@ export class SimulationService {
           var processingSystem = getProcessingSystem();
           return Observable.interval(500).map(() => 
                inc(processingSystem)
-          )
+          ).takeWhile(x => !isFinished(x))
       }
 }
+var isFinished = (processingSystem : ProcessingSystem) => {
+    var processingUnits = Array<ProcessingUnit>().concat([],...processingSystem.taskDispatchers.map(td => td.processingUnits));
+    var tasks = Array<Task>().concat([],...processingUnits.map(x => x.tasks));
+    return tasks.find((x:Task) => x.processed < 100) ? false : true;
+}
+
+
 var inc : (processingSystem : ProcessingSystem) => ProcessingSystem = (processingSystem) => {
      processingSystem.taskDispatchers.forEach(x => x.processingUnits.forEach(p => p.tasks.forEach(t => { 
+        if (t.processed >= 100)  { t.processed = 100; t.inProgress = false;  return}
         var inProgress = Math.random() > 0.5 ? true : false;
         t.id =  t.id,
         t.inProgress = inProgress,
