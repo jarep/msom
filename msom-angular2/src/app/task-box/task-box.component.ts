@@ -12,11 +12,26 @@ import {tasksProcessedAvg,processingTimeAvg } from '../shared/utils'
       <span> Avg. processing time: <em>{{getTasksProcessingTimeAvg()}}</em> </span>
     </p>
     <p class="details-toogle" (click)="toggleShow()"> <a>- Show/hide details -</a> </p>
-      <ul *ngIf="show" class="tasks-list">
-        <li *ngFor="let task of tasks">ID {{task.id}} - Task1 [{{task.type}}] {{task.processed}}% {TWT: {{task.totalWaitingTime}}; TPT: {{task.totalProcessingTime}}; PC: {{task.processingCount}}}</li>
-      </ul>
+      <div *ngIf="show" class="tasks-list">
+      <div class="progress" *ngFor="let task of tasks">
+        <div class="progress-bar progress-bar-striped active" [ngClass]="getStyle(task.processed)"  role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': task.processed +'%'}">
+          <span style="color : black">ID {{task.id}} - Task1 [{{task.type}}] {{task.processed}}% {TWT: {{task.totalWaitingTime}}; TPT: {{task.totalProcessingTime}}; PC: {{task.processingCount}}}</span>
+        </div>
+      </div>
+      </div>
   </div>
-              `
+              `,
+styles : [`
+.progress {
+  position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+}`]
 })
 export class TaskBoxComponent implements OnInit {
 @Input() tasks : Task[];
@@ -36,5 +51,14 @@ export class TaskBoxComponent implements OnInit {
   }
   toggleShow(){
     this.toggle.emit({});
+  }
+  getStyle(processed : number){
+      if (processed >= 0 && processed < 33)
+      return 'progress-bar-danger'
+      if (processed >= 33 && processed < 66)
+      return 'progress-bar-warning'
+      if (processed >= 66 && processed < 100)
+      return 'progress-bar-info'
+      return 'progress-bar-success'
   }
 }
