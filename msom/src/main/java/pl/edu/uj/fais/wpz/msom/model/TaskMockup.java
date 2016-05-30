@@ -9,6 +9,7 @@ import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
  *
@@ -16,16 +17,26 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
  */
 public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task> implements Task {
     
+    public enum State {IDLE, QUEUED, IN_PROCESS, FINISHED}
+    
     private final TaskService taskService;
+    private final TaskTypeService taskTypeService;
+    
+    // Task state info parameters
+    private State currentState;
+    private long timeInQueue;
+    private long timeOfProcessing;
 
-    public TaskMockup(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService TaskService) {
-        this.taskService = TaskService;
+    public TaskMockup(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService taskService, TaskTypeService taskTypeService) {
+        this.taskService = taskService;
+        this.taskTypeService = taskTypeService;
         setEntityObject(entityObject);
     }
     
     @Override
     public void reload() {
         reloadEntityObcject();
+        currentState = State.IDLE;
     }
 
     private void reloadEntityObcject() {
@@ -47,7 +58,9 @@ public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.enti
 
     @Override
     public Type getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getEntityObject() != null) {
+          return new TypeMockup(getEntityObject().getTaskType(), taskTypeService);
+        } else return null;
     }
 
     @Override
@@ -61,28 +74,53 @@ public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.enti
     }
 
     @Override
+    public void queueTask() {
+        if (currentState == State.IDLE) {
+            currentState = State.QUEUED;
+            this.timeInQueue = System.currentTimeMillis();
+        } else throw new IllegalStateException("Cannot queue task which is in " + currentState + " state");
+    }
+
+    
+    
+    @Override
     public boolean processTask() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (currentState == State.QUEUED) {
+            // pop from queue
+            currentState = State.IN_PROCESS;
+            // save queue time
+            this.timeInQueue = System.currentTimeMillis() - this.timeInQueue;
+            // start processing timer
+            this.timeOfProcessing =  System.currentTimeMillis();
+            return true;
+        } else throw new IllegalStateException("Cannot process task which is in " + currentState + " state");
     }
 
     @Override
     public void finishTask() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (currentState == State.IN_PROCESS) {
+            currentState = State.FINISHED;
+            this.timeOfProcessing = System.currentTimeMillis() - this.timeOfProcessing;
+        } throw new IllegalStateException("Cannot finish task which is in " + currentState + " state");
     }
 
     @Override
     public boolean isFinished() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.currentState == State.FINISHED;
     }
 
     @Override
     public Integer getProcessingTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (currentState == State.FINISHED) {
+            return (int) this.timeOfProcessing;
+        } else return 0;
     }
 
     @Override
     public Integer getWaitingTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (currentState == State.FINISHED || currentState == State.IN_PROCESS) {
+            return (int) this.timeInQueue;
+        } else return 0;
     }
 
     @Override
