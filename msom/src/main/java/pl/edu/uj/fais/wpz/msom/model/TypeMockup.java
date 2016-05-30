@@ -8,6 +8,7 @@ package pl.edu.uj.fais.wpz.msom.model;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
+import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
  *
@@ -49,9 +50,15 @@ public class TypeMockup extends AbstractModelObject<TaskType> implements Type {
         }
     }
 
+    /**
+     * @return type difficulty if not null. Else returns -1
+     */
     @Override
     public int getDifficulty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getEntityObject() != null) {
+            return taskTypeService.find(getEntityObject().getId()).getDifficulty();
+        }
+        return -1;
     }
 
 }
