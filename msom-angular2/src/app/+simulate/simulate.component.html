@@ -23,8 +23,8 @@
                 Available types:
                 <span *ngFor="let type of processingUnit.availableTypes">{{type}}, </span>
               </p>
-              <app-task-box [tasks]="getTasksInProgress(processingUnit.tasks)" ></app-task-box>
-              <app-queue-box [tasks]="getTasksInQueue(processingUnit.tasks)"> </app-queue-box>
+              <app-task-box [tasks]="getTasksInProgress(processingUnit.tasks)" [show]="show(processingUnit, 'progress')" (toggle)="toggle(processingUnit,'progress')"> </app-task-box>
+              <app-queue-box [tasks]="getTasksInQueue(processingUnit.tasks)"  [show]="show(processingUnit, 'queue')" (toggle)="toggle(processingUnit,'queue')"> </app-queue-box>
             </div>
           </div>
         </div>

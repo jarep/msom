@@ -15,6 +15,7 @@ import {TaskStatsComponent} from '../task-stats/task-stats.component'
 })
 export class SimulateComponent implements OnInit, OnActivate {
   processingSystem : ProcessingSystem;
+  showProcessingUnit = [];
   constructor(private simulationService : SimulationService,private router: Router ) {}
 
   ngOnInit() {
@@ -36,5 +37,15 @@ export class SimulateComponent implements OnInit, OnActivate {
     var processingUnits = Array<ProcessingUnit>().concat([],...this.processingSystem.taskDispatchers.map(td => td.processingUnits));
     var tasks = Array<Task>().concat([],...processingUnits.map(x => x.tasks));
     return _.values(_.groupBy(_.sortBy(tasks,x => x.type) , (t) => t.type));
+  }
+  show(processingUnit : ProcessingUnit, type : string){
+     return this.showProcessingUnit.find(x => x.id == processingUnit.id && type== x.type ) ? false : true;
+  }
+  toggle(processingUnit: ProcessingUnit, type : string){
+    if (!this.show(processingUnit, type)) {
+      _.remove(this.showProcessingUnit, (x) => x.id == processingUnit.id && x.type == type) 
+    } else { 
+      this.showProcessingUnit.push( {id : processingUnit.id, type: type} )
+    }
   }
 }
