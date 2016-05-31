@@ -14,6 +14,7 @@ import {TaskStatsComponent} from '../task-stats/task-stats.component'
   templateUrl: 'simulate.component.html'
 })
 export class SimulateComponent implements OnInit, OnActivate {
+  private id;
   processingSystem : ProcessingSystem;
   showProcessingUnit = [];
   constructor(private simulationService : SimulationService,private router: Router ) {}
@@ -22,8 +23,8 @@ export class SimulateComponent implements OnInit, OnActivate {
       
   }
  routerOnActivate(curr: RouteSegment): void {
-    let id = curr.getParam('id');
-    this.simulationService.getSimulationState(id).subscribe(x => {
+    this.id = curr.getParam('id');
+    this.simulationService.getSimulationState(this.id).subscribe(x => {
       this.processingSystem = x;
     });
   }
@@ -47,5 +48,10 @@ export class SimulateComponent implements OnInit, OnActivate {
     } else { 
       this.showProcessingUnit.push( {id : processingUnit.id, type: type} )
     }
+  }
+  startSimulation(){
+     this.simulationService.startSimulation(this.id).subscribe(x => {
+      this.processingSystem = x;
+    });
   }
 }

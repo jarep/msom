@@ -9,18 +9,37 @@ export class SimulationService {
     
   }
   getSimulationState(id : string) : Observable<ProcessingSystem>{
-          //return this.http.get(
-          //    `http://localhost:8080/msom/processingsystem/simulate/${id}`
-          //    ).map(
-          //    (res:Response) => {
-          //        return res.json()
-          //    }
+          return this.http.get(
+             `http://localhost:8080/msom/api/simulation/${id}`
+             ).map(
+                 (res:Response) =>{
+                     console.log(res);
+                     return res.json();
+                 }
+                 );
           //)
-          var processingSystem = getProcessingSystem();
-          return Observable.interval(500).map(() => 
-               inc(processingSystem)
-          ).takeWhile(x => !isFinished(x))
-      }
+        //   var processingSystem = getProcessingSystem();
+        //   return Observable.interval(500).map(() => 
+        //        inc(processingSystem)
+        //   ).takeWhile(x => !isFinished(x))
+             
+    }
+      startSimulation(id : string) : Observable<ProcessingSystem>{
+          return this.http.post(
+             `http://localhost:8080/msom/api/simulation/start/`, JSON.stringify({'simulationId' : id})
+             ).map(
+                 (res:Response) =>{
+                     console.log(res);
+                     return res.json();
+                 }
+                 );
+          //)
+        //   var processingSystem = getProcessingSystem();
+        //   return Observable.interval(500).map(() => 
+        //        inc(processingSystem)
+        //   ).takeWhile(x => !isFinished(x))
+             
+    }
 }
 var isFinished = (processingSystem : ProcessingSystem) => {
     var processingUnits = Array<ProcessingUnit>().concat([],...processingSystem.taskDispatchers.map(td => td.processingUnits));

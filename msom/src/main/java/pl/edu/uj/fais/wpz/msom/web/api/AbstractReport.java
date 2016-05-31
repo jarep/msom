@@ -12,11 +12,11 @@ package pl.edu.uj.fais.wpz.msom.web.api;
 public class AbstractReport {
 
     private long simulationId;
-    private long entityId;
+    private long id;
 
     public AbstractReport(long simulationId, long entityId) {
         this.simulationId = simulationId;
-        this.entityId = entityId;
+        this.id = entityId;
     }
 
     public long getSimulationId() {
@@ -28,11 +28,11 @@ public class AbstractReport {
     }
 
     public long getEntityId() {
-        return entityId;
+        return id;
     }
 
     public void setEntityId(long entityId) {
-        this.entityId = entityId;
+        this.id = entityId;
     }
 
 }
