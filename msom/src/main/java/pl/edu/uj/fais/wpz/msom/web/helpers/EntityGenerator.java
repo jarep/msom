@@ -5,7 +5,9 @@
  */
 package pl.edu.uj.fais.wpz.msom.web.helpers;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
@@ -146,7 +148,8 @@ public class EntityGenerator {
 
     private <T> void removeAll(IDao<T, Long> dao) {
         List<T> entities = dao.findAll();
-        for (T e : entities) {
+        Set<T> entities2 = new HashSet<>(entities); //lovely
+        for (T e : entities2) {
             dao.remove(e);
         }
     }
