@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
-import pl.edu.uj.fais.wpz.msom.web.helpers.TaskTypesWrapper;
+import pl.edu.uj.fais.wpz.msom.web.helpers.ModuleForm;
 
 /**
  *
@@ -37,6 +38,9 @@ public class ModulesController {
     
     @Autowired
     private TaskTypeService taskTypeService;
+    
+    @Autowired
+    private ControllerUnitService controllerUnitService;
     
     @RequestMapping(value = "/modules", method = RequestMethod.GET)
     public String showAllModules(Model model) {
@@ -55,7 +59,16 @@ public class ModulesController {
      */
     @RequestMapping(value = "/modules/new", method = RequestMethod.GET)
     public String createModule(Model model) {
-        model.addAttribute("module", new Module());
+        ModuleForm moduleForm = new ModuleForm();
+        model.addAttribute("module", moduleForm);
+        List<ControllerUnit> controllerUnits = controllerUnitService.findAll();
+        model.addAttribute("controllerUnitsList", controllerUnits);
+        List<TaskType> taskTypes = taskTypeService.findAll();
+        Map<Long, String> taskTypesMap = new HashMap<>();
+        for (TaskType t : taskTypes) {
+            taskTypesMap.put(t.getId(), t.getName());
+        }
+        model.addAttribute("taskTypesList", taskTypesMap);
         return "modules/new";
     }
 
@@ -66,8 +79,19 @@ public class ModulesController {
      * @return redirects to list
      */
     @RequestMapping(value = "/modules/new", method = RequestMethod.POST)
-    public String addModule(@ModelAttribute(value = "module") Module module) {
-        moduleService.add(module);
+    public String addModule(@ModelAttribute(value = "module") ModuleForm module) {
+        Module m = new Module(module.getName(), module.getCores(), 
+                module.getEfficiency(), module.getControllerUnit());
+        Set<TaskType> taskTypes = new HashSet<>();
+        List<Long> ids = module.getTaskTypes();
+        if (ids != null) {
+            for (Long i : ids) {
+                TaskType t = taskTypeService.find(i);
+                taskTypes.add(t);
+            }
+        }
+        m.setTaskTypes(taskTypes);
+        moduleService.add(m);
         return "redirect:/modules";
     }
 
@@ -80,23 +104,23 @@ public class ModulesController {
      */
     @RequestMapping(value = "/modules/{id}", method = RequestMethod.GET)
     public String getModule(@PathVariable("id") long id, Model model) {
-        Module module = moduleService.find(id);
+        Module m = moduleService.find(id);
+        Set<TaskType> modulesTaskTypes = m.getTaskTypes();
+        List<Long> checkedTaskTypes = new ArrayList<>();
+        for (TaskType t : modulesTaskTypes) {
+            checkedTaskTypes.add(t.getId());
+        }
+        ModuleForm module = new ModuleForm(m.getId(), m.getName(), m.getCores(), 
+                         m.getEfficiency(), m.getControllerUnit(), checkedTaskTypes);
         model.addAttribute("module", module);
-        
+        List<ControllerUnit> controllerUnits = controllerUnitService.findAll();
+        model.addAttribute("controllerUnitsList", controllerUnits);
         List<TaskType> taskTypes = taskTypeService.findAll();
         Map<Long, String> taskTypesMap = new HashMap<>();
         for (TaskType t : taskTypes) {
             taskTypesMap.put(t.getId(), t.getName());
         }
-        Set<TaskType> modulesTaskTypes = module.getTaskTypes();
-        List<Long> checkedTaskTypes = new ArrayList<>();
-        for (TaskType t : modulesTaskTypes) {
-            checkedTaskTypes.add(t.getId());
-        }
-        TaskTypesWrapper wCheckedTaskTypes = new TaskTypesWrapper(checkedTaskTypes);
-        
-        model.addAttribute("taskTypes", taskTypesMap);
-        model.addAttribute("checkedTaskTypes", wCheckedTaskTypes);
+        model.addAttribute("taskTypesList", taskTypesMap);
         return "modules/view";
     }
 
@@ -127,24 +151,22 @@ public class ModulesController {
      * @return redirects to module
      */
     @RequestMapping(value = "/modules/update", method = RequestMethod.POST)
-    public String updateModule(@ModelAttribute(value = "module") Module module) {
-        module.setTaskTypes(moduleService.find(module.getId()).getTaskTypes());
-        moduleService.update(module);
-        return "redirect:/modules";
-    }
-    
-    @RequestMapping(value = "/modules/{id}/updatetasktypes", method = RequestMethod.POST)
-    public String updateTaskTypesInModule(@PathVariable("id") long id, @ModelAttribute(value = "checkedTaskTypes") TaskTypesWrapper checkedTaskTypes) {
-
-        Module module = moduleService.find(id);
+    public String updateModule(@ModelAttribute(value = "module") ModuleForm module) {
+        Module m = moduleService.find(module.getId());
+        m.setName(module.getName());
+        m.setCores(module.getCores());
+        m.setEfficiency(module.getEfficiency());
+        m.setControllerUnit(module.getControllerUnit());
         Set<TaskType> taskTypes = new HashSet<>();
-        List<Long> ids = checkedTaskTypes.getIds();
-        for (Long i : ids) {
-            TaskType t = taskTypeService.find(i);
-            taskTypes.add(t);
+        List<Long> ids = module.getTaskTypes();
+        if (ids != null) {
+            for (Long i : ids) {
+                TaskType t = taskTypeService.find(i);
+                taskTypes.add(t);
+            }
         }
-        module.setTaskTypes(taskTypes);
-        moduleService.update(module);
+        m.setTaskTypes(taskTypes);
+        moduleService.update(m);
         return "redirect:/modules";
     }
 

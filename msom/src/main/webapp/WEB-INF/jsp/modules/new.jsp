@@ -18,7 +18,14 @@
         <sf:input name="efficiency"  path="efficiency" class="form-control" type="number"/>
     </div>
     <div class="form-group">
-        
+        <label for="controllerUnit">Controller unit</label>
+        <sf:select path="controllerUnit.id" class="form-control">
+            <sf:options items="${controllerUnitsList}" itemLabel="name" itemValue="id" />
+        </sf:select>  
+    </div>
+    <div class="form-group">
+        <label for="taskTypes">Task types</label>
+        <sf:checkboxes items="${taskTypesList}" path="taskTypes"/>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>
