@@ -5,7 +5,6 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,8 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.integration.DomainAwareBase;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -27,7 +24,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  * @author paweldylag
  */
 @ContextConfiguration("/testApplicationContext.xml")
-public class TaskMockupTest extends DomainAwareBase {
+public class TaskImplTest extends DomainAwareBase {
     
     private final String TEST_TASK_TYPE_NAME = "testTaskType";
     private final String TEST_TASK_NAME = "testTask";
@@ -42,7 +39,7 @@ public class TaskMockupTest extends DomainAwareBase {
     private Task task;
     private TaskType taskType;
     
-    public TaskMockupTest() {
+    public TaskImplTest() {
     }
     
     @BeforeClass
@@ -75,15 +72,15 @@ public class TaskMockupTest extends DomainAwareBase {
      */
     @Test
     public void testReload() {
-        TaskMockup taskMockupObject = new TaskMockup(task, taskService, taskTypeService);
-        taskMockupObject.queueTask();
-        taskMockupObject.processTask();
-        taskMockupObject.finishTask();
-        assertTrue(taskMockupObject.isFinished());
-        taskMockupObject.reload();
-        assertTrue(!taskMockupObject.isFinished());
-        assertTrue(taskMockupObject.getProcessingTime() == 0);
-        assertTrue(taskMockupObject.getWaitingTime() == 0);
+        TaskImpl taskObj = new TaskImpl(task, taskService, taskTypeService);
+        taskObj.queueTask();
+        taskObj.processTask();
+        taskObj.finishTask();
+        assertTrue(taskObj.isFinished());
+        taskObj.reload();
+        assertTrue(!taskObj.isFinished());
+        assertTrue(taskObj.getProcessingTime() == 0);
+        assertTrue(taskObj.getWaitingTime() == 0);
     }
 
     /**
@@ -91,9 +88,9 @@ public class TaskMockupTest extends DomainAwareBase {
      */
     @Test
     public void testSave() {
-        TaskMockup taskMockupObject = new TaskMockup(task, taskService, taskTypeService);
+        TaskImpl taskObj = new TaskImpl(task, taskService, taskTypeService);
         // TODO: implement this
-        taskMockupObject.reload();
+        taskObj.reload();
     }
 
     /**
@@ -101,7 +98,7 @@ public class TaskMockupTest extends DomainAwareBase {
      */
     @Test
     public void testGetType() {
-       TaskMockup taskMockupObject = new TaskMockup(task, taskService, taskTypeService);
+       TaskImpl taskMockupObject = new TaskImpl(task, taskService, taskTypeService);
        assertTrue(taskMockupObject.getType().getId().equals(this.taskType.getId()));
     }
 
@@ -110,7 +107,7 @@ public class TaskMockupTest extends DomainAwareBase {
      */
     @Test
     public void testGetName() {
-        TaskMockup taskMockupObject = new TaskMockup(task, taskService, taskTypeService);
+        TaskImpl taskMockupObject = new TaskImpl(task, taskService, taskTypeService);
         assertTrue(taskMockupObject.getName().equals(TEST_TASK_NAME));
     }
 
@@ -119,7 +116,7 @@ public class TaskMockupTest extends DomainAwareBase {
      */
     @Test
     public void testGetDifficulty() {
-        TaskMockup taskMockupObject = new TaskMockup(task, taskService, taskTypeService);
+        TaskImpl taskMockupObject = new TaskImpl(task, taskService, taskTypeService);
         assertTrue(taskMockupObject.getDifficulty() == TEST_TASK_DIFFICULTY);
     }
 
@@ -136,36 +133,36 @@ public class TaskMockupTest extends DomainAwareBase {
      */
     @Test
     public void testProcessingTask() {
-       TaskMockup taskMockupObject = new TaskMockup(task, taskService, taskTypeService); 
-       taskMockupObject.reload();
-       assertTrue(taskMockupObject.getWaitingTime() == 0);
-       assertTrue(taskMockupObject.getProcessingTime() == 0);
-       assertTrue(!taskMockupObject.isFinished());
-       taskMockupObject.queueTask();
+       TaskImpl taskObj = new TaskImpl(task, taskService, taskTypeService); 
+       taskObj.reload();
+       assertTrue(taskObj.getWaitingTime() == 0);
+       assertTrue(taskObj.getProcessingTime() == 0);
+       assertTrue(!taskObj.isFinished());
+       taskObj.queueTask();
        try {
            Thread.sleep(100);
        } catch (InterruptedException e){
            e.printStackTrace();
        }
-       assertTrue(taskMockupObject.getWaitingTime() == 0);
-       assertTrue(taskMockupObject.getProcessingTime() == 0);
-       assertTrue(!taskMockupObject.isFinished());
-       taskMockupObject.processTask();
+       assertTrue(taskObj.getWaitingTime() == 0);
+       assertTrue(taskObj.getProcessingTime() == 0);
+       assertTrue(!taskObj.isFinished());
+       taskObj.processTask();
          try {
            Thread.sleep(100);
        } catch (InterruptedException e){
            e.printStackTrace();
        }
-       assertTrue(taskMockupObject.getWaitingTime() != 0);
-       assertTrue(taskMockupObject.getProcessingTime() == 0);
-       taskMockupObject.finishTask();
+       assertTrue(taskObj.getWaitingTime() != 0);
+       assertTrue(taskObj.getProcessingTime() == 0);
+       taskObj.finishTask();
          try {
            Thread.sleep(100);
        } catch (InterruptedException e){
            e.printStackTrace();
        }
-       assertTrue(taskMockupObject.getWaitingTime() != 0);
-       assertTrue(taskMockupObject.getProcessingTime() != 0);
+       assertTrue(taskObj.getWaitingTime() != 0);
+       assertTrue(taskObj.getProcessingTime() != 0);
     }
 
   
