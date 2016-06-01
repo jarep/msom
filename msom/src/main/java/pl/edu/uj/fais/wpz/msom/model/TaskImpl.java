@@ -46,6 +46,10 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
             taskService.refresh(getEntityObject());
         }
     }
+    
+    private void changeState(State newState){
+        this.currentState = newState;
+    }
 
     @Override
     public void save() {
@@ -78,7 +82,7 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     @Override
     public void queueTask() {
         if (currentState == State.IDLE) {
-            currentState = State.QUEUED;
+            changeState(State.QUEUED);
             this.timeInQueue = System.currentTimeMillis();
         } else throw new IllegalStateException("Cannot queue task which is in " + currentState + " state");
     }
@@ -89,7 +93,7 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     public boolean processTask() {
         if (currentState == State.QUEUED) {
             // pop from queue
-            currentState = State.IN_PROCESS;
+            changeState(State.IN_PROCESS);
             // save queue time
             this.timeInQueue = System.currentTimeMillis() - this.timeInQueue;
             // start processing timer
@@ -101,9 +105,9 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     @Override
     public void finishTask() {
         if (currentState == State.IN_PROCESS) {
-            currentState = State.FINISHED;
+            changeState(State.FINISHED);
             this.timeOfProcessing = System.currentTimeMillis() - this.timeOfProcessing;
-        } throw new IllegalStateException("Cannot finish task which is in " + currentState + " state");
+        } else throw new IllegalStateException("Cannot finish task which is in " + currentState + " state on object " + this.hashCode());
     }
 
     @Override
