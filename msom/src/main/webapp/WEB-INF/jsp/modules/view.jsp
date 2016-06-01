@@ -18,9 +18,13 @@
         <label for="efficiency">Efficiency (Integer)</label>
         <sf:input name="efficiency" path="efficiency" class="form-control" type="number" min="1"/>
     </div>
-    <div class="form-group">
-        
-    </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>
 
+<h3>Edit task types in module</h2>
+    <sf:form method="post" id="taskTypesForm" modelAttribute="checkedTaskTypes" action="${module.id}/updatetasktypes">
+    <div class="form-group">
+        <sf:checkboxes items="${taskTypes}" path="ids"  />
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+</sf:form>

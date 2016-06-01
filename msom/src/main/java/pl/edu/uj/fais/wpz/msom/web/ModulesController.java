@@ -5,8 +5,12 @@
  */
 package pl.edu.uj.fais.wpz.msom.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
+import pl.edu.uj.fais.wpz.msom.web.helpers.TaskTypesWrapper;
 
 /**
  *
@@ -29,7 +34,10 @@ public class ModulesController {
 
     @Autowired
     private ModuleService moduleService;
-   
+    
+    @Autowired
+    private TaskTypeService taskTypeService;
+    
     @RequestMapping(value = "/modules", method = RequestMethod.GET)
     public String showAllModules(Model model) {
         List<Module> modules = moduleService.findAll(); //lovely 
@@ -75,6 +83,20 @@ public class ModulesController {
         Module module = moduleService.find(id);
         model.addAttribute("module", module);
         
+        List<TaskType> taskTypes = taskTypeService.findAll();
+        Map<Long, String> taskTypesMap = new HashMap<>();
+        for (TaskType t : taskTypes) {
+            taskTypesMap.put(t.getId(), t.getName());
+        }
+        Set<TaskType> modulesTaskTypes = module.getTaskTypes();
+        List<Long> checkedTaskTypes = new ArrayList<>();
+        for (TaskType t : modulesTaskTypes) {
+            checkedTaskTypes.add(t.getId());
+        }
+        TaskTypesWrapper wCheckedTaskTypes = new TaskTypesWrapper(checkedTaskTypes);
+        
+        model.addAttribute("taskTypes", taskTypesMap);
+        model.addAttribute("checkedTaskTypes", wCheckedTaskTypes);
         return "modules/view";
     }
 
@@ -106,8 +128,23 @@ public class ModulesController {
      */
     @RequestMapping(value = "/modules/update", method = RequestMethod.POST)
     public String updateModule(@ModelAttribute(value = "module") Module module) {
+        module.setTaskTypes(moduleService.find(module.getId()).getTaskTypes());
         moduleService.update(module);
+        return "redirect:/modules";
+    }
+    
+    @RequestMapping(value = "/modules/{id}/updatetasktypes", method = RequestMethod.POST)
+    public String updateTaskTypesInModule(@PathVariable("id") long id, @ModelAttribute(value = "checkedTaskTypes") TaskTypesWrapper checkedTaskTypes) {
 
+        Module module = moduleService.find(id);
+        Set<TaskType> taskTypes = new HashSet<>();
+        List<Long> ids = checkedTaskTypes.getIds();
+        for (Long i : ids) {
+            TaskType t = taskTypeService.find(i);
+            taskTypes.add(t);
+        }
+        module.setTaskTypes(taskTypes);
+        moduleService.update(module);
         return "redirect:/modules";
     }
 
