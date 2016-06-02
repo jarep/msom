@@ -44,9 +44,8 @@ public class ModulesController {
     
     @RequestMapping(value = "/modules", method = RequestMethod.GET)
     public String showAllModules(Model model) {
-        List<Module> modules = moduleService.findAll(); //lovely 
-        HashSet<Module> modules2 = new HashSet<>(modules);
-        model.addAttribute("moduleList", modules2);
+        List<Module> modules = moduleService.findAll(); 
+        model.addAttribute("moduleList", modules);
 
         return "modules/list";
     }

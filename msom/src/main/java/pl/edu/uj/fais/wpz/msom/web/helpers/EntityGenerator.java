@@ -148,8 +148,7 @@ public class EntityGenerator {
 
     private <T> void removeAll(IDao<T, Long> dao) {
         List<T> entities = dao.findAll();
-        Set<T> entities2 = new HashSet<>(entities); //lovely
-        for (T e : entities2) {
+        for (T e : entities) {
             dao.remove(e);
         }
     }

@@ -22,14 +22,6 @@ public class ModuleForm {
     private List<Long> taskTypes = new ArrayList<>();
     public ModuleForm() {}
     public ModuleForm(Long id, String name, Integer cores, Integer efficiency, 
-            ControllerUnit controllerUnit) {
-        this.id = id;
-        this.name = name; 
-        this.cores = cores;
-        this.efficiency = efficiency;
-        this.controllerUnit = controllerUnit;
-    }
-    public ModuleForm(Long id, String name, Integer cores, Integer efficiency, 
             ControllerUnit controllerUnit, List<Long> taskTypes) {
         this.id = id;
         this.name = name; 
