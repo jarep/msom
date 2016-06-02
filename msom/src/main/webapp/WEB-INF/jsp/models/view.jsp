@@ -5,7 +5,7 @@
 <p class="lead">
 </p>
 <h3>Model</h3>
-<sf:form method="post" modelAttribute="model" action="update">
+<sf:form method="post" modelAttribute="model" id="modelForm" action="update">
     <sf:hidden path="id" />
     <div class="form-group">
         <label for="name">Name</label>

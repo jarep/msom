@@ -9,10 +9,10 @@
                     min: 1
                 }
             },messages:{
-                name : "Please specify name of task type",
+                name : "Please specify the name",
                 difficulty: {
-                    required : "Please specify difficulty of task type",
-                    min : jQuery.validator.format("Needs to be at least difficulty  {0}.")
+                    required : "Please specify the difficulty",
+                    min : jQuery.validator.format("The difficulty must be greater than {0}")
                 }
             },
             highlight: function(element) {

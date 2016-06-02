@@ -96,6 +96,9 @@
     <!--Controller Units-->
     <definition name="controllerunits" extends="common">
         <put-attribute name="title" value="Controller Units Management" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/controllerunits.js" />
+        </put-list-attribute>
     </definition>
     
     <definition name="controllerunits/list" extends="controllerunits">
@@ -131,6 +134,9 @@
     <!--Models-->
     <definition name="models" extends="common">
         <put-attribute name="title" value="Models Management" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/models.js" />
+        </put-list-attribute>
     </definition>
     
     <definition name="models/list" extends="models">

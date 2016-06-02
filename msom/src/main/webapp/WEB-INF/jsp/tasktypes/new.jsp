@@ -11,7 +11,7 @@
     </div>
     <div class="form-group">
         <label for="difficulty">Difficulty (Number)</label>
-        <sf:input name="difficulty" path="difficulty" class="form-control"/>
+        <sf:input name="difficulty" path="difficulty" class="form-control" type="number"/>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>

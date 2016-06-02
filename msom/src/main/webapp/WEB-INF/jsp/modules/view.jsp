@@ -11,12 +11,12 @@
         <sf:input name="name" path="name" class="form-control"/>
     </div>
     <div class="form-group">
-        <label for="cores">Cores (Integer)</label>
-        <sf:input name="cores" path="cores" class="form-control" type="number" min="1"/>
+        <label for="cores">Cores (Number)</label>
+        <sf:input name="cores" path="cores" class="form-control" type="number"/>
     </div>
     <div class="form-group">
-        <label for="efficiency">Efficiency (Integer)</label>
-        <sf:input name="efficiency" path="efficiency" class="form-control" type="number" min="1"/>
+        <label for="efficiency">Efficiency (Number)</label>
+        <sf:input name="efficiency" path="efficiency" class="form-control" type="number"/>
     </div>
     <div class="form-group">
         <label for="controllerUnit">Controller unit</label>
