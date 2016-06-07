@@ -44,8 +44,8 @@
             <td>${module.cores}</td>
             <td>${module.efficiency}</td>
             <td>
-            <c:forEach items="#{module.taskTypes}" var="tasktype">    
-                ${tasktype.name} 
+            <c:forEach items="#{module.taskTypes}" var="tasktype" varStatus="loop">    
+                ${tasktype.name}<c:if test="${!loop.last}"><br/></c:if>
             </c:forEach>
             </td>
             <td>${module.controllerUnit.name}</td>
