@@ -14,6 +14,7 @@
         <li><a href="/msom/controllerunits">Controller Units</a></li>
         <li><a href="/msom/models">Models</a></li>
         <li class="nav-divider"></li>
+        <li><a href="/msom/processingsystemmockup">Processing System Mockups</a></li>
         <li><a href="/msom/processingsystem">Processing Systems</a></li>
     </ul>
 </nav>
