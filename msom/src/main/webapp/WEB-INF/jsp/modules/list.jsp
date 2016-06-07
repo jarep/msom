@@ -16,6 +16,7 @@
         <th>Cores</th>
         <th>Efficiency</th>
         <th>Task types</th>
+        <th>Controller unit</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -30,6 +31,7 @@
                 ${tasktype.name} 
             </c:forEach>
             </td>
+            <td>${module.controllerUnit.name}</td>
             <td><a href="modules/${module.id}">Edit</a></td>
             <td>
                 <sf:form action="modules/remove/${module.id}" method="post">

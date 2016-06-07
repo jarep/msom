@@ -4,7 +4,7 @@
 
 </p>
 <h3>Add new Controller Unit</h3>
-<sf:form method="post" action="new" modelAttribute="controller">
+<sf:form method="post" action="new" id="controllerUnitForm" modelAttribute="controller">
     <div class="form-group">
         <label for="name">Name of Controller Unit</label>
         <sf:input path="name" class="form-control" />

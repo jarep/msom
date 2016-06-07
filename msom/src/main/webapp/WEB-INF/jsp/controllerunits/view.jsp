@@ -5,7 +5,7 @@
 <p class="lead">
 </p>
 <h3>Controller Unit</h3>
-<sf:form method="post" modelAttribute="controller" action="update">
+<sf:form method="post" id="controllerUnitForm" modelAttribute="controller" action="update">
     <sf:hidden path="id" />
     <div class="form-group">
         <label for="model">Model</label>

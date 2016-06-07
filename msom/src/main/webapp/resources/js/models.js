@@ -1,11 +1,11 @@
     $(document).ready(
-        $("#taskForm").validate({
+            $("#modelForm").validate({
             rules: {
-                name:{
+                name: {
                     required : true
                 }
-            },messages:{
-                name : "Please specify the name"
+            },messages: {
+                name: "Please specify the name"
             },
             highlight: function(element) {
                 $(element).closest('.form-group').addClass('has-error');
