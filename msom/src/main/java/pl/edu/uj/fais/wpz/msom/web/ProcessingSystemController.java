@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pl.edu.uj.fais.wpz.msom.model.ProcessingSystemTool;
+import pl.edu.uj.fais.wpz.msom.model.mockups.ProcessingSystemMockupTool;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
@@ -44,7 +44,7 @@ public class ProcessingSystemController {
     @Autowired
     private TaskTypeService taskTypeService;
 
-    private ProcessingSystemTool processingSystemTool;
+    private ProcessingSystemMockupTool processingSystemTool;
 
     @RequestMapping(value = "/processingsystem", method = RequestMethod.GET)
     public String showAllProcessingSystems(Model model) {
@@ -109,6 +109,6 @@ public class ProcessingSystemController {
         }
     }
     private void setProcessingSystemTool() {
-            processingSystemTool = new ProcessingSystemTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            processingSystemTool = new ProcessingSystemMockupTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
     }
 }

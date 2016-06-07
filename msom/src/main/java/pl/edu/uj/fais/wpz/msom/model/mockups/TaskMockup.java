@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
@@ -14,7 +14,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
  *
  * @author jarep
  */
-public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task> implements Task {
+public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.msom.entities.Task> implements Task {
     
     private final TaskService taskService;
 

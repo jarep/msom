@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class TaskDispatcherMockup extends AbstractModelObject<ControllerUnit> implements TaskDispatcher {
+public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUnit> implements TaskDispatcher {
 
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingSystemTool {
+public class ProcessingSystemMockupTool {
 
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
@@ -34,7 +34,7 @@ public class ProcessingSystemTool {
 
     private final List<ProcessingSystem> localProcessingSystems = new ArrayList<>();
 
-    public ProcessingSystemTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    public ProcessingSystemMockupTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
