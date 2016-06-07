@@ -10,6 +10,7 @@
         <sf:input path="name" class="form-control" />
     </div>
     <div class="form-group">
+        <label for="tasktype">Task Type</label>
         <sf:select path="taskType.id" class="form-control">
             <sf:options items="${taskTypesList}" itemLabel="name" itemValue="id" />
         </sf:select>    

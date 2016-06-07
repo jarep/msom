@@ -19,7 +19,7 @@
         <sf:input name="efficiency" path="efficiency" class="form-control" type="number"/>
     </div>
     <div class="form-group">
-        <label for="controllerUnit">Controller unit</label>
+        <label for="controllerUnit">Controller Unit</label>
         <sf:select path="controllerUnit.id" class="form-control">
             <sf:options items="${controllerUnitsList}" itemLabel="name" itemValue="id" />
         </sf:select>  

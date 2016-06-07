@@ -11,6 +11,9 @@
                 efficiency:{
                     required : true,
                     min: 1
+                },
+                "controllerUnit.id": {
+                    required : true
                 }
             },messages:{
                 name : "Please specify the name",
@@ -21,7 +24,8 @@
                 efficiency: {
                     required : "Please specify the efficiency",
                     min : jQuery.validator.format("The efficiency must be greater than {0}")
-                }
+                },
+                "controllerUnit.id" : "Please select the Controller Unit"
             },
             highlight: function(element) {
                 $(element).closest('.form-group').addClass('has-error');
