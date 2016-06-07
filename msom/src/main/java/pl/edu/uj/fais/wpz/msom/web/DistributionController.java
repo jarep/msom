@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.Distribution;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
@@ -50,11 +51,16 @@ public class DistributionController {
     /**
     * Saves new distribution to database
     * @param distribution
+    * @param redirectAttributes
     * @return redirects to list
     */
     @RequestMapping(value = "/distributions/new", method = RequestMethod.POST)
-    public String addDistribution(@ModelAttribute(value = "distribution") Distribution distribution) {
-        distributionService.add(distribution);
+    public String addDistribution(@ModelAttribute(value = "distribution") Distribution distribution, RedirectAttributes redirectAttributes) {
+        if (distributionService.add(distribution)) {
+            redirectAttributes.addFlashAttribute("msg", "The Distribution was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Distribution");
+        }
         return "redirect:/distributions";
     }
     
@@ -77,25 +83,30 @@ public class DistributionController {
      * Deletes distribution with specified ID
      *
      * @param id distribution's ID
+     * @param redirectAttributes
      * @return redirects to distribution if everything ok
      */
     @RequestMapping(value = "/distributions/remove/{id}", method = RequestMethod.POST)
-    public String deleteDistribution(@PathVariable("id") long id) {
+    public String deleteDistribution(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         Distribution distribution = distributionService.find(id);
-        boolean wasDeleted = distributionService.remove(distribution);
 
-        if (!wasDeleted) {
-           // exception to handle
+        if (distributionService.remove(distribution)) {
+            redirectAttributes.addFlashAttribute("msg", "The Distribution was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Distribution");
         }
 
-        // everything OK, see remaining distributions
         return "redirect:/distributions";
     }
     
     @RequestMapping(value = "/distributions/update", method = RequestMethod.POST)
-    public String updateDistribution(@ModelAttribute(value = "distribution") Distribution distribution) {
-        distributionService.update(distribution);
+    public String updateDistribution(@ModelAttribute(value = "distribution") Distribution distribution, RedirectAttributes redirectAttributes) {
+        if (distributionService.update(distribution)) {
+            redirectAttributes.addFlashAttribute("msg", "The Distribution was updated");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to update the Distribution");
+        }
         return "redirect:/distributions";
     }
 }

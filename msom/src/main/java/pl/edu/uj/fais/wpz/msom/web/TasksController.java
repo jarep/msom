@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
@@ -40,17 +41,15 @@ public class TasksController {
     }
 
     @RequestMapping(value = "/tasks/remove/{id}", method = RequestMethod.POST)
-    public String deleteTask(@PathVariable("id") long id) {
+    public String deleteTask(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         Task toDelete = taskService.find(id);
-        boolean wasDeleted = taskService.remove(toDelete);
-
-        if (!wasDeleted) {
-            // nie mozna usunac, 
-            // należy obsłużyć wyjątek i przekazać odpowiedni komunikat użytkownikowi
+        if (taskService.remove(toDelete)) {
+            redirectAttributes.addFlashAttribute("msg", "The Task was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Task");
         }
-
-        // everything OK, see remaining task types
+        
         return "redirect:/tasks";
     }
 
@@ -74,12 +73,17 @@ public class TasksController {
      * Saves new task to the database
      *
      * @param task
+     * @param redirectAttributes
      * @param taskTypeId
      * @return redirects to tasks
      */
     @RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
-    public String addTask(@ModelAttribute(value = "task") Task task) {
-        taskService.add(task);
+    public String addTask(@ModelAttribute(value = "task") Task task, RedirectAttributes redirectAttributes) {
+        if (taskService.add(task)) {
+            redirectAttributes.addFlashAttribute("msg", "The Task was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Task");
+        }
         return "redirect:/tasks";
     }
 
@@ -105,11 +109,16 @@ public class TasksController {
      * Updates task
      *
      * @param task Task to update (bounded from HTML form)
+     * @param redirectAttributes
      * @return redirects to tasks
      */
     @RequestMapping(value = "/tasks/update", method = RequestMethod.POST)
-    public String updateTask(@ModelAttribute(value = "task") Task task) {
-        taskService.update(task);
+    public String updateTask(@ModelAttribute(value = "task") Task task, RedirectAttributes redirectAttributes) {
+        if (taskService.update(task)) {
+            redirectAttributes.addFlashAttribute("msg", "The Task was updated");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to update the Task");
+        }
         return "redirect:/tasks";
     }
 
