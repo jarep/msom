@@ -140,7 +140,7 @@ public class ModulesController {
     public String deleteModule(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         Module module = moduleService.find(id);
-        if(moduleService.remove(module)) {
+        if((module != null) && moduleService.remove(module)) {
             redirectAttributes.addFlashAttribute("msg", "The Module was removed");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Module");

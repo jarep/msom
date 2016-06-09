@@ -91,7 +91,7 @@ public class DistributionController {
 
         Distribution distribution = distributionService.find(id);
 
-        if (distributionService.remove(distribution)) {
+        if ((distribution != null) && distributionService.remove(distribution)) {
             redirectAttributes.addFlashAttribute("msg", "The Distribution was removed");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Distribution");

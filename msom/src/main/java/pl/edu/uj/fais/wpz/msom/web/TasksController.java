@@ -43,8 +43,8 @@ public class TasksController {
     @RequestMapping(value = "/tasks/remove/{id}", method = RequestMethod.POST)
     public String deleteTask(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-        Task toDelete = taskService.find(id);
-        if (taskService.remove(toDelete)) {
+        Task task = taskService.find(id);
+        if ((task != null) && taskService.remove(task)) {
             redirectAttributes.addFlashAttribute("msg", "The Task was removed");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Task");

@@ -86,7 +86,7 @@ public class ControllerUnitsController {
 
         ControllerUnit controller = controllerUnitService.find(id);
 
-        if (controllerUnitService.remove(controller)) {
+        if ((controller != null) && controllerUnitService.remove(controller)) {
             redirectAttributes.addFlashAttribute("msg", "The Controller Unit was removed");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Controller Unit");

@@ -39,13 +39,14 @@ public class TaskTypesController {
      * Deletes taskType with specified ID
      *
      * @param id taskType's ID
+     * @param redirectAttributes
      * @return redirects to tasktypes if everything was ok
      */
     @RequestMapping(value = "/tasktypes/remove/{id}", method = RequestMethod.POST)
     public String deleteTaskType(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-        TaskType toDelete = taskTypeService.find(id);
-        if (taskTypeService.remove(toDelete))  {
+        TaskType taskType = taskTypeService.find(id);
+        if ((taskType != null) && taskTypeService.remove(taskType))  {
             redirectAttributes.addFlashAttribute("msg", "The Task Type was removed");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Task Type");

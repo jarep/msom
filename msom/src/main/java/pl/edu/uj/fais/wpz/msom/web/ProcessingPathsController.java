@@ -53,7 +53,7 @@ public class ProcessingPathsController {
             model.addAttribute("unspecifiedTypes", typesWithUnspecifiedPathFromContoller);
 
             if (typesWithUnspecifiedPathFromContoller.isEmpty()) {
-                redirectAttributes.addFlashAttribute("msg", "Error: Unable to create a new Processing Path from the Controller Unit - all paths are already created");
+                redirectAttributes.addFlashAttribute("msg", "Error: Unable to create a new Processing Path from the Controller Unit - all paths have already been created");
                 return "redirect:/controllerunits/" + controllerId;
             }
 
@@ -80,7 +80,7 @@ public class ProcessingPathsController {
 
         ProcessingPath path = processingPathService.find(pathId);
 
-        if (processingPathService.remove(path)) {
+        if ((path != null) && processingPathService.remove(path)) {
             redirectAttributes.addFlashAttribute("msg", "The Processing Path was removed");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Processing Path");
