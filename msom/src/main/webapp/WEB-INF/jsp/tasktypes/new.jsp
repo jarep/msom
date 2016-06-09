@@ -7,11 +7,11 @@
     <sf:form method="post" modelAttribute="taskType" id="taskTypeForm" action="new">
     <div class="form-group">
         <label for="name">Name of type</label>
-        <sf:input name="name" path="name" class="form-control"/>
+        <sf:input path="name" class="form-control"/>
     </div>
     <div class="form-group">
         <label for="difficulty">Difficulty (Number)</label>
-        <sf:input name="difficulty" path="difficulty" class="form-control" type="number"/>
+        <sf:input path="difficulty" class="form-control" type="number"/>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>

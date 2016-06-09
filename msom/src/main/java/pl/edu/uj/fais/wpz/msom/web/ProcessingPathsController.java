@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -37,7 +38,7 @@ public class ProcessingPathsController {
     ModelService modelService;
 
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.GET)
-    public String createProcessingPath(@PathVariable("controllerId") long controllerId, Model model) {
+    public String createProcessingPath(@PathVariable("controllerId") long controllerId, Model model, RedirectAttributes redirectAttributes) {
         ControllerUnit controllerUnit = controllerUnitService.find(controllerId); // can be null!!!
         if (controllerUnit == null) {
             // redirect to error page 
@@ -52,8 +53,8 @@ public class ProcessingPathsController {
             model.addAttribute("unspecifiedTypes", typesWithUnspecifiedPathFromContoller);
 
             if (typesWithUnspecifiedPathFromContoller.isEmpty()) {
-                model.addAttribute("errorMsg", "All paths from this Controller Unit are already defined.");
-                return "errorpage";
+                redirectAttributes.addFlashAttribute("msg", "Error: Unable to create a new Processing Path from the Controller Unit - all paths are already created");
+                return "redirect:/controllerunits/" + controllerId;
             }
 
             List<ControllerUnit> controllers = controllerUnitService.getControllersByModel(controllerUnit.getModel());
@@ -64,27 +65,27 @@ public class ProcessingPathsController {
     }
 
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.POST)
-    public String addProcessingPath(@PathVariable("controllerId") long controllerId, @ModelAttribute(value = "path") ProcessingPath path, Model model) {
-        if (!processingPathService.add(path)) {
-            String errorMsg = "Can not create this processing path... Probably Controller Units are assigned to different Models.";
-            model.addAttribute("errorMsg", errorMsg);
-            return "errorpage";
+    public String addProcessingPath(@PathVariable("controllerId") long controllerId, @ModelAttribute(value = "path") ProcessingPath path, RedirectAttributes redirectAttributes) {
+        if (processingPathService.add(path)) {
+            redirectAttributes.addFlashAttribute("msg", "The Processing Path was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Processing Path - selected Controller Units might be assigned to a different Models");
         }
         return "redirect:/controllerunits/" + controllerId;
 
     }
 
     @RequestMapping(value = "/processingpaths/remove/{controllerId}/{pathId}", method = RequestMethod.POST)
-    public String deleteProcessingPath(@PathVariable("controllerId") long controllerId, @PathVariable("pathId") long pathId, Model model) {
+    public String deleteProcessingPath(@PathVariable("controllerId") long controllerId, @PathVariable("pathId") long pathId, RedirectAttributes redirectAttributes) {
 
         ProcessingPath path = processingPathService.find(pathId);
-        boolean wasDeleted = processingPathService.remove(path);
 
-        if (!wasDeleted) {
-            model.addAttribute("errorMsg", "Can not remove this processing path...");
-            return "errorpage";
+        if (processingPathService.remove(path)) {
+            redirectAttributes.addFlashAttribute("msg", "The Processing Path was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Processing Path");
         }
-
+        
         return "redirect:/controllerunits/" + controllerId;
     }
 

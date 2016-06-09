@@ -54,7 +54,7 @@ public class ModelsController {
     }
 
     @RequestMapping(value = "/models/remove/{id}", method = RequestMethod.POST)
-    public String deleteModel(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
+    public String deleteModel(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
         if (modelService.remove(m))  {
             redirectAttributes.addFlashAttribute("msg", "The Model was removed");
