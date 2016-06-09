@@ -36,8 +36,8 @@ public interface ProcessingPathDao extends IDao<ProcessingPath, Long> {
 
     /**
      * Get Processing Paths which coming out from given Controller Unit to
-     * another Controller Unit (or to the same Controller Unit when task should be
-     * finished in given Controller Unit).
+     * another Controller Unit (or to the same Controller Unit when task should
+     * be finished in given Controller Unit).
      *
      * @param controllerUnit Controller Unit
      * @return List of founded Processing Paths
@@ -62,7 +62,6 @@ public interface ProcessingPathDao extends IDao<ProcessingPath, Long> {
      */
     public List<TaskType> getTaskTypesToProcessingByControllerUnit(ControllerUnit controllerUnit);
 
-
     /**
      * Get Task Types which should be finished by given Controller Unit, whether
      * they are to be processed or not. (For Processing Path related to returned
@@ -75,5 +74,13 @@ public interface ProcessingPathDao extends IDao<ProcessingPath, Long> {
      * @return List of task types which should be finished.
      */
     public List<TaskType> getTaskTypesToFinishedByControllerUnit(ControllerUnit controllerUnit);
+
+    /**
+     * Get all Task Types supported by given Controller Unit.
+     *
+     * @param controllerUnit
+     * @return list of Task Types
+     */
+    public List<TaskType> getSupportedTaskTypesByControllerUnit(ControllerUnit controllerUnit);
 
 }
