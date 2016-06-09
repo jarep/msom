@@ -6,10 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 
 /**
@@ -19,9 +16,11 @@ import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 public class Core implements Runnable {
 
     private final BlockingQueue<Task> tasksBlockingQueue;
-    private final ProcessingUnit processingUnit;
+    private final ProcessingUnitImpl processingUnit;
+    private final int number;
 
-    public Core(BlockingQueue<Task> tasksBlockingQueue, ProcessingUnit processingUnit) {
+    public Core(BlockingQueue<Task> tasksBlockingQueue, ProcessingUnitImpl processingUnit, int number) {
+        this.number = number;
         this.tasksBlockingQueue = tasksBlockingQueue;
         this.processingUnit = processingUnit;
     }
@@ -32,17 +31,20 @@ public class Core implements Runnable {
             try {
                 PrintHelper.printMsg(getName(), "CZEKAM na zadanie");
                 Task taskToDo = tasksBlockingQueue.take();
-                PrintHelper.printMsg(getName(), "ODEBRAŁEM zadanie");
+                PrintHelper.printMsg(getName(), "ODEBRAŁEM zadanie, rozpoczynam przetwarzanie...");
+                taskToDo.processTask();
+                PrintHelper.printMsg(getName(), "zakonczylem przetwarzanie zadania, zwracam do processing unit.");
+                processingUnit.returnTask(taskToDo);
             } catch (InterruptedException ex) {
                 PrintHelper.printAlert(getName(), "umieram... (interrupted exception)");
 //                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         PrintHelper.printMsg(getName(), "koniec pracy");
     }
 
-    private String getName(){
-        return processingUnit.getName() +  " *** core";
+    private String getName() {
+        return processingUnit.getFullName() + " *** core_" + number;
     }
 }

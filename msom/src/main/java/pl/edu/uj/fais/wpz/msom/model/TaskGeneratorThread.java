@@ -41,7 +41,7 @@ public class TaskGeneratorThread implements Runnable {
         PrintHelper.printMsg(getName(), "Poczatek generowania zadan");
         while (active.get()) {
             int millis = ThreadLocalRandom.current().nextInt(5000);
-            millis = millis + 25000;
+            millis = millis + 1000;
             try {
                 PrintHelper.printMsg(getName(), "Nastepne zadanie za: " + millis + " ms.");
                 Thread.sleep(millis);

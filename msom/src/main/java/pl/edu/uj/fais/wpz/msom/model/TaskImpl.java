@@ -6,6 +6,9 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
@@ -86,12 +89,21 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     @Override
     public boolean processTask() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            PrintHelper.printMsg(getName(), "ktos mnie bedrze przetwarzal...");
+            int millis = 1000 * type.getDifficulty();
+            Thread.sleep(millis);
+            PrintHelper.printMsg(getName(), "wykonano mnie.");
+            return true;
+        } catch (InterruptedException ex) {
+            PrintHelper.printAlert(getName(), "Przerwano w trakcie przetwarzania. (interrupted exception)");
+        }
+        return false;
     }
 
     @Override
     public void finishTask() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PrintHelper.printMsg(getName(), "zakonczono mnie...");
     }
 
     @Override

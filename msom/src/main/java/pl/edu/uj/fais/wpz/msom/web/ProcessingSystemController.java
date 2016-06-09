@@ -92,15 +92,20 @@ public class ProcessingSystemController {
     public String resetProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();
 
-        ProcessingSystem processingSystem = processingSystemTool.reloadProcessingSystem(id);
+        ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
+        if (processingSystem.isLocked()) {
+            model.addAttribute("processingSystem", processingSystem);
+            model.addAttribute("message", "System jest w trakcie pracy - nie mozna przeladowac.");
+        } else {
+            processingSystem = processingSystemTool.reloadProcessingSystem(id);
+            model.addAttribute("processingSystem", processingSystem);
+            model.addAttribute("message", "Przeladowano system!");
+        }
 
         if (processingSystem == null) {
             model.addAttribute("errorMsg", "404 Bad Request...");
             return "errorpage";
         }
-
-        model.addAttribute("processingSystem", processingSystem);
-        model.addAttribute("message", "Przeladowano system!");
 
         return "processingsystem/simulate";
     }

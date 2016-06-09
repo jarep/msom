@@ -51,6 +51,9 @@ public class ProcessingSystemTool {
     }
 
     public ProcessingSystem reloadProcessingSystem(ProcessingSystem processingSystemToReload) {
+        if(processingSystemToReload.isLocked()){
+            return processingSystemToReload;
+        }
         return reloadProcessingSystemFromDatabase(processingSystemToReload.getId());
     }
 
@@ -149,7 +152,11 @@ public class ProcessingSystemTool {
     }
 
     public ProcessingSystem reloadProcessingSystem(long id) {
-        return reloadProcessingSystem(getProcessingSystem(id));
+        ProcessingSystem processingSystem = getProcessingSystem(id);
+        if(processingSystem.isLocked()){
+            return null;
+        } 
+        return reloadProcessingSystem(processingSystem);
     }
 
 }

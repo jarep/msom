@@ -7,9 +7,15 @@ package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
+import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
@@ -22,12 +28,8 @@ import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
  *
@@ -35,25 +37,21 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  */
 public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> implements TaskDispatcher {
 
+    private final SystemStorage systemStorage;
+    // services
     private final ControllerUnitService controllerUnitService;
-    private final DistributionService distributionService;
-    private final ModelService modelService;
     private final ModuleService moduleService;
     private final ProcessingPathService pathService;
-    private final TaskService taskService;
-    private final TaskTypeService taskTypeService;
 
     private final AtomicBoolean active = new AtomicBoolean(false);
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
+    private final List<Path> comingOutPahts = new ArrayList<>();
 
-    public TaskDispatcherImpl(ControllerUnit entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
-        this.controllerUnitService = controllerUnitService;
-        this.distributionService = distributionService;
-        this.modelService = modelService;
-        this.moduleService = moduleService;
-        this.pathService = pathService;
-        this.taskService = taskService;
-        this.taskTypeService = taskTypeService;
+    public TaskDispatcherImpl(ControllerUnit entityObject, SystemStorage systemStorage) {
+        this.systemStorage = systemStorage;
+        this.controllerUnitService = systemStorage.getControllerUnitService();
+        this.moduleService = systemStorage.getModuleService();
+        this.pathService = systemStorage.getPathService();
         setEntityObject(entityObject);
     }
 
@@ -116,10 +114,29 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
         if (getEntityObject() != null) {
             List<Module> modulesByControllerUnit = moduleService.getModulesByControllerUnit(getEntityObject());
             for (Module m : modulesByControllerUnit) {
-                ProcessingUnitImpl p = new ProcessingUnitImpl(m, controllerUnitService, moduleService, taskService, taskTypeService);
+                ProcessingUnitImpl p = new ProcessingUnitImpl(m, this, systemStorage);
                 processingUnits.add(p);
             }
         }
+    }
+
+    protected boolean reloadComingOutPaths() {
+        if (active.get()) {
+            return false;
+        } else {
+            comingOutPahts.clear();
+            if (getEntityObject() != null) {
+                List<ProcessingPath> comingOutPaths = pathService.getProcessingPathsComingOutFromTheControllerUnit(getEntityObject());
+                for (ProcessingPath entity : comingOutPaths) {
+                    TypeImpl typeObject = systemStorage.getTypeObject(entity.getTaskType());
+                    TaskDispatcher forwardTo = systemStorage.getTaskDispatcherObject(entity.getNextControllerUnit());
+                    PathImpl pathImpl = new PathImpl(entity, typeObject, forwardTo, pathService);
+                    comingOutPahts.add(pathImpl);
+                }
+            }
+            return true;
+        }
+
     }
 
     @Override
@@ -229,13 +246,64 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
 
     @Override
     public void returnTaskFromProcessingUnit(Task task) throws SystemIntegrityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            forwardTaskOrFinish(task);
+        } catch (PathDefinitionExcpetion ex) {
+            Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathDefinitionInfinityLoopExcpetion ex) {
+            Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void forwardTaskOrFinish(Task task, Path pathForTask) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
+        TaskDispatcher forwardTo = pathForTask.getNextTaskDispatcher();
+        if (forwardTo == null || forwardTo.getId().equals(this.getId())) {
+            PrintHelper.printMsg(getName(), "Zadanie powinno byc zakonczone...");
+            task.finishTask();
+        } else {
+            PrintHelper.printMsg(getName(), "ZADANIE POWINNO BYC PRZEKAZANE DO: " + forwardTo.getName() + " ...");
+            forwardTo.receiveTask(task);
+        }
+    }
+
+    private void forwardTaskOrFinish(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
+        forwardTaskOrFinish(task, getPathForTask(task));
     }
 
     @Override
     public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
         PrintHelper.printMsg(getName(), "Otrzymalem zadanie");
-        PrintHelper.printMsg(getName(), "Nic z nim nie robie bo nie wiem jeszcze jak...");
+        Path pathForTask = getPathForTask(task);
+        if (pathForTask != null) {
+            if (pathForTask.isProcessing()) {
+                try {
+                    PrintHelper.printMsg(getName(), "Zadanie powinno byc przetworzone...");
+                    chooseProcessingUnit().processTask(task);
+                    /// trzeba je potem spowrotem odebrac...
+                } catch (ProcessingAbilityException ex) {
+                    Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                forwardTaskOrFinish(task, pathForTask);
+            }
+        } else {
+            PrintHelper.printAlert(getName(), "NIE ZNALEZIONO SCIEZKI DLA ZADANIA");
+        }
+    }
+
+    private Path getPathForTask(Task task) {
+        for (Path p : comingOutPahts) {
+            if (p.getType().getId().equals(task.getType().getId())) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private ProcessingUnitImpl chooseProcessingUnit() {
+        Random r = new Random();
+        int nextInt = r.nextInt(processingUnits.size());
+        return (ProcessingUnitImpl) processingUnits.get(nextInt);
     }
 
     @Override
@@ -245,7 +313,7 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
 
     @Override
     public List<Path> getComingOutPaths() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return comingOutPahts;
     }
 
 }

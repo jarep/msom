@@ -10,17 +10,35 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
  *
  * @author jarep
  */
 public class SystemStorage {
+
+    // services
+    private final ControllerUnitService controllerUnitService;
+    private final DistributionService distributionService;
+    private final ModelService modelService;
+    private final ModuleService moduleService;
+    private final ProcessingPathService pathService;
+    private final TaskService taskService;
+    private final TaskTypeService taskTypeService;
 
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
     private final List<TypeImpl> types = new ArrayList<>();
@@ -29,8 +47,42 @@ public class SystemStorage {
     private final AtomicBoolean active = new AtomicBoolean(false);
 
     // nalozyc blokady, kolejki bezpieczne watkowo ...
-    
-    public SystemStorage() {
+    public SystemStorage(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+        this.controllerUnitService = controllerUnitService;
+        this.distributionService = distributionService;
+        this.modelService = modelService;
+        this.moduleService = moduleService;
+        this.pathService = pathService;
+        this.taskService = taskService;
+        this.taskTypeService = taskTypeService;
+    }
+
+    public ControllerUnitService getControllerUnitService() {
+        return controllerUnitService;
+    }
+
+    public DistributionService getDistributionService() {
+        return distributionService;
+    }
+
+    public ModelService getModelService() {
+        return modelService;
+    }
+
+    public ModuleService getModuleService() {
+        return moduleService;
+    }
+
+    public ProcessingPathService getPathService() {
+        return pathService;
+    }
+
+    public TaskService getTaskService() {
+        return taskService;
+    }
+
+    public TaskTypeService getTaskTypeService() {
+        return taskTypeService;
     }
 
     public void cleanTasks() {
@@ -67,8 +119,12 @@ public class SystemStorage {
         }
         return null;
     }
-    
-    public List<TypeImpl> getAllSupportedTypes(){
+
+    public TypeImpl getTypeObject(TaskType taskType) {
+        return getTypeObject(taskType.getId());
+    }
+
+    public List<TypeImpl> getAllSupportedTypes() {
         return types;
     }
 
@@ -98,13 +154,17 @@ public class SystemStorage {
         return taskDispatchers;
     }
 
-    public TaskDispatcher getTaskDispacherObject(Long taskDispatcherId) {
+    public TaskDispatcher getTaskDispatcherObject(Long taskDispatcherId) {
         for (TaskDispatcher td : taskDispatchers) {
             if (td.getId().equals(taskDispatcherId)) {
                 return td;
             }
         }
         return null;
+    }
+    
+    public TaskDispatcher getTaskDispatcherObject(ControllerUnit controllerUnit){
+        return getTaskDispatcherObject(controllerUnit.getId());
     }
 
     public DistributionType getDistributionType() {

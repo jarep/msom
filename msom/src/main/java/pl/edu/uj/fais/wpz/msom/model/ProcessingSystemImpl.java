@@ -33,6 +33,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  */
 public class ProcessingSystemImpl extends AbstractModelObject<Model> implements ProcessingSystem {
 
+    private final SystemStorage systemStorage;
     // services
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
@@ -44,8 +45,6 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
 
     private TaskGeneratorImpl taskGenerator;
 
-    private final SystemStorage systemStorage = new SystemStorage();
-
     private final AtomicBoolean active = new AtomicBoolean(false);
 
     public ProcessingSystemImpl(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
@@ -56,6 +55,7 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        this.systemStorage = new SystemStorage(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
         setEntityObject(entityObject);
         initializeSystemStorage();
     }
@@ -63,6 +63,7 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
     private void initializeSystemStorage() {
         reloadTaskDispatchers();
         reloadTypes();
+        reloadPaths(); // paths are reloaded after reloaded task dispatchers, because we need all task dispatchers to create connection between them
     }
 
     @Override
@@ -90,9 +91,16 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         if (getEntityObject() != null) {
             List<ControllerUnit> controllersByModel = controllerUnitService.getControllersByModel(getEntityObject());
             for (ControllerUnit controllerUnit : controllersByModel) {
-                TaskDispatcherImpl td = new TaskDispatcherImpl(controllerUnit, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+                TaskDispatcherImpl td = new TaskDispatcherImpl(controllerUnit, systemStorage);
                 systemStorage.addTaskDispatcher(td);
             }
+        }
+    }
+
+    private void reloadPaths() {
+        List<TaskDispatcher> taskDispatchers = systemStorage.getTaskDispatchers();
+        for (TaskDispatcher dispatcher : taskDispatchers) {
+            ((TaskDispatcherImpl) dispatcher).reloadComingOutPaths();
         }
     }
 
@@ -254,7 +262,7 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
 
     @Override
     public boolean isLocked() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return active.get();
     }
 
     @Override

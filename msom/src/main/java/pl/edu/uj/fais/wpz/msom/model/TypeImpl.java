@@ -63,7 +63,7 @@ public class TypeImpl extends AbstractModelObject<TaskType> implements Type {
 
     @Override
     public int getDifficulty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getEntityObject().getDifficulty();
     }
 
     @Override

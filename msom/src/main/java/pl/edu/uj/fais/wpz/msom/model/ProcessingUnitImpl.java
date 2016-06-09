@@ -7,22 +7,22 @@ package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
@@ -31,9 +31,8 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  */
 public class ProcessingUnitImpl extends AbstractModelObject<Module> implements ProcessingUnit {
 
-    private final ControllerUnitService controllerUnitService;
+    private final SystemStorage systemStorage;
     private final ModuleService moduleService;
-    private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
     private final AtomicBoolean active = new AtomicBoolean(false);
@@ -41,13 +40,15 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     private final List<Thread> coreThreads = new ArrayList<>();
     private final BlockingQueue<Task> tasksBlockingQueue = new LinkedBlockingQueue<>();
 
+    private final TaskDispatcherImpl taskDispatcher;
+
     private final List<Type> availableTypes = new ArrayList<>();
 
-    public ProcessingUnitImpl(Module entityObject, ControllerUnitService controllerUnitService, ModuleService moduleService, TaskService taskService, TaskTypeService taskTypeService) {
-        this.controllerUnitService = controllerUnitService;
-        this.moduleService = moduleService;
-        this.taskService = taskService;
-        this.taskTypeService = taskTypeService;
+    public ProcessingUnitImpl(Module entityObject, TaskDispatcherImpl taskDispatcher, SystemStorage systemStorage) {
+        this.systemStorage = systemStorage;
+        this.moduleService = systemStorage.getModuleService();
+        this.taskTypeService = systemStorage.getTaskTypeService();
+        this.taskDispatcher = taskDispatcher;
         setEntityObject(entityObject);
     }
 
@@ -58,10 +59,10 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public boolean activate() {
-        PrintHelper.printMsg(getName(), "aktywuje sie...");
+        PrintHelper.printMsg(getFullName(), "aktywuje sie...");
         active.set(true);
         activateCores();
-        PrintHelper.printMsg(getName(), "jestem aktywny.");
+        PrintHelper.printMsg(getFullName(), "jestem aktywny.");
         return true;
     }
 
@@ -73,26 +74,26 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     }
 
     private void activateCores() {
-        PrintHelper.printMsg(getName(), "aktywuje rdzenie...");
+        PrintHelper.printMsg(getFullName(), "aktywuje rdzenie...");
         for (int i = 0; i < getCores(); i++) {
-            Core core = new Core(tasksBlockingQueue, this);
+            Core core = new Core(tasksBlockingQueue, this, i);
             cores.add(core);
             Thread coreThread = new Thread(core);
             coreThreads.add(coreThread);
             coreThread.setDaemon(true);
             coreThread.start();
         }
-        PrintHelper.printMsg(getName(), "aktywowalem rdzenie.");
+        PrintHelper.printMsg(getFullName(), "aktywowalem rdzenie.");
     }
 
     private void deactivateCores() {
-        PrintHelper.printMsg(getName(), "deaktywuje rdzenie...");
+        PrintHelper.printMsg(getFullName(), "deaktywuje rdzenie...");
         for (Thread thread : coreThreads) {
             thread.interrupt();
         }
         coreThreads.clear();
         cores.clear();
-        PrintHelper.printMsg(getName(), "deaktywowalem rdzenie.");
+        PrintHelper.printMsg(getFullName(), "deaktywowalem rdzenie.");
 
     }
 
@@ -113,6 +114,7 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
         }
     }
 
+    // should be common objects (from SystemStorage)
     private void reloadAvailableTypes() {
         availableTypes.clear();
         if (getEntityObject() != null) {
@@ -149,6 +151,10 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     @Override
     public String getName() {
         return getEntityObject().getName();
+    }
+
+    public String getFullName() {
+        return taskDispatcher.getName() + " - " + getEntityObject().getName();
     }
 
     @Override
@@ -193,12 +199,13 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public void processTask(Task task) throws ProcessingAbilityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PrintHelper.printMsg(getFullName(), "Odebralem zadanie - przekazuje do kolejki.");
+        tasksBlockingQueue.add(task);
     }
 
     @Override
     public int getQueueLength() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return tasksBlockingQueue.size();
     }
 
     @Override
@@ -208,7 +215,10 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public List<Task> getWaitingTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Task peek = tasksBlockingQueue.peek(); // for now, only we return only first element
+        List<Task> result = new ArrayList<>();
+        result.add(peek);
+        return result;
     }
 
     @Override
@@ -234,5 +244,18 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     @Override
     public int getAvgProcessingTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Return task from core.
+     *
+     * @param task
+     */
+    protected void returnTask(Task task) {
+        try {
+            taskDispatcher.returnTaskFromProcessingUnit(task);
+        } catch (SystemIntegrityException ex) {
+            Logger.getLogger(ProcessingUnitImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
