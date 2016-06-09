@@ -14,7 +14,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
  *
  * @author jarep
  */
-public interface ProcessingUnit extends IModelObject<Module> {
+public interface ProcessingUnit extends IModelObject<Module>, Activatable {
 
     /**
      * Set name for this Processing Unit
@@ -159,5 +159,5 @@ public interface ProcessingUnit extends IModelObject<Module> {
      * @return average processing time
      */
     public int getAvgProcessingTime();
-
+    
 }

@@ -9,7 +9,7 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
  *
  * @author jarep
  */
-public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task> {
+public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task>, Activatable {
 
     /**
      * Get type of task
@@ -68,14 +68,14 @@ public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task
 
     /**
      * Get how many times this task was executed.
-     * 
+     *
      * @return execution counter
      */
     public int getExecutionCounter();
 
     /**
      * Get percentage of current execution.
-     * 
+     *
      * @return percentage of execution
      */
     public double getPercentageOfCurrentExecution();
