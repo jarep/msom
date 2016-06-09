@@ -5,11 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
@@ -41,7 +43,10 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
     private final TaskTypeService taskTypeService;
 
     private TaskGeneratorImpl taskGenerator;
-    private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
+
+    private final SystemStorage systemStorage = new SystemStorage();
+
+    private final AtomicBoolean active = new AtomicBoolean(false);
 
     public ProcessingSystemImpl(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
@@ -52,12 +57,26 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
         setEntityObject(entityObject);
+        initializeSystemStorage();
+    }
+
+    private void initializeSystemStorage() {
+        reloadTaskDispatchers();
+        reloadTypes();
     }
 
     @Override
-    public void reload() {
-        reloadEntityObcject();
-        reloadTaskDispatchers();
+    public boolean reload() {
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Obiekt aktywny - nie mozna przeladowac.");
+            return false;
+        } else {
+            reloadEntityObcject();
+            reloadTaskDispatchers();
+            reloadTypes();
+            PrintHelper.printMsg(getName(), "Obiekt przeladowano.");
+            return true;
+        }
     }
 
     private void reloadEntityObcject() {
@@ -67,20 +86,40 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
     }
 
     private void reloadTaskDispatchers() {
-        taskDispatchers.clear();
+        systemStorage.cleanTasksDispatchers();
         if (getEntityObject() != null) {
             List<ControllerUnit> controllersByModel = controllerUnitService.getControllersByModel(getEntityObject());
             for (ControllerUnit controllerUnit : controllersByModel) {
                 TaskDispatcherImpl td = new TaskDispatcherImpl(controllerUnit, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-                taskDispatchers.add(td);
+                systemStorage.addTaskDispatcher(td);
+            }
+        }
+    }
+
+    private void reloadTypes() {
+        systemStorage.cleanTypes();
+        if (getEntityObject() != null) {
+            List<TaskType> allTaskTypes = taskTypeService.findAll(); // UWAGA - powinny byc tylko te, ktore sa powiazane z tym modelem!!! 
+            //czyli wlasciwie te, ktore obsluguje pierwszy controller
+//            getFirstTaskDispatcher().getAllSupportedTypes();
+            for (TaskType taskType : allTaskTypes) {
+                TypeImpl type = new TypeImpl(taskType, taskTypeService);
+                systemStorage.addType(type);
             }
         }
     }
 
     @Override
-    public void save() {
-        saveEntityObject();
-        saveTaskDispatchers();
+    public boolean save() {
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Obiekt aktywny - nie mozna zapisac.");
+            return false;
+        } else {
+            saveEntityObject();
+            saveTaskDispatchers();
+            PrintHelper.printMsg(getName(), "Obiekt zapisano.");
+            return true;
+        }
     }
 
     private void saveEntityObject() {
@@ -90,7 +129,7 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
     }
 
     private void saveTaskDispatchers() {
-        for (TaskDispatcher td : taskDispatchers) {
+        for (TaskDispatcher td : systemStorage.getTaskDispatchers()) {
             td.save();
         }
     }
@@ -105,13 +144,33 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         return getEntityObject().getName();
     }
 
-    /**
-     * For now it is only mockup - should be implemented
-     */
     @Override
     public boolean startSimulation() {
-        System.out.println("[Rozpoczeto symulacje ... ]");
+        if (active.getAndSet(true)) {
+            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna ponownie rozpoczac ...");
+            return false; // already started
+        } else {
+            PrintHelper.printMsg(getName(), "Rozpoczynam symulacje ...");
+            activateTaskDispatchers();
+            activateGenerator();
+            PrintHelper.printMsg(getName(), "Rozpoczeto symulacje");
+        }
         return true;
+    }
+
+    private void activateTaskDispatchers() {
+        PrintHelper.printMsg(getName(), "Aktywuje task dispatchers ...");
+        for (TaskDispatcher td : systemStorage.getTaskDispatchers()) {
+            td.activate();
+        }
+        PrintHelper.printMsg(getName(), "Aktywowalem task dispatchers.");
+    }
+
+    private void activateGenerator() {
+        PrintHelper.printMsg(getName(), "Aktywuje generator ...");
+        taskGenerator = new TaskGeneratorImpl(systemStorage, taskService);
+        taskGenerator.activate();
+        PrintHelper.printMsg(getName(), "Aktywowalem generator.");
     }
 
     /**
@@ -119,32 +178,63 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
      */
     @Override
     public void stopSimulation() {
-        System.out.println("[Zatrzymano symulacje ... ]");
+        if (!active.getAndSet(false)) {
+            PrintHelper.printAlert(getName(), "Symualacja zatrzymana - nie mozna ponownie zatrzymac ...");
+        } else {
+            PrintHelper.printMsg(getName(), "Zatrzymuje symulacje ... ]");
+            deactivateGenerator();
+            deactivateTaskDispatchers();
+            // clean storage (albo osobno, jesli chcemy zachowac dane symulacji)
+            PrintHelper.printMsg(getName(), "Zatrzymano symulacje]");
+        }
+    }
+
+    private void deactivateTaskDispatchers() {
+        for (TaskDispatcher td : systemStorage.getTaskDispatchers()) {
+            td.deactivate();
+        }
+    }
+
+    private void deactivateGenerator() {
+        if (taskGenerator != null) {
+            taskGenerator.deactivate();
+        }
+        taskGenerator = null;
     }
 
     @Override
     public TaskDispatcher createTaskDispatcher(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+            return null;
+        } else {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
     @Override
-    public void addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+            return false;
+        } else {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
     @Override
     public List<TaskDispatcher> getTaskDispatchers() {
-        return taskDispatchers;
+        return systemStorage.getTaskDispatchers();
     }
 
     @Override
-    public void setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
+    public boolean setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public TaskDispatcher getFirstTaskDispatcher() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return systemStorage.getFirstTaskDispatcher();
     }
 
     @Override

@@ -111,5 +111,10 @@ public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.mso
     public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public boolean isActive() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
    
 }

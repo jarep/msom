@@ -27,4 +27,11 @@ public interface Activatable {
      */
     public boolean deactivate();
 
+    /**
+     * Check if object is activated.
+     *
+     * @return {@code true} if is active, {@code false} otherwise.
+     */
+    public boolean isActive();
+
 }

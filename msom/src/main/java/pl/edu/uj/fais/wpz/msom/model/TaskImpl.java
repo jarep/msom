@@ -5,7 +5,9 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 
 /**
@@ -13,17 +15,24 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
  * @author jarep
  */
 public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task> implements Task {
-    
+
     private final TaskService taskService;
+    private final AtomicBoolean active = new AtomicBoolean(false);
+    private Type type;
 
     public TaskImpl(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService TaskService) {
         this.taskService = TaskService;
         setEntityObject(entityObject);
     }
-    
+
     @Override
-    public void reload() {
-        reloadEntityObcject();
+    public boolean reload() {
+        if (active.get()) {
+            return false;
+        } else {
+            reloadEntityObcject();
+            return true;
+        }
     }
 
     private void reloadEntityObcject() {
@@ -33,8 +42,13 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     }
 
     @Override
-    public void save() {
-        saveEntityObject();
+    public boolean save() {
+        if (active.get()) {
+            return false;
+        } else {
+            saveEntityObject();
+            return true;
+        }
     }
 
     private void saveEntityObject() {
@@ -44,8 +58,20 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     }
 
     @Override
-    public TypeImpl getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Type getType() {
+        return type;
+    }
+
+    public boolean setType(TypeImpl type) {
+        if (active.get()) {
+            return false;
+        } else if (type == null || getEntityObject() == null) {
+            return false;
+        } else {
+            this.type = type;
+            getEntityObject().setTaskType(type.getEntityObject());
+            return true;
+        }
     }
 
     @Override
@@ -97,5 +123,27 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     public double getPercentageOfCurrentExecution() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-   
+
+    @Override
+    public boolean isActive() {
+        return active.get();
+    }
+
+    @Override
+    public boolean activate() {
+        active.set(true); // do rozbudowania
+        return true;
+    }
+
+    @Override
+    public boolean deactivate() {
+        active.set(false); // do rozbudowania
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskImpl{" + "name=" + getName() + ", active=" + active + ", type=" + type.getName() + '}';
+    }
+
 }

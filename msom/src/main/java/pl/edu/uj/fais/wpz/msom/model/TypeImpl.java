@@ -5,6 +5,7 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
@@ -16,6 +17,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 public class TypeImpl extends AbstractModelObject<TaskType> implements Type {
 
     private final TaskTypeService taskTypeService;
+    private final AtomicBoolean active = new AtomicBoolean(false);
 
     public TypeImpl(TaskType entityObject, TaskTypeService taskTypeService) {
         this.taskTypeService = taskTypeService;
@@ -28,8 +30,13 @@ public class TypeImpl extends AbstractModelObject<TaskType> implements Type {
     }
 
     @Override
-    public void reload() {
-        reloadEntityObcject();
+    public boolean reload() {
+        if (active.get()) {
+            return false;
+        } else {
+            reloadEntityObcject();
+            return true;
+        }
     }
 
     private void reloadEntityObcject() {
@@ -39,8 +46,13 @@ public class TypeImpl extends AbstractModelObject<TaskType> implements Type {
     }
 
     @Override
-    public void save() {
-        saveEntityObject();
+    public boolean save() {
+        if (active.get()) {
+            return false;
+        } else {
+            saveEntityObject();
+            return true;
+        }
     }
 
     private void saveEntityObject() {
@@ -51,6 +63,21 @@ public class TypeImpl extends AbstractModelObject<TaskType> implements Type {
 
     @Override
     public int getDifficulty() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isActive() {
+        return active.get();
+    }
+
+    @Override
+    public boolean activate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

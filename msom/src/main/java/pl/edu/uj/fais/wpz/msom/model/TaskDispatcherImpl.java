@@ -7,8 +7,11 @@ package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
@@ -40,6 +43,7 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
+    private final AtomicBoolean active = new AtomicBoolean(false);
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
 
     public TaskDispatcherImpl(ControllerUnit entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
@@ -54,9 +58,51 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     }
 
     @Override
-    public void reload() {
-        reloadEntityObcject();
-        reloadProcessingUnits();
+    public boolean activate() {
+        PrintHelper.printMsg(getName(), "aktywuje sie...");
+        active.set(true);
+        activateProcessingUnits();
+        PrintHelper.printMsg(getName(), "jestem aktywny.");
+        return true;
+    }
+
+    @Override
+    public boolean deactivate() {
+        deactivateProcessingUnits();
+        active.set(false);
+        return false;
+    }
+
+    private boolean activateProcessingUnits() {
+        PrintHelper.printMsg(getName(), "aktywuje processing units...");
+        for (ProcessingUnit p : processingUnits) {
+            p.activate();
+        }
+        PrintHelper.printMsg(getName(), "aktywowalem processing units.");
+        return true;
+    }
+
+    private boolean deactivateProcessingUnits() {
+        for (ProcessingUnit p : processingUnits) {
+            p.deactivate();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isActive() {
+        return active.get();
+    }
+
+    @Override
+    public boolean reload() {
+        if (active.get()) {
+            return false;
+        } else {
+            reloadEntityObcject();
+            reloadProcessingUnits();
+            return true;
+        }
     }
 
     private void reloadEntityObcject() {
@@ -77,9 +123,14 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     }
 
     @Override
-    public void save() {
-        saveEntityObject();
-        saveProcessingUnits();
+    public boolean save() {
+        if (active.get()) {
+            return false;
+        } else {
+            saveEntityObject();
+            saveProcessingUnits();
+            return true;
+        }
     }
 
     private void saveEntityObject() {
@@ -89,7 +140,7 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     }
 
     private void saveProcessingUnits() {
-        for(ProcessingUnit p : processingUnits){
+        for (ProcessingUnit p : processingUnits) {
             p.save();
         }
     }
@@ -171,13 +222,20 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     }
 
     @Override
+    public List<Type> getAllSupportedTypes() {
+        List<TaskType> supportedTaskTypesByControllerUnit = pathService.getSupportedTaskTypesByControllerUnit(getEntityObject());
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void returnTaskFromProcessingUnit(Task task) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PrintHelper.printMsg(getName(), "Otrzymalem zadanie");
+        PrintHelper.printMsg(getName(), "Nic z nim nie robie bo nie wiem jeszcze jak...");
     }
 
     @Override

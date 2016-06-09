@@ -30,6 +30,7 @@ public abstract class AbstractModelObject<Entity> {
     public Long getId() {
         return ((AbstractEntity) entityObject).getId();
     }
-    
-    public abstract void reload();
+
+    public abstract boolean reload();
+
 }

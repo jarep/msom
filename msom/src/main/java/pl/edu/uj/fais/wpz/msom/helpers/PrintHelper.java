@@ -12,18 +12,22 @@ package pl.edu.uj.fais.wpz.msom.helpers;
 public class PrintHelper {
 
     public static void printMsg(String who, String msg) {
-        System.out.println("[" + who + "]:" + msg);
+        print("[" + who + "]:\t" + msg);
     }
 
     public static void printAlert(String who, String msg) {
-        System.out.println("[! " + who + " !]:" + msg);
+        print("[! " + who + " !]:\t" + msg);
     }
 
     public static void printError(String who, String msg) {
-        System.out.println("ERROR [!!! " + who + " !!!!]");
-        System.out.println("--- " + msg + " ---");
-        System.out.println("--------- ERROR |");
+        print("ERROR [!!! " + who + " !!!!]");
+        print("--- " + msg + " ---");
+        print("--------- ERROR |");
+    }
 
+    private static void print(String msg) {
+        String threadName = Thread.currentThread().getName();
+        System.out.println("{" + threadName + "} \t" + msg);
     }
 
 }

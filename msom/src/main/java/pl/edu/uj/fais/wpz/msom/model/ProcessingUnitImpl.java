@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
@@ -32,9 +36,10 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
 
-    private final Random generator = new Random();
-    private int fakeQueueLength;
-    private int fakeTaskDifficulty;
+    private final AtomicBoolean active = new AtomicBoolean(false);
+    private final List<Core> cores = new ArrayList<>();
+    private final List<Thread> coreThreads = new ArrayList<>();
+    private final BlockingQueue<Task> tasksBlockingQueue = new LinkedBlockingQueue<>();
 
     private final List<Type> availableTypes = new ArrayList<>();
 
@@ -47,9 +52,59 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     }
 
     @Override
-    public void reload() {
-        reloadEntityObcject();
-        reloadAvailableTypes();
+    public boolean isActive() {
+        return active.get();
+    }
+
+    @Override
+    public boolean activate() {
+        PrintHelper.printMsg(getName(), "aktywuje sie...");
+        active.set(true);
+        activateCores();
+        PrintHelper.printMsg(getName(), "jestem aktywny.");
+        return true;
+    }
+
+    @Override
+    public boolean deactivate() {
+        active.set(false);
+        deactivateCores();
+        return true;
+    }
+
+    private void activateCores() {
+        PrintHelper.printMsg(getName(), "aktywuje rdzenie...");
+        for (int i = 0; i < getCores(); i++) {
+            Core core = new Core(tasksBlockingQueue, this);
+            cores.add(core);
+            Thread coreThread = new Thread(core);
+            coreThreads.add(coreThread);
+            coreThread.setDaemon(true);
+            coreThread.start();
+        }
+        PrintHelper.printMsg(getName(), "aktywowalem rdzenie.");
+    }
+
+    private void deactivateCores() {
+        PrintHelper.printMsg(getName(), "deaktywuje rdzenie...");
+        for (Thread thread : coreThreads) {
+            thread.interrupt();
+        }
+        coreThreads.clear();
+        cores.clear();
+        PrintHelper.printMsg(getName(), "deaktywowalem rdzenie.");
+
+    }
+
+    @Override
+    public boolean reload() {
+        if (active.get()) {
+            return false;
+        } else {
+            reloadEntityObcject();
+            reloadAvailableTypes();
+            return true;
+        }
     }
 
     private void reloadEntityObcject() {
@@ -70,8 +125,13 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     }
 
     @Override
-    public void save() {
-        saveEntityObject();
+    public boolean save() {
+        if (active.get()) {
+            return false;
+        } else {
+            saveEntityObject();
+            return true;
+        }
 //        saveTaskTypes();
     }
 
@@ -136,17 +196,11 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     * For now it is only mockup - should be implemented
-     */
     @Override
     public int getQueueLength() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     * For now it is only mockup - should be implemented
-     */
     @Override
     public int getQueueValue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
