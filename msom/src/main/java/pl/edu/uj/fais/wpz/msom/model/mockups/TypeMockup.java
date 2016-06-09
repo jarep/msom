@@ -28,8 +28,9 @@ public class TypeMockup extends AbstractModelMockupObject<TaskType> implements T
     }
 
     @Override
-    public void reload() {
+    public boolean reload() {
         reloadEntityObcject();
+        return true;
     }
 
     private void reloadEntityObcject() {
@@ -39,8 +40,9 @@ public class TypeMockup extends AbstractModelMockupObject<TaskType> implements T
     }
 
     @Override
-    public void save() {
+    public boolean save() {
         saveEntityObject();
+        return true;
     }
 
     private void saveEntityObject() {
@@ -51,6 +53,16 @@ public class TypeMockup extends AbstractModelMockupObject<TaskType> implements T
 
     @Override
     public int getDifficulty() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean activate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

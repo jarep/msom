@@ -54,9 +54,10 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     @Override
-    public void reload() {
+    public boolean reload() {
         reloadEntityObcject();
         reloadProcessingUnits();
+        return true;
     }
 
     private void reloadEntityObcject() {
@@ -77,9 +78,10 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     @Override
-    public void save() {
+    public boolean save() {
         saveEntityObject();
         saveProcessingUnits();
+        return true;
     }
 
     private void saveEntityObject() {
@@ -89,7 +91,7 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     private void saveProcessingUnits() {
-        for(ProcessingUnit p : processingUnits){
+        for (ProcessingUnit p : processingUnits) {
             p.save();
         }
     }
@@ -171,6 +173,11 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     @Override
+    public List<Type> getAllSupportedTypes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void returnTaskFromProcessingUnit(Task task) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -187,6 +194,16 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
 
     @Override
     public List<Path> getComingOutPaths() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean activate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

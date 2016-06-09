@@ -54,9 +54,10 @@ public class ProcessingSystemMockup extends AbstractModelMockupObject<Model> imp
     }
 
     @Override
-    public void reload() {
+    public boolean reload() {
         reloadEntityObcject();
         reloadTaskDispatchers();
+        return true;
     }
 
     private void reloadEntityObcject() {
@@ -77,9 +78,10 @@ public class ProcessingSystemMockup extends AbstractModelMockupObject<Model> imp
     }
 
     @Override
-    public void save() {
+    public boolean save() {
         saveEntityObject();
         saveTaskDispatchers();
+        return true;
     }
 
     private void saveEntityObject() {
@@ -127,7 +129,7 @@ public class ProcessingSystemMockup extends AbstractModelMockupObject<Model> imp
     }
 
     @Override
-    public void addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
+    public boolean addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -137,7 +139,7 @@ public class ProcessingSystemMockup extends AbstractModelMockupObject<Model> imp
     }
 
     @Override
-    public void setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
+    public boolean setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

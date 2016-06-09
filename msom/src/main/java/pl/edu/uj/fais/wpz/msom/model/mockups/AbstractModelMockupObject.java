@@ -31,5 +31,5 @@ public abstract class AbstractModelMockupObject<Entity> {
         return ((AbstractEntity) entityObject).getId();
     }
     
-    public abstract void reload();
+    public abstract boolean reload();
 }

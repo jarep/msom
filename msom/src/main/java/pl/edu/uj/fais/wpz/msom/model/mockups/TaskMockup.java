@@ -24,8 +24,9 @@ public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.mso
     }
     
     @Override
-    public void reload() {
+    public boolean reload() {
         reloadEntityObcject();
+        return true;
     }
 
     private void reloadEntityObcject() {
@@ -35,8 +36,9 @@ public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.mso
     }
 
     @Override
-    public void save() {
+    public boolean save() {
         saveEntityObject();
+        return true;
     }
 
     private void saveEntityObject() {
@@ -97,6 +99,16 @@ public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.mso
 
     @Override
     public double getPercentageOfCurrentExecution() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean activate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    

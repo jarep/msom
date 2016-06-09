@@ -47,9 +47,10 @@ public class ProcessingUnitMockup extends AbstractModelMockupObject<Module> impl
     }
 
     @Override
-    public void reload() {
+    public boolean reload() {
         reloadEntityObcject();
         reloadAvailableTypes();
+        return true;
     }
 
     private void reloadEntityObcject() {
@@ -70,9 +71,10 @@ public class ProcessingUnitMockup extends AbstractModelMockupObject<Module> impl
     }
 
     @Override
-    public void save() {
+    public boolean save() {
         saveEntityObject();
 //        saveTaskTypes();
+        return true;
     }
 
     private void saveEntityObject() {
@@ -182,6 +184,16 @@ public class ProcessingUnitMockup extends AbstractModelMockupObject<Module> impl
 
     @Override
     public int getAvgProcessingTime() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean activate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
