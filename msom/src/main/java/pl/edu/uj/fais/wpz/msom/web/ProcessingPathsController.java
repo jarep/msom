@@ -39,29 +39,23 @@ public class ProcessingPathsController {
 
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.GET)
     public String createProcessingPath(@PathVariable("controllerId") long controllerId, Model model, RedirectAttributes redirectAttributes) {
-        ControllerUnit controllerUnit = controllerUnitService.find(controllerId); // can be null!!!
-        if (controllerUnit == null) {
-            // redirect to error page 
-            model.addAttribute("errorMsg", "Controller Unit with id " + controllerId + " not found...");
-            return "errorpage";
-        } else {
-            ProcessingPath path = new ProcessingPath();
-            path.setControllerUnit(controllerUnit);
-            model.addAttribute("path", path);
+        ControllerUnit controllerUnit = controllerUnitService.find(controllerId);
+        ProcessingPath path = new ProcessingPath();
+        path.setControllerUnit(controllerUnit);
+        model.addAttribute("path", path);
 
-            List<TaskType> typesWithUnspecifiedPathFromContoller = controllerUnitService.getTypesWithUnspecifiedPathFromContoller(controllerUnit);
-            model.addAttribute("unspecifiedTypes", typesWithUnspecifiedPathFromContoller);
+        List<TaskType> typesWithUnspecifiedPathFromContoller = controllerUnitService.getTypesWithUnspecifiedPathFromContoller(controllerUnit);
+        model.addAttribute("unspecifiedTypes", typesWithUnspecifiedPathFromContoller);
 
-            if (typesWithUnspecifiedPathFromContoller.isEmpty()) {
-                redirectAttributes.addFlashAttribute("msg", "Error: Unable to create a new Processing Path from the Controller Unit - all paths have already been created");
-                return "redirect:/controllerunits/" + controllerId;
-            }
-
-            List<ControllerUnit> controllers = controllerUnitService.getControllersByModel(controllerUnit.getModel());
-            model.addAttribute("controllers", controllers);
-            return "processingpaths/new";
+        if (typesWithUnspecifiedPathFromContoller.isEmpty()) {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to create a new Processing Path from the Controller Unit - all paths have already been created");
+            return "redirect:/controllerunits/" + controllerId;
         }
 
+        List<ControllerUnit> controllers = controllerUnitService.getControllersByModel(controllerUnit.getModel());
+        model.addAttribute("controllers", controllers);
+        return "processingpaths/new";
+        
     }
 
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.POST)

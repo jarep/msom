@@ -74,6 +74,7 @@ public class DistributionController {
     @RequestMapping(value = "/distributions/{id}", method = RequestMethod.GET)
     public String getDistribution(@PathVariable("id") long id, Model model) {
         Distribution distribution = distributionService.find(id);
+        if (distribution == null) throw new NullPointerException();
         model.addAttribute("distribution", distribution);
         model.addAttribute("distributionTypes", DistributionType.values());
         return "distributions/view";

@@ -94,6 +94,7 @@ public class TaskTypesController {
     @RequestMapping(value = "/tasktypes/{id}", method = RequestMethod.GET)
     public String getTaskType(@PathVariable("id") long id, Model model) {
         TaskType taskType = taskTypeService.find(id);
+        if (taskType == null) throw new NullPointerException();
         model.addAttribute("taskType", taskType);
 
         return "tasktypes/view";

@@ -68,6 +68,7 @@ public class ModelsController {
     @RequestMapping(value = "/models/{id}", method = RequestMethod.GET)
     public String getModel(@PathVariable("id") long id, Model model) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
+        if (m == null) throw new NullPointerException();
         model.addAttribute("model", m);
         return "models/view";
     }
