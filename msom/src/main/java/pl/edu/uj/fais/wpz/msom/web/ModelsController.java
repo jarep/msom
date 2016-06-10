@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
@@ -43,19 +44,22 @@ public class ModelsController {
     }
 
     @RequestMapping(value = "/models/new", method = RequestMethod.POST)
-    public String addModel(@ModelAttribute(value = "model") pl.edu.uj.fais.wpz.msom.entities.Model m) {
-        modelService.add(m);
+    public String addModel(@ModelAttribute(value = "model") pl.edu.uj.fais.wpz.msom.entities.Model m, RedirectAttributes redirectAttributes) {
+        if (modelService.add(m)) {
+            redirectAttributes.addFlashAttribute("msg", "The Model was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Model");
+        }
         return "redirect:/models";
     }
 
     @RequestMapping(value = "/models/remove/{id}", method = RequestMethod.POST)
-    public String deleteModel(@PathVariable("id") long id, Model model) {
+    public String deleteModel(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
-        boolean wasDeleted = modelService.remove(m);
-
-        if (!wasDeleted) {
-            model.addAttribute("errorMsg", "Can not remove this Model...");
-            return "errorpage";
+        if ((m != null) && modelService.remove(m))  {
+            redirectAttributes.addFlashAttribute("msg", "The Model was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Model");
         }
 
         return "redirect:/models";
@@ -64,15 +68,17 @@ public class ModelsController {
     @RequestMapping(value = "/models/{id}", method = RequestMethod.GET)
     public String getModel(@PathVariable("id") long id, Model model) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
+        if (m == null) throw new NullPointerException();
         model.addAttribute("model", m);
         return "models/view";
     }
 
     @RequestMapping(value = "/models/update", method = RequestMethod.POST)
-    public String updateModel(@ModelAttribute(value = "model") pl.edu.uj.fais.wpz.msom.entities.Model m, Model model) {
-        if (!modelService.update(m)) {
-            model.addAttribute("errorMsg", "Can not change this Model... ");
-            return "errorpage";
+    public String updateModel(@ModelAttribute(value = "model") pl.edu.uj.fais.wpz.msom.entities.Model m, Model model, RedirectAttributes redirectAttributes) {
+        if (modelService.update(m)) {
+            redirectAttributes.addFlashAttribute("msg", "The Model was updated");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to update the Model");
         }
         return "redirect:/models";
     }

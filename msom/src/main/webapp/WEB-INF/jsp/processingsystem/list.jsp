@@ -4,7 +4,7 @@
 <p class="lead">
 </p>
 
-<h2>All Processing Systems</h2>
+<h2>Available Processing Systems</h2>
 <table class="table">
     <tr>
         <th>Name</th>

@@ -1,14 +1,14 @@
     $(document).ready(
-        $("#taskForm").validate({
+        $("#processingPathForm").validate({
             rules: {
-                name:{
+                "nextControllerUnit.id":{
                     required : true
                 },
                 "taskType.id": {
                     required : true
                 }
             },messages:{
-                name : "Please specify the name",
+                "nextControllerUnit.id" : "Please select the next Controller Unit",
                 "taskType.id": "Please select the Task Type"
             },
             highlight: function(element) {

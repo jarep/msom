@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
@@ -71,30 +72,35 @@ public class ControllerUnitsController {
     }
 
     @RequestMapping(value = "/controllerunits/new", method = RequestMethod.POST)
-    public String addControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller) {
-        controllerUnitService.add(controller);
+    public String addControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller, RedirectAttributes redirectAttributes) {
+        if (controllerUnitService.add(controller)) {
+            redirectAttributes.addFlashAttribute("msg", "The Controller Unit was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Controller Unit");
+        }
         return "redirect:/controllerunits";
     }
 
     @RequestMapping(value = "/controllerunits/remove/{id}", method = RequestMethod.POST)
-    public String deleteControllerUnit(@PathVariable("id") long id, Model model) {
+    public String deleteControllerUnit(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         ControllerUnit controller = controllerUnitService.find(id);
-        boolean wasDeleted = controllerUnitService.remove(controller);
 
-        if (!wasDeleted) {
-            model.addAttribute("errorMsg", "Can not remove this Controller Unit...");
-            return "errorpage";
+        if ((controller != null) && controllerUnitService.remove(controller)) {
+            redirectAttributes.addFlashAttribute("msg", "The Controller Unit was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Controller Unit");
         }
-
+        
         return "redirect:/controllerunits";
     }
 
     @RequestMapping(value = "/controllerunits/update", method = RequestMethod.POST)
-    public String updateControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller, Model model) {
-        if (!controllerUnitService.update(controller)) {
-            model.addAttribute("errorMsg", "Can not change Model for this controller unit... ");
-            return "errorpage";
+    public String updateControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller, RedirectAttributes redirectAttributes) {
+        if (controllerUnitService.update(controller)) {
+            redirectAttributes.addFlashAttribute("msg", "The Controller Unit was udpated");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to update the Controller Unit");
         }
         return "redirect:/controllerunits";
     }

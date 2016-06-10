@@ -11,7 +11,7 @@
     </div>
     <div class="form-group">
         <label for="model">Model</label>
-        <sf:select name="model" path="model.id" cssClass="form-control">
+        <sf:select path="model.id" cssClass="form-control">
             <sf:options items="${modelsList}" itemLabel="name" itemValue="id" />
         </sf:select> 
     </div>

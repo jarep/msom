@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
@@ -75,10 +76,11 @@ public class ModulesController {
      * Saves new module to database
      *
      * @param module
+     * @param redirectAttributes
      * @return redirects to list
      */
     @RequestMapping(value = "/modules/new", method = RequestMethod.POST)
-    public String addModule(@ModelAttribute(value = "module") ModuleForm module) {
+    public String addModule(@ModelAttribute(value = "module") ModuleForm module, RedirectAttributes redirectAttributes) {
         Module m = new Module(module.getName(), module.getCores(), 
                 module.getEfficiency(), module.getControllerUnit());
         Set<TaskType> taskTypes = new HashSet<>();
@@ -90,7 +92,11 @@ public class ModulesController {
             }
         }
         m.setTaskTypes(taskTypes);
-        moduleService.add(m);
+        if (moduleService.add(m)) {
+            redirectAttributes.addFlashAttribute("msg", "The Module was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Module");
+        }
         return "redirect:/modules";
     }
 
@@ -127,19 +133,19 @@ public class ModulesController {
      * Deletes module with specified ID
      *
      * @param id module's ID
+     * @param redirectAttributes
      * @return redirects to modules if everything
      */
     @RequestMapping(value = "/modules/remove/{id}", method = RequestMethod.POST)
-    public String deleteModule(@PathVariable("id") long id) {
+    public String deleteModule(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         Module module = moduleService.find(id);
-        boolean wasDeleted = moduleService.remove(module);
-
-        if (!wasDeleted) {
-            // exception to handle
+        if((module != null) && moduleService.remove(module)) {
+            redirectAttributes.addFlashAttribute("msg", "The Module was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Module");
         }
 
-        // everything OK, see remaining modules
         return "redirect:/modules";
     }
 
@@ -147,10 +153,11 @@ public class ModulesController {
      * Updates module
      *
      * @param module module to update (bounded from HTML form)
+     * @param redirectAttributes
      * @return redirects to module
      */
     @RequestMapping(value = "/modules/update", method = RequestMethod.POST)
-    public String updateModule(@ModelAttribute(value = "module") ModuleForm module) {
+    public String updateModule(@ModelAttribute(value = "module") ModuleForm module, RedirectAttributes redirectAttributes) {
         Module m = moduleService.find(module.getId());
         m.setName(module.getName());
         m.setCores(module.getCores());
@@ -165,7 +172,11 @@ public class ModulesController {
             }
         }
         m.setTaskTypes(taskTypes);
-        moduleService.update(m);
+        if (moduleService.update(m)) {
+            redirectAttributes.addFlashAttribute("msg", "The Module was updated");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to update the Module");
+        }
         return "redirect:/modules";
     }
 
