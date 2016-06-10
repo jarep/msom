@@ -23,16 +23,14 @@ public class ExceptionsController {
     @ExceptionHandler(TypeMismatchException.class)
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleTypeMismatchException(Exception e, HttpServletRequest request, Model model) {
-        // invalid id
-        model.addAttribute("errorMsg", "Error: Page not found!");
+        model.addAttribute("errorMsg", "invalid ID");
         return "errorpage";
     }
     
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleNullPointerException(Exception e, HttpServletRequest request, Model model) {
-        // element with given id doesnt exist
-        model.addAttribute("errorMsg", "Error: Page not found!");
+        model.addAttribute("errorMsg", "ID not found");
         return "errorpage";
     }
     
