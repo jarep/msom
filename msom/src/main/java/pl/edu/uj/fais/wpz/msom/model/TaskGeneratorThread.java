@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
@@ -26,11 +27,11 @@ public class TaskGeneratorThread implements Runnable {
     private final SystemStorage systemStorage;
 
 //    private final List<pl.edu.uj.fais.wpz.msom.entities.Task> taskEntities = new ArrayList<>();
-    private final List<TaskEntityWithTypeId> taskEntitiesWithTypeIds = new ArrayList<>();
+    private final List<TaskEntityWrapper> taskEntitiesWrappers = new ArrayList<>();
     private final List<Type> availableTypes = new ArrayList<>();
 
     private final TaskService taskService;
-
+    
     public TaskGeneratorThread(SystemStorage systemStorage, TaskService taskService) {
         this.systemStorage = systemStorage;
         this.taskService = taskService;
@@ -56,10 +57,10 @@ public class TaskGeneratorThread implements Runnable {
 
     private void generateTask() {
         PrintHelper.printMsg(getName(), "Generuje zadanie...");
-        int index = ThreadLocalRandom.current().nextInt(taskEntitiesWithTypeIds.size());
-        TaskEntityWithTypeId entityWithTypeId = taskEntitiesWithTypeIds.get(index);
-        TaskImpl task = new TaskImpl(entityWithTypeId.getTaskEntity(), taskService);
-        Long typeId = entityWithTypeId.getTypeId();
+        int index = ThreadLocalRandom.current().nextInt(taskEntitiesWrappers.size());
+        TaskEntityWrapper taskEntityWrapper = taskEntitiesWrappers.get(index);
+        TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), taskService, taskEntityWrapper.incrementAndGetInstanceCounter());
+        Long typeId = taskEntityWrapper.getTypeId();
         TypeImpl type = systemStorage.getTypeObject(typeId);
         task.setType(type);
         task.activate();
@@ -75,7 +76,7 @@ public class TaskGeneratorThread implements Runnable {
 
     protected void deactive() {
         PrintHelper.printMsg(getName(), "deaktywacja...");
-        taskEntitiesWithTypeIds.clear();
+        taskEntitiesWrappers.clear();
         availableTypes.clear();
         active.set(false);
         PrintHelper.printMsg(getName(), "deaktywowano.");
@@ -96,10 +97,10 @@ public class TaskGeneratorThread implements Runnable {
         PrintHelper.printMsg(getName(), "inicializuje liste zadan...");
         List<Long> idsByTypes = getIdsByTypes(availableTypes);
         List<Task> tasksByTaskTypeIds = taskService.getTasksByTaskTypeIds(idsByTypes);
-        taskEntitiesWithTypeIds.clear();
+        taskEntitiesWrappers.clear();
         for (Task taskEntity : tasksByTaskTypeIds) {
-            TaskEntityWithTypeId entityWithTypeId = new TaskEntityWithTypeId(taskEntity, taskEntity.getTaskType().getId());
-            taskEntitiesWithTypeIds.add(entityWithTypeId);
+            TaskEntityWrapper entityWithTypeId = new TaskEntityWrapper(taskEntity, taskEntity.getTaskType().getId());
+            taskEntitiesWrappers.add(entityWithTypeId);
         }
 //        taskEntities.clear();
 //        taskEntities.addAll(taskService.getTasksByTaskTypeIds(idsByTypes));

@@ -78,12 +78,12 @@ public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.mso
     }
 
     @Override
-    public Integer getProcessingTime() {
+    public Long getProcessingTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Integer getWaitingTime() {
+    public Long getWaitingTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

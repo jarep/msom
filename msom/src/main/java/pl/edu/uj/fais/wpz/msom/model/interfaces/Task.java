@@ -57,14 +57,14 @@ public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task
      *
      * @return The number of milliseconds
      */
-    public Integer getProcessingTime();
+    public Long getProcessingTime();
 
     /**
      * Get current sum of waiting times.
      *
      * @return The number of milliseconds
      */
-    public Integer getWaitingTime();
+    public Long getWaitingTime();
 
     /**
      * Get how many times this task was executed.

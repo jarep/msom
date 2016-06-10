@@ -5,18 +5,20 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.concurrent.atomic.AtomicLong;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 
 /**
  *
  * @author jarep
  */
-public class TaskEntityWithTypeId {
+public class TaskEntityWrapper {
 
     private final Task taskEntity;
     private final Long typeId;
+    private final AtomicLong instanceCounter = new AtomicLong();
 
-    public TaskEntityWithTypeId(Task taskEntity, Long typeId) {
+    public TaskEntityWrapper(Task taskEntity, Long typeId) {
         this.taskEntity = taskEntity;
         this.typeId = typeId;
     }
@@ -28,5 +30,10 @@ public class TaskEntityWithTypeId {
     public Long getTypeId() {
         return typeId;
     }
+    
+    public Long incrementAndGetInstanceCounter(){
+        return instanceCounter.incrementAndGet();
+    }
+    
 
 }

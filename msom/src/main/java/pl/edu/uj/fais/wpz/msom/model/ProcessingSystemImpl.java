@@ -192,9 +192,20 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
             PrintHelper.printMsg(getName(), "Zatrzymuje symulacje ... ]");
             deactivateGenerator();
             deactivateTaskDispatchers();
-            // clean storage (albo osobno, jesli chcemy zachowac dane symulacji)
             PrintHelper.printMsg(getName(), "Zatrzymano symulacje]");
         }
+    }
+    
+    public boolean cleanSimulationData(){
+        if(active.get()){
+            PrintHelper.printAlert(getName(), "Nie mozna wyczyscic danych symulacji - symulacja w toku.");
+            return false;
+        } else {
+            systemStorage.cleanTasks();
+            systemStorage.cleanTasksDispatchers(); // with paths
+            systemStorage.cleanTypes();
+        }
+        return false;
     }
 
     private void deactivateTaskDispatchers() {
