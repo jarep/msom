@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
@@ -23,6 +24,7 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     private final TaskService taskService;
     private Type type;
+    private ProcessingUnit lastProcessingUnit;
 
     private final AtomicBoolean active = new AtomicBoolean(false);
     private final AtomicBoolean finished = new AtomicBoolean(false);
@@ -47,34 +49,17 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     @Override
     public boolean reload() {
         if (active.get()) {
+            PrintHelper.printAlert(getName(), "Nie mozna przeladowac zadania gdy jest aktywne.");
             return false;
-        } else {
-            executionWriteLock.lock();
-            try {
-                reloadEntityObcject();
-            } finally {
-                executionWriteLock.unlock();
-            }
-            return true;
         }
-    }
-
-    private void reloadEntityObcject() {
-        if (getEntityObject() != null) {
-            taskService.refresh(getEntityObject());
-        }
-    }
-
-    @Override
-    public boolean save() {
         executionWriteLock.lock();
         try {
             if (active.get()) {
-                PrintHelper.printAlert(getName(), "Nie mozna zapisac zadania gdy jest aktywne.");
+                PrintHelper.printAlert(getName(), "Nie mozna przeladowac zadania gdy jest aktywne.");
                 return false;
             } else {
-                saveEntityObject();
-                PrintHelper.printMsg(getName(), "Zapisano zadanie.");
+                reloadEntityObcject();
+                PrintHelper.printMsg(getName(), "Przeladowano zadanie.");
                 return true;
             }
         } finally {
@@ -83,23 +68,74 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     }
 
-    private void saveEntityObject() {
-        if (getEntityObject() != null) {
-            taskService.update(getEntityObject());
+    private void reloadEntityObcject() {
+        executionWriteLock.lock();
+        try {
+            if (getEntityObject() != null) {
+                taskService.refresh(getEntityObject());
+            }
+        } finally {
+            executionWriteLock.unlock();
+        }
+    }
+
+    @Override
+    public boolean save() {
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Nie mozna zapisac zadania gdy jest aktywne.");
+            return false;
+        }
+        executionWriteLock.lock();
+        try {
+            if (active.get()) {
+                PrintHelper.printAlert(getName(), "Nie mozna zapisac zadania gdy jest aktywne.");
+                return false;
+            } else {
+                return saveEntityObject();
+            }
+        } finally {
+            executionWriteLock.unlock();
+        }
+    }
+
+    private boolean saveEntityObject() {
+        executionWriteLock.lock();
+        try {
+            if (getEntityObject() != null) {
+                taskService.update(getEntityObject());
+                PrintHelper.printMsg(getName(), "Zapisano zadanie.");
+                return true;
+            } else {
+                PrintHelper.printError(getName(), "Nie mozna zapisac do bazy - entity is null");
+                return false;
+            }
+        } finally {
+            executionWriteLock.lock();
         }
     }
 
     @Override
     public Type getType() {
-        return type;
+        executionReadLock.lock();
+        try {
+            return type;
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     public boolean setType(TypeImpl type) {
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Nie mozna zmienic typu - zadanie jest aktywne.");
+            return false;
+        }
         executionWriteLock.lock();
         try {
             if (active.get()) {
+                PrintHelper.printAlert(getName(), "Nie mozna zmienic typu - zadanie jest aktywne.");
                 return false;
-            } else if (type == null || getEntityObject() == null) {
+            } else if (type == null || getEntityObject() == null || type.getEntityObject() == null) {
+                PrintHelper.printError(getName(), "Nie mozna zmienic typu - typ lub entity jest nullem.");
                 return false;
             } else {
                 this.type = type;
@@ -113,17 +149,27 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     @Override
     public String getName() {
-        return getEntityObject().getName() + ":" + instanceId;
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getName() + ":" + instanceId;
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
     public Integer getDifficulty() {
-        return getEntityObject().getTaskType().getDifficulty();
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getTaskType().getDifficulty();
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
-    public boolean processTask() {
-        executionWriteLock.lock();
+    public boolean processTask(ProcessingUnit processingUnit) {
+        executionReadLock.lock(); // we only change atomic variables, others can read
         try {
             if (!active.get()) {
                 PrintHelper.printError(getName(), "Proba przetwarzania nieaktywnego zadania!");
@@ -153,25 +199,40 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
                     PrintHelper.printMsg(getName(), "wykonano mnie po raz: " + executionCounter.incrementAndGet());
                     currentPercentage.set(0);
                     // WZNOWIENIE POMIARU CZASU OCZEKIWANIA
-                    return true;
                 } catch (InterruptedException ex) {
                     PrintHelper.printAlert(getName(), "Przerwano w trakcie przetwarzania. (interrupted exception)");
                 }
-                return false;
             }
+        } finally {
+            executionReadLock.unlock();
+        }
+        executionWriteLock.lock();
+        try {
+            lastProcessingUnit = processingUnit;
+            return true;
         } finally {
             executionWriteLock.unlock();
         }
     }
 
     @Override
-    public void finishTask() {
+    public boolean finishTask() {
+        if (finished.get()) {
+            PrintHelper.printAlert(getName(), "Nie mozna ponownie zakonczyc zadania.");
+            return false;
+        }
         executionWriteLock.lock();
         try {
-            finished.set(true);
-            // KONIEC POMIARU CZASU OCZEKIWANIA
-            // moze tutaj przekazanie danych - statystyk do obiektu typu?
-            PrintHelper.printMsg(getName(), "zakonczono mnie...");
+            if (finished.get()) {
+                PrintHelper.printAlert(getName(), "Nie mozna ponownie zakonczyc zadania.");
+                return false;
+            } else {
+                finished.set(true);
+                // KONIEC POMIARU CZASU OCZEKIWANIA
+                // moze tutaj przekazanie danych - statystyk do obiektu typu?
+                PrintHelper.printMsg(getName(), "zakonczono mnie...");
+                return true;
+            }
         } finally {
             executionWriteLock.unlock();
         }
@@ -193,8 +254,13 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     }
 
     @Override
-    public ProcessingUnitImpl getLastProcessingUnit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ProcessingUnit getLastProcessingUnit() {
+        executionReadLock.lock();
+        try {
+            return lastProcessingUnit;
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
@@ -214,6 +280,10 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     @Override
     public boolean activate() {
+        if (active.get()) {
+            PrintHelper.printMsg(getName(), "Nie mozna ponownie aktywowac zadania.");
+            return false;
+        }
         executionWriteLock.lock();
         try {
             if (active.get()) {
@@ -232,9 +302,13 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     @Override
     public boolean deactivate() {
+        if (!active.get()) {
+            PrintHelper.printMsg(getName(), "Nie mozna ponownie deaktywowac zadania.");
+            return false;
+        }
         executionWriteLock.lock();
         try {
-            if (active.get()) {
+            if (!active.get()) {
                 PrintHelper.printMsg(getName(), "Nie mozna ponownie deaktywowac zadania.");
                 return false;
             } else {
@@ -252,7 +326,12 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
 
     @Override
     public String toString() {
-        return "TaskImpl{" + "name=" + getName() + ", active=" + active + ", type=" + type.getName() + '}';
+        executionReadLock.lock();
+        try {
+            return "TaskImpl{" + "name=" + getName() + ", active=" + active + ", type=" + type.getName() + '}';
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
 }

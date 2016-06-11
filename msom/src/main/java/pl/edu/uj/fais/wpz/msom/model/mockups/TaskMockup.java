@@ -5,6 +5,7 @@
  */
 package pl.edu.uj.fais.wpz.msom.model.mockups;
 
+import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
@@ -63,12 +64,12 @@ public class TaskMockup extends AbstractModelMockupObject<pl.edu.uj.fais.wpz.mso
     }
 
     @Override
-    public boolean processTask() {
+    public boolean processTask(ProcessingUnit processingUnit) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void finishTask() {
+    public boolean finishTask() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

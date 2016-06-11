@@ -195,9 +195,9 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
             PrintHelper.printMsg(getName(), "Zatrzymano symulacje]");
         }
     }
-    
-    public boolean cleanSimulationData(){
-        if(active.get()){
+
+    public boolean cleanSimulationData() {
+        if (active.get()) {
             PrintHelper.printAlert(getName(), "Nie mozna wyczyscic danych symulacji - symulacja w toku.");
             return false;
         } else {
@@ -248,7 +248,12 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
 
     @Override
     public boolean setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (active.get()) {
+            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+            return false;
+        } else {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
     @Override

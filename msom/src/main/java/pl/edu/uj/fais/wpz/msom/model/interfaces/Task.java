@@ -35,15 +35,16 @@ public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task
     /**
      * Process task.
      *
+     * @param processingUnit 
      * @return {@code true} when successfully processed, {@code false} if task
      * was already finished
      */
-    public boolean processTask();
+    public boolean processTask(ProcessingUnit processingUnit);
 
     /**
      * Finish task.
      */
-    public void finishTask();
+    public boolean finishTask();
 
     /**
      * Check that the task is finished.

@@ -32,7 +32,7 @@ public class Core implements Runnable {
                 PrintHelper.printMsg(getName(), "CZEKAM na zadanie");
                 Task taskToDo = tasksBlockingQueue.take();
                 PrintHelper.printMsg(getName(), "ODEBRAŁEM zadanie, rozpoczynam przetwarzanie...");
-                taskToDo.processTask();
+                taskToDo.processTask(processingUnit);
                 PrintHelper.printMsg(getName(), "zakonczylem przetwarzanie zadania, zwracam do processing unit.");
                 processingUnit.returnTask(taskToDo);
             } catch (InterruptedException ex) {
@@ -40,7 +40,6 @@ public class Core implements Runnable {
 //                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         PrintHelper.printMsg(getName(), "koniec pracy");
     }
 
