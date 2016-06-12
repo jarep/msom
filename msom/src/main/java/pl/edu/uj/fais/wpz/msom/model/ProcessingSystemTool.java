@@ -34,6 +34,16 @@ public class ProcessingSystemTool {
 
     private final List<ProcessingSystem> localProcessingSystems = new ArrayList<>();
 
+    /**
+     * Constructor
+     * @param controllerUnitService
+     * @param distributionService
+     * @param modelService
+     * @param moduleService
+     * @param pathService
+     * @param taskService
+     * @param taskTypeService
+     */
     public ProcessingSystemTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
@@ -45,11 +55,20 @@ public class ProcessingSystemTool {
         reloadProcessingSystemsFromDatabase();
     }
 
+    /**
+     *
+     * @return all procesing systems
+     */
     public List<ProcessingSystem> getAllProcessingSystems() {
         updateProcessingSystemsList();
         return localProcessingSystems;
     }
 
+    /**
+     *
+     * @param processingSystemToReload
+     * @return reloaded processing system
+     */
     public ProcessingSystem reloadProcessingSystem(ProcessingSystem processingSystemToReload) {
         return reloadProcessingSystemFromDatabase(processingSystemToReload.getId());
     }
@@ -133,6 +152,11 @@ public class ProcessingSystemTool {
         localProcessingSystems.removeAll(processingSystemsToRemove);
     }
 
+    /**
+     *
+     * @param id processing system
+     * @return processing system
+     */
     public ProcessingSystem getProcessingSystem(Long id) {
         for (ProcessingSystem p : localProcessingSystems) {
             if (Objects.equals(p.getId(), id)) {
@@ -148,6 +172,11 @@ public class ProcessingSystemTool {
         return null;
     }
 
+    /**
+     *
+     * @param id processing system
+     * @return reloaded procesing system
+     */
     public ProcessingSystem reloadProcessingSystem(long id) {
         return reloadProcessingSystem(getProcessingSystem(id));
     }

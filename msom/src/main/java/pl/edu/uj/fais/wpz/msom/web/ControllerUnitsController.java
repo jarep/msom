@@ -36,6 +36,11 @@ public class ControllerUnitsController {
     @Autowired
     ModelService modelService;
 
+    /**
+     *
+     * @param model to use in method
+     * @return path to view with list all controller unit in model
+     */
     @RequestMapping(value = "/controllerunits", method = RequestMethod.GET)
     public String showAllControllerUnits(Model model) {
         List<ControllerUnit> controllers = controllerUnitService.findAll();
@@ -44,6 +49,12 @@ public class ControllerUnitsController {
         return "controllerunits/list";
     }
 
+    /**
+     *
+     * @param id unit controller
+     * @param model which will be used
+     * @return path to view with controller unit
+     */
     @RequestMapping(value = "/controllerunits/{id}", method = RequestMethod.GET)
     public String getControllerUnit(@PathVariable("id") long id, Model model) {
         ControllerUnit controller = controllerUnitService.find(id);
@@ -61,6 +72,11 @@ public class ControllerUnitsController {
         return "controllerunits/view";
     }
 
+    /**
+     * Create new controller unit
+     * @param model which will be used
+     * @return path to view with new controller unit
+     */
     @RequestMapping(value = "/controllerunits/new", method = RequestMethod.GET)
     public String createControllerUnit(Model model) {
         model.addAttribute("controller", new ControllerUnit());
@@ -71,6 +87,12 @@ public class ControllerUnitsController {
         return "controllerunits/new";
     }
 
+    /**
+     * Add controller unit 
+     * @param controller to add
+     * @param redirectAttributes  is used for response messages about method action
+     * @return path to view with controller units
+     */
     @RequestMapping(value = "/controllerunits/new", method = RequestMethod.POST)
     public String addControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller, RedirectAttributes redirectAttributes) {
         if (controllerUnitService.add(controller)) {
@@ -81,6 +103,12 @@ public class ControllerUnitsController {
         return "redirect:/controllerunits";
     }
 
+    /**
+     *
+     * @param id controller unit
+     * @param redirectAttributes redirect response message about executed method
+     * @return path to view with controller units
+     */
     @RequestMapping(value = "/controllerunits/remove/{id}", method = RequestMethod.POST)
     public String deleteControllerUnit(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
@@ -95,6 +123,12 @@ public class ControllerUnitsController {
         return "redirect:/controllerunits";
     }
 
+    /**
+     * Edit controller unit
+     * @param controller to edit
+     * @param redirectAttributes redirect response message about executed method
+     * @return path to view with controller units
+     */
     @RequestMapping(value = "/controllerunits/update", method = RequestMethod.POST)
     public String updateControllerUnit(@ModelAttribute(value = "controller") ControllerUnit controller, RedirectAttributes redirectAttributes) {
         if (controllerUnitService.update(controller)) {

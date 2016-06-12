@@ -32,6 +32,11 @@ public class TasksController {
     @Autowired
     private TaskTypeService taskTypeService;
 
+    /**
+     * show tasks used in model
+     * @param model
+     * @return tasks used in model
+     */
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public String showTasks(Model model) {
         List<Task> tasks = taskService.findAll();
@@ -40,6 +45,12 @@ public class TasksController {
         return "tasks/list";
     }
 
+    /**
+     * Method delete selected task
+     * @param id task
+     * @param redirectAttributes redirect response message
+     * @return redirect to view with tasks
+     */
     @RequestMapping(value = "/tasks/remove/{id}", method = RequestMethod.POST)
     public String deleteTask(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
@@ -57,7 +68,7 @@ public class TasksController {
      * Creates form for new task
      *
      * @param model Model to bind to HTML form
-     * @return tasks/new
+     * @return path to view with new tasks
      */
     @RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
     public String createTask(Model model) {
@@ -72,10 +83,9 @@ public class TasksController {
     /**
      * Saves new task to the database
      *
-     * @param task
-     * @param redirectAttributes
-     * @param taskTypeId
-     * @return redirects to tasks
+     * @param task to add
+     * @param redirectAttributes redirect response message about executed method
+     * @return redirects to view with tasks
      */
     @RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
     public String addTask(@ModelAttribute(value = "task") Task task, RedirectAttributes redirectAttributes) {
@@ -92,7 +102,7 @@ public class TasksController {
      *
      * @param id task's ID
      * @param model Model to put taskType to
-     * @return tasks/view
+     * @return path to view with tasks view
      */
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.GET)
     public String getTask(@PathVariable("id") long id, Model model) {
@@ -109,8 +119,8 @@ public class TasksController {
      * Updates task
      *
      * @param task Task to update (bounded from HTML form)
-     * @param redirectAttributes
-     * @return redirects to tasks
+     * @param redirectAttributes redirect response message about executed method
+     * @return redirects to view with to tasks
      */
     @RequestMapping(value = "/tasks/update", method = RequestMethod.POST)
     public String updateTask(@ModelAttribute(value = "task") Task task, RedirectAttributes redirectAttributes) {

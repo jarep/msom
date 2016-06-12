@@ -17,6 +17,10 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.IService;
  */
 public abstract class AbstractService<T extends AbstractEntity> implements IService<T> {
 
+    /**
+     *
+     * @return Data acces object
+     */
     public abstract IDao getDao();
 
     @Override

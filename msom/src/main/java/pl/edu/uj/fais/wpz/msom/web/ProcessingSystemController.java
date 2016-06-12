@@ -46,6 +46,11 @@ public class ProcessingSystemController {
 
     private ProcessingSystemTool processingSystemTool;
 
+    /**
+     *
+     * @param model actual model
+     * @return path to view with processing system list
+     */
     @RequestMapping(value = "/processingsystem", method = RequestMethod.GET)
     public String showAllProcessingSystems(Model model) {
         setProcessingSystemToolIfDoesNotExist();
@@ -55,6 +60,12 @@ public class ProcessingSystemController {
         return "processingsystem/list";
     }
 
+    /**
+     *
+     * @param id Processing System
+     * @param model actual model
+     * @return  path to view with processing system view
+     */
     @RequestMapping(value = "/processingsystem/view/{id}", method = RequestMethod.GET)
     public String viewProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();
@@ -71,6 +82,12 @@ public class ProcessingSystemController {
         return "processingsystem/view";
     }
 
+    /**
+     *
+     * @param id Processing System
+     * @param model actual model
+     * @return  path to view with processing system list
+     */
     @RequestMapping(value = "/processingsystem/simulate/{id}", method = RequestMethod.GET)
     public String simulateProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();
@@ -87,6 +104,12 @@ public class ProcessingSystemController {
         return "processingsystem/simulate";
     }
 
+    /**
+     *
+     * @param id Processing System
+     * @param model actual model
+     * @return path to view with processing system simulate
+     */
     @RequestMapping(value = "/processingsystem/reset/{id}", method = RequestMethod.GET)
     public String resetProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();

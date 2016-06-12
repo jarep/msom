@@ -38,6 +38,14 @@ public class ProcessingUnitMockup extends AbstractModelObject<Module> implements
 
     private final List<Type> availableTypes = new ArrayList<>();
 
+    /**
+     * Constructor
+     * @param entityObject
+     * @param controllerUnitService
+     * @param moduleService
+     * @param taskService
+     * @param taskTypeService
+     */
     public ProcessingUnitMockup(Module entityObject, ControllerUnitService controllerUnitService, ModuleService moduleService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.moduleService = moduleService;

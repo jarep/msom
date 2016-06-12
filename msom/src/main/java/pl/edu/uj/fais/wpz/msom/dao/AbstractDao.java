@@ -27,24 +27,38 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 public abstract class AbstractDao<E, K extends Serializable> implements IDao<E, K> {
 
     private SessionFactory sessionFactory;
+
+    /**
+     * Data acces object type, used by hybernate
+     */
     protected Class<? extends E> daoType;
 
+    /**
+     * sets data acces object type, used by hybernate
+     */
     public AbstractDao() {
         daoType = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
 
-    /*
-     In this specific case we will use setter injection,
-     because we’re designing this class for extension. 
-     If we’d pick constructor injection, all extending classes would have to have
+ 
+
+    /**
+     * In this specific case we will use setter injection,
+     * because we’re designing this class for extension. 
+     * If we’d pick constructor injection, all extending classes would have to have
      constructor matching one from the superclass. 
+     * @param sessionFactory used by hybernate
      */
+
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * @return current data acces session
+     */
     protected Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }

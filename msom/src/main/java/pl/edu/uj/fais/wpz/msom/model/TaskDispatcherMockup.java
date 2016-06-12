@@ -42,6 +42,17 @@ public class TaskDispatcherMockup extends AbstractModelObject<ControllerUnit> im
 
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
 
+    /**
+     * Constructor
+     * @param entityObject
+     * @param controllerUnitService
+     * @param distributionService
+     * @param modelService
+     * @param moduleService
+     * @param pathService
+     * @param taskService
+     * @param taskTypeService
+     */
     public TaskDispatcherMockup(ControllerUnit entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;

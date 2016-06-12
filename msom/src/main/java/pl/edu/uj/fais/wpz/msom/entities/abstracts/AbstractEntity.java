@@ -24,10 +24,18 @@ public abstract class AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     *
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }

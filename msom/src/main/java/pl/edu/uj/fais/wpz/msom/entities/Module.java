@@ -47,21 +47,42 @@ public class Module extends AbstractEntity {
     @JoinColumn(name = "controllerunit_id")
     private ControllerUnit controllerUnit;
 
+    /**
+     * Constructor
+     */
     public Module() {
     }
 
+    /**
+     * Constructor with cores and efficiency set
+     * @param cores
+     * @param efficiency
+     */
     public Module(Integer cores, Integer efficiency) {
         this.name = "";
         this.cores = cores;
         this.efficiency = efficiency;
     }
 
+    /**
+     *Constructor with name and cores and efficiency set
+     * @param name
+     * @param cores
+     * @param efficiency
+     */
     public Module(String name, Integer cores, Integer efficiency) {
         this.name = name;
         this.cores = cores;
         this.efficiency = efficiency;
     }
 
+    /**
+     * Constructor with name, cores, efficiency and controller unit set
+     * @param name
+     * @param cores
+     * @param efficiency
+     * @param controllerUnit
+     */
     public Module(String name, Integer cores, Integer efficiency, ControllerUnit controllerUnit) {
         this.name = name;
         this.cores = cores;
@@ -69,54 +90,109 @@ public class Module extends AbstractEntity {
         this.controllerUnit = controllerUnit;
     }
 
+    /**
+     *
+     * @return controller unit
+     */
     public ControllerUnit getControllerUnit() {
         return controllerUnit;
     }
 
+    /**
+     *
+     * @param controllerUnit to set
+     */
     public void setControllerUnit(ControllerUnit controllerUnit) {
         this.controllerUnit = controllerUnit;
     }
 
+    /**
+     *
+     * @return name of model
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return number of cores
+     */
     public Integer getCores() {
         return cores;
     }
 
+    /**
+     *
+     * @param cores
+     */
     public void setCores(Integer cores) {
         this.cores = cores;
     }
 
+    /**
+     *
+     * @return efficiency
+     */
     public Integer getEfficiency() {
         return efficiency;
     }
 
+    /**
+     *
+     * @param efficiency to set
+     */
     public void setEfficiency(Integer efficiency) {
         this.efficiency = efficiency;
     }
 
+    /**
+     * Add task type to nodule
+     * @param taskType to add
+     * @return true if executed, else false
+     */
     public boolean addTaskType(TaskType taskType) {
         return this.taskTypes.add(taskType);
     }
 
+    /**
+     * Remove task type to nodule
+     * @param taskType to remove
+     * @return true if executed, else false
+     */
     public boolean removeTaskType(TaskType taskType) {
         return this.taskTypes.remove(taskType);
     }
 
+    /**
+     * Checks if it has a type of task
+     * @param taskType
+     * @return true if contains, else false
+     */
     public boolean containsTaskType(TaskType taskType) {
         return this.taskTypes.contains(taskType);
     }
 
+    /**
+     *
+     * @return module task types
+     */
     public Set<TaskType> getTaskTypes() {
         return taskTypes;
     }
 
+    /**
+     *
+     * @param taskTypes to set
+     */
     public void setTaskTypes(Set<TaskType> taskTypes) {
         this.taskTypes = taskTypes;
     }

@@ -25,6 +25,10 @@ public class TaskTypeServiceImpl extends AbstractService<TaskType> implements Ta
     @Autowired
     private TaskTypeDao taskTypeDao;
 
+    /**
+     *
+     * @return type task data acces object
+     */
     public TaskTypeDao getTaskTypeDao() {
         return taskTypeDao;
     }

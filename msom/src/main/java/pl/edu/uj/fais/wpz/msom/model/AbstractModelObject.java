@@ -16,10 +16,18 @@ public abstract class AbstractModelObject<Entity> {
 
     private Entity entityObject;
 
+    /**
+     *
+     * @return entity object
+     */
     protected Entity getEntityObject() {
         return entityObject;
     }
 
+    /**
+     *
+     * @param entityObject to set entity object
+     */
     protected void setEntityObject(Entity entityObject) {
         if (entityObject instanceof AbstractEntity) {
             this.entityObject = entityObject;
@@ -27,9 +35,16 @@ public abstract class AbstractModelObject<Entity> {
         }
     }
 
+    /**
+     *
+     * @return id of entity
+     */
     public Long getId() {
         return ((AbstractEntity) entityObject).getId();
     }
     
+    /**
+     * refresh and reload state
+     */
     public abstract void reload();
 }

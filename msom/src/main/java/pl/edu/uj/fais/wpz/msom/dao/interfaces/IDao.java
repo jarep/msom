@@ -49,6 +49,7 @@ public interface IDao<E, K> {
      * Remove entity from database
      *
      * @param entity Entity to delete
+     * @return true if successfully removed
      */
     public boolean remove(E entity);
 

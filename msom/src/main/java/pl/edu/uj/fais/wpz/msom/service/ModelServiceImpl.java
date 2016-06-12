@@ -25,6 +25,10 @@ public class ModelServiceImpl extends AbstractService<Model> implements ModelSer
     @Autowired
     private ModelDao modelDao;
 
+    /**
+     *
+     * @return model data acces object
+     */
     public ModelDao getModelDao() {
         return modelDao;
     }

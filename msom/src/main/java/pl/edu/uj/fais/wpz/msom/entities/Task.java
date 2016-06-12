@@ -23,26 +23,50 @@ public class Task extends AbstractEntity {
     @JoinColumn(name = "tasktype_id")
     private TaskType taskType;
 
+    /**
+     * Constructor
+     */
     public Task() {
     }
 
+    /**
+     * Contructor with name and taskType set
+     * @param name
+     * @param taskType
+     */
     public Task(String name, TaskType taskType) {
         this.name = name;
         this.taskType = taskType;
     }
 
+    /**
+     *
+     * @return task name 
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return task type
+     */
     public TaskType getTaskType() {
         return taskType;
     }
 
+    /**
+     *
+     * @param taskType to set
+     */
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
     }

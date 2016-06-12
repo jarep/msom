@@ -25,6 +25,10 @@ public class TaskServiceImpl extends AbstractService<Task> implements TaskServic
     @Autowired
     private TaskDao taskDao;
 
+    /**
+     *
+     * @return task data acces object
+     */
     public TaskDao getTaskDao() {
         return taskDao;
     }

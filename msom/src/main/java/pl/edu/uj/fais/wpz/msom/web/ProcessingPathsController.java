@@ -37,6 +37,13 @@ public class ProcessingPathsController {
     @Autowired
     ModelService modelService;
 
+    /**
+     *
+     * @param controllerId id controller
+     * @param model actual model
+     * @param redirectAttributes is used for response messages about method action
+     * @return
+     */
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.GET)
     public String createProcessingPath(@PathVariable("controllerId") long controllerId, Model model, RedirectAttributes redirectAttributes) {
         ControllerUnit controllerUnit = controllerUnitService.find(controllerId);
@@ -58,6 +65,13 @@ public class ProcessingPathsController {
         
     }
 
+    /**
+     *
+     * @param controllerId id controller
+     * @param path path from controller
+     * @param redirectAttributes is used for response messages about method action
+     * @return
+     */
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.POST)
     public String addProcessingPath(@PathVariable("controllerId") long controllerId, @ModelAttribute(value = "path") ProcessingPath path, RedirectAttributes redirectAttributes) {
         if (processingPathService.add(path)) {
@@ -69,6 +83,13 @@ public class ProcessingPathsController {
 
     }
 
+    /**
+     *
+     * @param controllerId
+     * @param pathId id path from controller
+     * @param redirectAttributes is used for response messages about method action
+     * @return
+     */
     @RequestMapping(value = "/processingpaths/remove/{controllerId}/{pathId}", method = RequestMethod.POST)
     public String deleteProcessingPath(@PathVariable("controllerId") long controllerId, @PathVariable("pathId") long pathId, RedirectAttributes redirectAttributes) {
 

@@ -28,6 +28,11 @@ public class ModelsController {
     @Autowired
     ModelService modelService;
 
+    /**
+     * 
+     * @param model to use in method
+     * @return  path to view with all models
+     */
     @RequestMapping(value = "/models", method = RequestMethod.GET)
     public String showAllModels(Model model) {
         List<pl.edu.uj.fais.wpz.msom.entities.Model> models = modelService.findAll();
@@ -36,6 +41,11 @@ public class ModelsController {
         return "models/list";
     }
 
+    /**
+     * Create new model
+     * @param model to use in method
+     * @return  path to view with new model
+     */
     @RequestMapping(value = "/models/new", method = RequestMethod.GET)
     public String createModel(Model model) {
         model.addAttribute("model", new pl.edu.uj.fais.wpz.msom.entities.Model());
@@ -43,6 +53,12 @@ public class ModelsController {
         return "models/new";
     }
 
+    /**
+     *
+     * @param m
+     * @param redirectAttributes is used for response messages about method action
+     * @return redirect to view with  to view models
+     */
     @RequestMapping(value = "/models/new", method = RequestMethod.POST)
     public String addModel(@ModelAttribute(value = "model") pl.edu.uj.fais.wpz.msom.entities.Model m, RedirectAttributes redirectAttributes) {
         if (modelService.add(m)) {
@@ -53,6 +69,12 @@ public class ModelsController {
         return "redirect:/models";
     }
 
+    /**
+     *
+     * @param id
+     * @param redirectAttributes is used for response messages about method action
+     * @return path to view models
+     */
     @RequestMapping(value = "/models/remove/{id}", method = RequestMethod.POST)
     public String deleteModel(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
@@ -65,6 +87,12 @@ public class ModelsController {
         return "redirect:/models";
     }
 
+    /**
+     *
+     * @param id
+     * @param model to use in method
+     * @return  path to view models view
+     */
     @RequestMapping(value = "/models/{id}", method = RequestMethod.GET)
     public String getModel(@PathVariable("id") long id, Model model) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
@@ -73,6 +101,13 @@ public class ModelsController {
         return "models/view";
     }
 
+    /**
+     *
+     * @param m
+     * @param model to use in method
+     * @param redirectAttributes is used for response messages about method action
+     * @return  path to view models
+     */
     @RequestMapping(value = "/models/update", method = RequestMethod.POST)
     public String updateModel(@ModelAttribute(value = "model") pl.edu.uj.fais.wpz.msom.entities.Model m, Model model, RedirectAttributes redirectAttributes) {
         if (modelService.update(m)) {

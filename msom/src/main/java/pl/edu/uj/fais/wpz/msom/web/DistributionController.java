@@ -28,6 +28,11 @@ public class DistributionController {
     @Autowired
     private DistributionService distributionService;
     
+    /**
+     *
+     * @param model to use in method
+     * @return path to view with distributions list
+     */
     @RequestMapping(value = "/distributions", method = RequestMethod.GET)
     public String showAllDistributions(Model model) {
         List<Distribution> distributionList = distributionService.findAll();
@@ -38,8 +43,8 @@ public class DistributionController {
     
     /**
     * Creates new form for distribution
-    * @param model
-    * @return distributions/new
+    * @param model to use in method
+    * @return path to view with new distributions
     */
     @RequestMapping(value = "/distributions/new", method = RequestMethod.GET)
     public String createDistribution(Model model) {
@@ -50,9 +55,9 @@ public class DistributionController {
     
     /**
     * Saves new distribution to database
-    * @param distribution
-    * @param redirectAttributes
-    * @return redirects to list
+    * @param distribution to add
+    * @param redirectAttributes is used for response messages about method action
+    * @return redirect to view with distributions
     */
     @RequestMapping(value = "/distributions/new", method = RequestMethod.POST)
     public String addDistribution(@ModelAttribute(value = "distribution") Distribution distribution, RedirectAttributes redirectAttributes) {
@@ -69,7 +74,7 @@ public class DistributionController {
      *
      * @param id distribution ID
      * @param model Model to put distribution to
-     * @return distributions/view
+     * @return path to view with distributions view
      */
     @RequestMapping(value = "/distributions/{id}", method = RequestMethod.GET)
     public String getDistribution(@PathVariable("id") long id, Model model) {
@@ -84,8 +89,8 @@ public class DistributionController {
      * Deletes distribution with specified ID
      *
      * @param id distribution's ID
-     * @param redirectAttributes
-     * @return redirects to distribution if everything ok
+     * @param redirectAttributes is used for response messages about method action
+     * @return redirect to view with distribution
      */
     @RequestMapping(value = "/distributions/remove/{id}", method = RequestMethod.POST)
     public String deleteDistribution(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
@@ -101,6 +106,12 @@ public class DistributionController {
         return "redirect:/distributions";
     }
     
+    /**
+     *
+     * @param distribution to update
+     * @param redirectAttributes is used for response messages about method action
+     * @return redirect to view with distributions
+     */
     @RequestMapping(value = "/distributions/update", method = RequestMethod.POST)
     public String updateDistribution(@ModelAttribute(value = "distribution") Distribution distribution, RedirectAttributes redirectAttributes) {
         if (distributionService.update(distribution)) {

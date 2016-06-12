@@ -43,6 +43,11 @@ public class ModulesController {
     @Autowired
     private ControllerUnitService controllerUnitService;
     
+    /**
+     * Show all modules
+     * @param model to use
+     * @return path to view with modules list
+     */
     @RequestMapping(value = "/modules", method = RequestMethod.GET)
     public String showAllModules(Model model) {
         List<Module> modules = moduleService.findAll(); 
@@ -55,7 +60,7 @@ public class ModulesController {
      * Creates new form for module
      *
      * @param model
-     * @return module/new
+     * @return path to view with module/new
      */
     @RequestMapping(value = "/modules/new", method = RequestMethod.GET)
     public String createModule(Model model) {
@@ -76,8 +81,8 @@ public class ModulesController {
      * Saves new module to database
      *
      * @param module
-     * @param redirectAttributes
-     * @return redirects to list
+     * @param redirectAttributes is used for response messages about method action
+     * @return redirects to view with list modules
      */
     @RequestMapping(value = "/modules/new", method = RequestMethod.POST)
     public String addModule(@ModelAttribute(value = "module") ModuleForm module, RedirectAttributes redirectAttributes) {
@@ -105,7 +110,7 @@ public class ModulesController {
      *
      * @param id module ID
      * @param model Model to put module to
-     * @return module/view
+     * @return path to view with  module view
      */
     @RequestMapping(value = "/modules/{id}", method = RequestMethod.GET)
     public String getModule(@PathVariable("id") long id, Model model) {
@@ -133,8 +138,8 @@ public class ModulesController {
      * Deletes module with specified ID
      *
      * @param id module's ID
-     * @param redirectAttributes
-     * @return redirects to modules if everything
+     * @param redirectAttributes is used for response messages about method action
+     * @return redirects to view with  modules
      */
     @RequestMapping(value = "/modules/remove/{id}", method = RequestMethod.POST)
     public String deleteModule(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
@@ -153,8 +158,8 @@ public class ModulesController {
      * Updates module
      *
      * @param module module to update (bounded from HTML form)
-     * @param redirectAttributes
-     * @return redirects to module
+     * @param redirectAttributes is used for response messages about method action
+     * @return redirects to view with to module
      */
     @RequestMapping(value = "/modules/update", method = RequestMethod.POST)
     public String updateModule(@ModelAttribute(value = "module") ModuleForm module, RedirectAttributes redirectAttributes) {

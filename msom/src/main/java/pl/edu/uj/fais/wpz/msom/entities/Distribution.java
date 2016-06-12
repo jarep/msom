@@ -23,17 +23,32 @@ public class Distribution extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private DistributionType type;
 
+    /**
+     * Type setter
+     * @param type to set
+     */
     public Distribution(DistributionType type) {
         this.type = type;
     }
 
+    /**
+     * Constructor
+     */
     public Distribution() {
     }
     
+    /**
+     *
+     * @return type
+     */
     public DistributionType getType() {
         return type;
     }
 
+    /**
+     *
+     * @param type to set
+     */
     public void setType(DistributionType type) {
         this.type = type;
     }

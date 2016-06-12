@@ -20,6 +20,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionsController {
     
+    /**
+     *
+     * @param e excepction
+     * @param request
+     * @param model  to use in method
+     * @return path to view errorpage
+     */
     @ExceptionHandler(TypeMismatchException.class)
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleTypeMismatchException(Exception e, HttpServletRequest request, Model model) {
@@ -27,6 +34,13 @@ public class ExceptionsController {
         return "errorpage";
     }
     
+    /**
+     *
+     * @param e excepction
+     * @param request
+     * @param model to use in method
+     * @return path to view errorpage
+     */
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleNullPointerException(Exception e, HttpServletRequest request, Model model) {

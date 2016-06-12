@@ -52,9 +52,19 @@ public class ProcessingPath extends AbstractEntity {
     @JoinColumn(name = "nextcontrollerunit_id", nullable = false)
     private ControllerUnit nextControllerUnit;
 
+    /**
+     * Contructor
+     */
     public ProcessingPath() {
     }
 
+    /**
+     * Constructor with settings
+     * @param controllerUnit to set
+     * @param taskType to set
+     * @param processing to set
+     * @param nextControllerUnit to set
+     */
     public ProcessingPath(ControllerUnit controllerUnit, TaskType taskType, Boolean processing, ControllerUnit nextControllerUnit) {
         this.controllerUnit = controllerUnit;
         this.taskType = taskType;
@@ -62,34 +72,66 @@ public class ProcessingPath extends AbstractEntity {
         this.nextControllerUnit = nextControllerUnit;
     }
 
+    /**
+     *
+     * @return unit controller
+     */
     public ControllerUnit getControllerUnit() {
         return controllerUnit;
     }
 
+    /**
+     *
+     * @param controllerUnit to set
+     */
     public void setControllerUnit(ControllerUnit controllerUnit) {
         this.controllerUnit = controllerUnit;
     }
 
+    /**
+     *
+     * @return task type of processing type 
+     */
     public TaskType getTaskType() {
         return taskType;
     }
 
+    /**
+     *
+     * @param taskType to set on path
+     */
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
     }
 
+    /**
+     *
+     * @return processing status
+     */
     public Boolean getProcessing() {
         return processing;
     }
 
+    /**
+     *
+     * @param processing
+     */
     public void setProcessing(Boolean processing) {
         this.processing = processing;
     }
 
+    /**
+     *
+     * @return next controller unit
+     */
     public ControllerUnit getNextControllerUnit() {
         return nextControllerUnit;
     }
 
+    /**
+     * Set next unit controller
+     * @param nextControllerUnit to set next unit conntroller
+     */
     public void setNextControllerUnit(ControllerUnit nextControllerUnit) {
         this.nextControllerUnit = nextControllerUnit;
     }

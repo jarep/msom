@@ -20,17 +20,31 @@ public class Model extends AbstractEntity {
      */
     private String name;
 
+    /**
+     * Constructor
+     */
     public Model() {
     }
 
+    /**
+     * Constructor with name set
+     * @param name to set
+     */
     public Model(String name) {
         this.name = name;
     }
 
+    /**
+     * @return model name 
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name to set
+     */
     public void setName(String name) {
         this.name = name;
     }

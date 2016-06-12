@@ -42,6 +42,17 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
     private boolean locked = false;
 
+    /**
+     * Constructor
+     * @param entityObject
+     * @param controllerUnitService
+     * @param distributionService
+     * @param modelService
+     * @param moduleService
+     * @param pathService
+     * @param taskService
+     * @param taskTypeService
+     */
     public ProcessingSystemMockup(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;

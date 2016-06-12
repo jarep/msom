@@ -22,6 +22,11 @@ public class FakeDataGeneratorController {
     @Autowired
     private EntityGenerator entityGenerator;
 
+    /**
+     *
+     * @param model to use in method
+     * @return  path to view fake data generator
+     */
     @RequestMapping(value = "/fakedatagenerator", method = RequestMethod.GET)
     public String generateFakeData(Model model) {
         entityGenerator.deleteDomain();

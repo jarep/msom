@@ -32,6 +32,10 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
     @Autowired
     private ControllerUnitService controllerUnitService;
 
+    /**
+     *
+     * @return processing path dao
+     */
     public ProcessingPathDao getProcessingPathDao() {
         return processingPathDao;
     }

@@ -11,18 +11,36 @@ package pl.edu.uj.fais.wpz.msom.entities;
  */
 public enum DistributionType {
   
-  LINEAR("linear"),
-  GAUSSIAN("gaussian"),
-  UNKNOWN("unknown");  
+    /**
+     *Linear type of distribution
+     */
+    LINEAR("linear"),
+
+    /**
+     * Gaussian type of distribution
+     */
+    GAUSSIAN("gaussian"),
+  
+    /**
+     * Unkown type of distribution
+     */
+    UNKNOWN("unknown");  
     
-    
-  public final String text;
+    /**
+     * Name of distribution type
+     */
+    public final String text;
 
   DistributionType(String text) {
     this.text = text;
   }
 
-  public static DistributionType fromString(String typeString) {
+    /**
+     * Change string to type of distribution
+     * @param typeString text value
+     * @return type of distribution
+     */
+    public static DistributionType fromString(String typeString) {
     if (typeString == null) throw new IllegalArgumentException();
     for (DistributionType type : DistributionType.values()) {
       if (typeString.equals(type.text)) {

@@ -17,6 +17,11 @@ public class TypeMockup extends AbstractModelObject<TaskType> implements Type {
 
     private final TaskTypeService taskTypeService;
 
+    /**
+     * Set task types parameters
+     * @param entityObject
+     * @param taskTypeService
+     */
     public TypeMockup(TaskType entityObject, TaskTypeService taskTypeService) {
         this.taskTypeService = taskTypeService;
         setEntityObject(entityObject);

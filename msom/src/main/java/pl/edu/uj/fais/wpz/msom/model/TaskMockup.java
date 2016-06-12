@@ -18,6 +18,11 @@ public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.enti
     
     private final TaskService taskService;
 
+    /**
+     * Constructor
+     * @param entityObject
+     * @param TaskService
+     */
     public TaskMockup(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService TaskService) {
         this.taskService = TaskService;
         setEntityObject(entityObject);

@@ -27,25 +27,48 @@ public class ControllerUnit extends AbstractEntity {
     @JoinColumn(name = "model_id")
     private Model model;
 
+    /**
+     * Constructor
+     */
     public ControllerUnit() {
     }
 
+    /**
+     * Constructor with set name
+     * @param name to set
+     */
     public ControllerUnit(String name) {
         this.name = name;
     }
 
+    /**
+     * 
+     * @return name of controller
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return model
+     */
     public Model getModel() {
         return model;
     }
 
+    /**
+     *
+     * @param model to set
+     */
     public void setModel(Model model) {
         this.model = model;
     }

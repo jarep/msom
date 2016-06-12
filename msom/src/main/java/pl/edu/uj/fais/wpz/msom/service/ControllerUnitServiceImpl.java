@@ -42,6 +42,10 @@ public class ControllerUnitServiceImpl extends AbstractService<ControllerUnit> i
     @Autowired
     private TaskTypeService taskTypeService;
 
+    /**
+     *
+     * @return controller unit dao
+     */
     public ControllerUnitDao getControllerUnitDao() {
         return controllerUnitDao;
     }

@@ -50,6 +50,9 @@ public class EntityGenerator {
     @Autowired
     ProcessingPathDao processingPathDao;
 
+    /**
+     * Method generating examples datas
+     */
     public void generateDomain() {
 
         // Create some Models
@@ -131,6 +134,9 @@ public class EntityGenerator {
         addAll(processingPathDao, path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11);
     }
 
+    /**
+     * clear system of all settngs
+     */
     public void deleteDomain() {
         removeAll(processingPathDao);
         removeAll(moduleDao);
