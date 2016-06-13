@@ -118,3 +118,7 @@ div#monitoring .type p {
     margin: 0;
     color:  #265a88;
 }
+
+ul.paths li {
+    font-size: 11px;
+}
