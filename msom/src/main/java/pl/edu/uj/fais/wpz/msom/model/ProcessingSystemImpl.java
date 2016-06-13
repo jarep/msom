@@ -6,7 +6,6 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
@@ -31,13 +30,13 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingSystemImpl extends AbstractModelObject<Model> implements ProcessingSystem {
+public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, ModelService> implements ProcessingSystem {
 
     private final SystemStorage systemStorage;
-    // services
+
+    // extra services (main service as a "service" in abstract class)
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
-    private final ModelService modelService;
     private final ModuleService moduleService;
     private final ProcessingPathService pathService;
     private final TaskService taskService;
@@ -45,18 +44,15 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
 
     private TaskGeneratorImpl taskGenerator;
 
-    private final AtomicBoolean active = new AtomicBoolean(false);
-
     public ProcessingSystemImpl(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+        super(entityObject, modelService);
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
-        this.modelService = modelService;
         this.moduleService = moduleService;
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
         this.systemStorage = new SystemStorage(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
-        setEntityObject(entityObject);
         initializeSystemStorage();
     }
 
@@ -67,23 +63,11 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
     }
 
     @Override
-    public boolean reload() {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Obiekt aktywny - nie mozna przeladowac.");
-            return false;
-        } else {
-            reloadEntityObcject();
-            reloadTaskDispatchers();
-            reloadTypes();
-            PrintHelper.printMsg(getName(), "Obiekt przeladowano.");
-            return true;
-        }
-    }
-
-    private void reloadEntityObcject() {
-        if (getEntityObject() != null) {
-            modelService.refresh(getEntityObject());
-        }
+    protected void reloadData() {
+        reloadEntityObcject();
+        reloadTaskDispatchers();
+        reloadTypes();
+        reloadPaths();
     }
 
     private void reloadTaskDispatchers() {
@@ -94,13 +78,6 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
                 TaskDispatcherImpl td = new TaskDispatcherImpl(controllerUnit, systemStorage);
                 systemStorage.addTaskDispatcher(td);
             }
-        }
-    }
-
-    private void reloadPaths() {
-        List<TaskDispatcher> taskDispatchers = systemStorage.getTaskDispatchers();
-        for (TaskDispatcher dispatcher : taskDispatchers) {
-            ((TaskDispatcherImpl) dispatcher).reloadComingOutPaths();
         }
     }
 
@@ -117,23 +94,18 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         }
     }
 
-    @Override
-    public boolean save() {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Obiekt aktywny - nie mozna zapisac.");
-            return false;
-        } else {
-            saveEntityObject();
-            saveTaskDispatchers();
-            PrintHelper.printMsg(getName(), "Obiekt zapisano.");
-            return true;
+    private void reloadPaths() {
+        List<TaskDispatcher> taskDispatchers = systemStorage.getTaskDispatchers();
+        for (TaskDispatcher dispatcher : taskDispatchers) {
+            ((TaskDispatcherImpl) dispatcher).reloadComingOutPaths();
         }
     }
 
-    private void saveEntityObject() {
-        if (getEntityObject() != null) {
-            modelService.update(getEntityObject());
-        }
+    @Override
+    protected boolean saveData() {
+        saveEntityObject();
+        saveTaskDispatchers();
+        return true;
     }
 
     private void saveTaskDispatchers() {
@@ -144,26 +116,39 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
 
     @Override
     public void setName(String name) {
-        getEntityObject().setName(name);
+        executionWriteLock.lock();
+        try {
+            getEntityObject().setName(name);
+        } finally {
+            executionWriteLock.unlock();
+        }
     }
 
     @Override
     public String getName() {
-        return getEntityObject().getName();
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getName();
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
     public boolean startSimulation() {
-        if (active.getAndSet(true)) {
-            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna ponownie rozpoczac ...");
-            return false; // already started
-        } else {
-            PrintHelper.printMsg(getName(), "Rozpoczynam symulacje ...");
-            activateTaskDispatchers();
-            activateGenerator();
-            PrintHelper.printMsg(getName(), "Rozpoczeto symulacje");
-        }
+        PrintHelper.printMsg(getName(), "Rozpoczynam symulacje ...");
+        boolean result = activate();
+        PrintHelper.printMsg(getName(), "Symulacja rozpoczeta.");
+        return result;
+    }
+
+    @Override
+    protected boolean activateObject() {
+        active.set(true);
+        activateTaskDispatchers();
+        activateGenerator();
         return true;
+
     }
 
     private void activateTaskDispatchers() {
@@ -181,37 +166,20 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         PrintHelper.printMsg(getName(), "Aktywowalem generator.");
     }
 
-    /**
-     * For now it is only mockup - should be implemented
-     */
     @Override
-    public void stopSimulation() {
-        if (!active.getAndSet(false)) {
-            PrintHelper.printAlert(getName(), "Symualacja zatrzymana - nie mozna ponownie zatrzymac ...");
-        } else {
-            PrintHelper.printMsg(getName(), "Zatrzymuje symulacje ... ]");
-            deactivateGenerator();
-            deactivateTaskDispatchers();
-            PrintHelper.printMsg(getName(), "Zatrzymano symulacje]");
-        }
+    public boolean stopSimulation() {
+        PrintHelper.printMsg(getName(), "Zatrzymuje symulacje ...");
+        boolean result = deactivate();
+        PrintHelper.printMsg(getName(), "Symulacja zatrzymana.");
+        return result;
     }
 
-    public boolean cleanSimulationData() {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Nie mozna wyczyscic danych symulacji - symulacja w toku.");
-            return false;
-        } else {
-            systemStorage.cleanTasks();
-            systemStorage.cleanTasksDispatchers(); // with paths
-            systemStorage.cleanTypes();
-        }
-        return false;
-    }
-
-    private void deactivateTaskDispatchers() {
-        for (TaskDispatcher td : systemStorage.getTaskDispatchers()) {
-            td.deactivate();
-        }
+    @Override
+    protected boolean deactivateObject() {
+        active.set(false);
+        deactivateGenerator();
+        deactivateTaskDispatchers();
+        return true;
     }
 
     private void deactivateGenerator() {
@@ -221,14 +189,37 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         taskGenerator = null;
     }
 
+    private void deactivateTaskDispatchers() {
+        for (TaskDispatcher td : systemStorage.getTaskDispatchers()) {
+            td.deactivate();
+        }
+    }
+
+    public boolean cleanSimulationData() {
+        return systemStorage.clean();
+    }
+
     @Override
     public TaskDispatcher createTaskDispatcher(String name) {
         if (active.get()) {
             PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
             return null;
-        } else {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+        executionWriteLock.lock();
+        try {
+            if (active.get()) {
+                PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+                return null;
+            } else {
+                return createAndAddTaskDispatcher(name);
+            }
+        } finally {
+            executionWriteLock.unlock();
+        }
+    }
+
+    private TaskDispatcher createAndAddTaskDispatcher(String name) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -236,8 +227,17 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
         if (active.get()) {
             PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
             return false;
-        } else {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+        executionWriteLock.lock();
+        try {
+            if (active.get()) {
+                PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+                return false;
+            } else {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        } finally {
+            executionWriteLock.unlock();
         }
     }
 
@@ -248,12 +248,13 @@ public class ProcessingSystemImpl extends AbstractModelObject<Model> implements 
 
     @Override
     public boolean setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
-            return false;
-        } else {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+        return executeIfNonActive(new Executable() {
+
+            @Override
+            public boolean execute() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }, executionWriteLock);
     }
 
     @Override

@@ -15,29 +15,22 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
  *
  * @author jarep
  */
-public class PathImpl extends AbstractModelObject<ProcessingPath> implements Path {
+public class PathImpl extends ActivatableAbstractModelObject<ProcessingPath, ProcessingPathService> implements Path {
 
     private final Type type;
     private final TaskDispatcher nextTaskDispatcher;
-    private final ProcessingPathService pathService;
+    // main service as a "service" in abstract class
 
     public PathImpl(ProcessingPath entityObject, Type type, TaskDispatcher forwardTo, ProcessingPathService pathService) {
+        super(entityObject, pathService);
         this.type = type;
         this.nextTaskDispatcher = forwardTo;
-        this.pathService = pathService;
-        setEntityObject(entityObject);
     }
 
     @Override
     public boolean reload() {
         reloadEntityObcject();
         return true;
-    }
-
-    private void reloadEntityObcject() {
-        if (getEntityObject() != null) {
-            pathService.refresh(getEntityObject());
-        }
     }
 
     @Override
@@ -61,9 +54,9 @@ public class PathImpl extends AbstractModelObject<ProcessingPath> implements Pat
         return true;
     }
 
-    private void saveEntityObject() {
-        if (getEntityObject() != null) {
-            pathService.update(getEntityObject());
-        }
+    @Override
+    public String getName() {
+        return "Path: Typ [" + getType().getName() + "] -> " + getNextTaskDispatcher().getName();
     }
+
 }

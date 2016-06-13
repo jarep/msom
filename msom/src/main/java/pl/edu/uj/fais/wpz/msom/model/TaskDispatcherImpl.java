@@ -8,9 +8,6 @@ package pl.edu.uj.fais.wpz.msom.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
@@ -35,48 +32,46 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
  *
  * @author jarep
  */
-public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> implements TaskDispatcher {
+public class TaskDispatcherImpl extends ActivatableAbstractModelObject<ControllerUnit, ControllerUnitService> implements TaskDispatcher {
 
     private final SystemStorage systemStorage;
-    // services
-    private final ControllerUnitService controllerUnitService;
+    // extra services (main service as a "service" in abstract class)
     private final ModuleService moduleService;
     private final ProcessingPathService pathService;
 
-    private final AtomicBoolean active = new AtomicBoolean(false);
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
     private final List<Path> comingOutPahts = new ArrayList<>();
 
     public TaskDispatcherImpl(ControllerUnit entityObject, SystemStorage systemStorage) {
+        super(entityObject, systemStorage.getControllerUnitService());
         this.systemStorage = systemStorage;
-        this.controllerUnitService = systemStorage.getControllerUnitService();
         this.moduleService = systemStorage.getModuleService();
         this.pathService = systemStorage.getPathService();
-        setEntityObject(entityObject);
+        reloadProcessingUnits();
     }
 
     @Override
-    public boolean activate() {
-        PrintHelper.printMsg(getName(), "aktywuje sie...");
-        active.set(true);
+    protected boolean activateObject() {
+        PrintHelper.printMsg(getName(), "aktywuje processing units...");
         activateProcessingUnits();
-        PrintHelper.printMsg(getName(), "jestem aktywny.");
+        PrintHelper.printMsg(getName(), "aktywowalem processing units.");
+        active.set(true);
         return true;
     }
 
     @Override
-    public boolean deactivate() {
+    protected boolean deactivateObject() {
+        PrintHelper.printMsg(getName(), "deaktywuje processing units...");
         deactivateProcessingUnits();
+        PrintHelper.printMsg(getName(), "deaktywowalem processing units.");
         active.set(false);
-        return false;
+        return true;
     }
 
     private boolean activateProcessingUnits() {
-        PrintHelper.printMsg(getName(), "aktywuje processing units...");
         for (ProcessingUnit p : processingUnits) {
             p.activate();
         }
-        PrintHelper.printMsg(getName(), "aktywowalem processing units.");
         return true;
     }
 
@@ -88,25 +83,9 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     }
 
     @Override
-    public boolean isActive() {
-        return active.get();
-    }
-
-    @Override
-    public boolean reload() {
-        if (active.get()) {
-            return false;
-        } else {
-            reloadEntityObcject();
-            reloadProcessingUnits();
-            return true;
-        }
-    }
-
-    private void reloadEntityObcject() {
-        if (getEntityObject() != null) {
-            controllerUnitService.refresh(getEntityObject());
-        }
+    protected void reloadData() {
+        reloadEntityObcject();
+        reloadProcessingUnits();
     }
 
     private void reloadProcessingUnits() {
@@ -118,42 +97,40 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
                 processingUnits.add(p);
             }
         }
+        System.out.println("Wczytano processing units.");
     }
 
+    /**
+     * Thread-safe method to reload coming out paths.
+     *
+     * @return
+     */
     protected boolean reloadComingOutPaths() {
-        if (active.get()) {
-            return false;
-        } else {
-            comingOutPahts.clear();
-            if (getEntityObject() != null) {
-                List<ProcessingPath> comingOutPaths = pathService.getProcessingPathsComingOutFromTheControllerUnit(getEntityObject());
-                for (ProcessingPath entity : comingOutPaths) {
-                    TypeImpl typeObject = systemStorage.getTypeObject(entity.getTaskType());
-                    TaskDispatcher forwardTo = systemStorage.getTaskDispatcherObject(entity.getNextControllerUnit());
-                    PathImpl pathImpl = new PathImpl(entity, typeObject, forwardTo, pathService);
-                    comingOutPahts.add(pathImpl);
-                }
-            }
-            return true;
-        }
+        return executeIfNonActive(new Executable() {
 
+            @Override
+            public boolean execute() {
+                comingOutPahts.clear();
+                if (getEntityObject() != null) {
+                    List<ProcessingPath> comingOutPaths = pathService.getProcessingPathsComingOutFromTheControllerUnit(getEntityObject());
+                    for (ProcessingPath entity : comingOutPaths) {
+                        TypeImpl typeObject = systemStorage.getTypeObject(entity.getTaskType());
+                        TaskDispatcher forwardTo = systemStorage.getTaskDispatcherObject(entity.getNextControllerUnit());
+                        PathImpl pathImpl = new PathImpl(entity, typeObject, forwardTo, pathService);
+                        comingOutPahts.add(pathImpl);
+                    }
+                }
+                PrintHelper.printMsg(getName(), "Przeladowano sciezki kontrolera.");
+                return true;
+            }
+        }, executionWriteLock);
     }
 
     @Override
-    public boolean save() {
-        if (active.get()) {
-            return false;
-        } else {
-            saveEntityObject();
-            saveProcessingUnits();
-            return true;
-        }
-    }
-
-    private void saveEntityObject() {
-        if (getEntityObject() != null) {
-            controllerUnitService.update(getEntityObject());
-        }
+    protected boolean saveData() {
+        saveEntityObject();
+        saveProcessingUnits();
+        return true;
     }
 
     private void saveProcessingUnits() {
@@ -164,12 +141,22 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
 
     @Override
     public void setName(String name) {
-        getEntityObject().setName(name);
+        executionWriteLock.lock();
+        try {
+            getEntityObject().setName(name);
+        } finally {
+            executionWriteLock.unlock();
+        }
     }
 
     @Override
     public String getName() {
-        return getEntityObject().getName();
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getName();
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
@@ -184,8 +171,13 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
 
     @Override
     public List<ProcessingUnit> getProcessingUnits() {
-        return processingUnits;
+        executionReadLock.lock();
+        try {
+            return processingUnits;
 
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
@@ -272,14 +264,20 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
 
     @Override
     public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        PrintHelper.printMsg(getName(), "Otrzymalem zadanie");
+        PrintHelper.printMsg(getName(), "Otrzymalem zadanie " + ((TaskImpl) task).toString());
         Path pathForTask = getPathForTask(task);
         if (pathForTask != null) {
             if (pathForTask.isProcessing()) {
                 try {
                     PrintHelper.printMsg(getName(), "Zadanie powinno byc przetworzone...");
-                    chooseProcessingUnit().processTask(task);
-                    /// trzeba je potem spowrotem odebrac...
+                    ProcessingUnit unit = chooseProcessingUnit(task.getType());
+                    if (unit != null) {
+                        PrintHelper.printMsg(getName(), "Wybrano modul - rozpoczynam przetwarzanie...");
+                        unit.processTask(task);
+                    } else {
+                        PrintHelper.printAlert(getName(), "Nie znaleziono modulu zdolnego przetworzyc zadanie.");
+                        throw new ProcessingAbilityException();
+                    }
                 } catch (ProcessingAbilityException ex) {
                     Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -292,18 +290,58 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
     }
 
     private Path getPathForTask(Task task) {
-        for (Path p : comingOutPahts) {
-            if (p.getType().getId().equals(task.getType().getId())) {
-                return p;
+        executionReadLock.lock();
+        try {
+            for (Path p : comingOutPahts) {
+                if (p.getType().getId().equals(task.getType().getId())) {
+                    return p;
+                }
             }
+            return null;
+        } finally {
+            executionReadLock.unlock();
         }
-        return null;
     }
 
-    private ProcessingUnitImpl chooseProcessingUnit() {
-        Random r = new Random();
-        int nextInt = r.nextInt(processingUnits.size());
-        return (ProcessingUnitImpl) processingUnits.get(nextInt);
+    private ProcessingUnit chooseProcessingUnit(Type type) {
+        executionReadLock.lock();
+        try {
+            PrintHelper.printMsg(getName(), "Wybieram modul przetwarzajacy...");
+            int bestQueueValue = Integer.MAX_VALUE;
+            ProcessingUnit processingUnitToReturn = null;
+            for (ProcessingUnit unit : findProcessingUnitsForType(type)) {
+                int currentQueueValue = unit.getQueueValue();
+                if (currentQueueValue < bestQueueValue) {
+                    bestQueueValue = currentQueueValue;
+                    processingUnitToReturn = unit;
+                }
+            }
+            return processingUnitToReturn;
+        } finally {
+            executionReadLock.unlock();
+        }
+    }
+
+    private List<ProcessingUnit> findProcessingUnitsForType(Type type) {
+        executionReadLock.lock();
+        try {
+            PrintHelper.printMsg(getName(), "Sprawdzam dostepne moduly...");
+            List<ProcessingUnit> foundedProcessingUnits = new ArrayList<>();
+            for (ProcessingUnit unit : processingUnits) {
+                List<Type> availableTypes = unit.getAvailableTypes();
+                for (Type t : availableTypes) {
+                    if (t.getId().equals(type.getId())) {
+                        foundedProcessingUnits.add(unit);
+                        break;
+                    }
+                }
+            }
+            PrintHelper.printMsg(getName(), "Znalazlem " + foundedProcessingUnits.size() + " potencjalnych modulow.");
+            return foundedProcessingUnits;
+        } finally {
+            executionReadLock.unlock();
+        }
+
     }
 
     @Override
@@ -313,7 +351,12 @@ public class TaskDispatcherImpl extends AbstractModelObject<ControllerUnit> impl
 
     @Override
     public List<Path> getComingOutPaths() {
-        return comingOutPahts;
+        executionReadLock.lock();
+        try {
+            return comingOutPahts;
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
 }

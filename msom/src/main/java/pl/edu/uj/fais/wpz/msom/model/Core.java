@@ -6,6 +6,8 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 
@@ -16,12 +18,16 @@ import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
 public class Core implements Runnable {
 
     private final BlockingQueue<Task> tasksBlockingQueue;
+    private final BlockingQueue<Task> processingTasksBlockingQueue;
+    private final AtomicInteger queueValue;
     private final ProcessingUnitImpl processingUnit;
     private final int number;
 
-    public Core(BlockingQueue<Task> tasksBlockingQueue, ProcessingUnitImpl processingUnit, int number) {
+    public Core(BlockingQueue<Task> tasksBlockingQueue, BlockingQueue<Task> processingTasksBlockingQueue, ProcessingUnitImpl processingUnit, AtomicInteger queueValue, int number) {
         this.number = number;
+        this.queueValue = queueValue;
         this.tasksBlockingQueue = tasksBlockingQueue;
+        this.processingTasksBlockingQueue = processingTasksBlockingQueue;
         this.processingUnit = processingUnit;
     }
 
@@ -31,6 +37,8 @@ public class Core implements Runnable {
             try {
                 PrintHelper.printMsg(getName(), "CZEKAM na zadanie");
                 Task taskToDo = tasksBlockingQueue.take();
+                processingTasksBlockingQueue.add(taskToDo);
+                queueValue.addAndGet(0 - taskToDo.getDifficulty());
                 PrintHelper.printMsg(getName(), "ODEBRAŁEM zadanie, rozpoczynam przetwarzanie...");
                 taskToDo.processTask(processingUnit);
                 PrintHelper.printMsg(getName(), "zakonczylem przetwarzanie zadania, zwracam do processing unit.");
@@ -44,6 +52,6 @@ public class Core implements Runnable {
     }
 
     private String getName() {
-        return processingUnit.getFullName() + " *** core_" + number;
+        return processingUnit.toString() + " *** core_" + number;
     }
 }

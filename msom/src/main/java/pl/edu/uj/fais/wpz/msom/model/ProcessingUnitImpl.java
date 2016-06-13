@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
@@ -29,131 +29,117 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingUnitImpl extends AbstractModelObject<Module> implements ProcessingUnit {
+public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, ModuleService> implements ProcessingUnit {
 
     private final SystemStorage systemStorage;
-    private final ModuleService moduleService;
+    // extra services (main service as a "service" in abstract class)
     private final TaskTypeService taskTypeService;
 
-    private final AtomicBoolean active = new AtomicBoolean(false);
     private final List<Core> cores = new ArrayList<>();
     private final List<Thread> coreThreads = new ArrayList<>();
     private final BlockingQueue<Task> tasksBlockingQueue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Task> processingTasksBlockingQueue = new LinkedBlockingQueue<>();
+    private final AtomicInteger queueValue = new AtomicInteger();
 
     private final TaskDispatcherImpl taskDispatcher;
 
     private final List<Type> availableTypes = new ArrayList<>();
 
     public ProcessingUnitImpl(Module entityObject, TaskDispatcherImpl taskDispatcher, SystemStorage systemStorage) {
+        super(entityObject, systemStorage.getModuleService());
         this.systemStorage = systemStorage;
-        this.moduleService = systemStorage.getModuleService();
         this.taskTypeService = systemStorage.getTaskTypeService();
         this.taskDispatcher = taskDispatcher;
-        setEntityObject(entityObject);
+        reloadAvailableTypes();
     }
 
     @Override
-    public boolean isActive() {
-        return active.get();
-    }
-
-    @Override
-    public boolean activate() {
-        PrintHelper.printMsg(getFullName(), "aktywuje sie...");
+    public boolean activateObject() {
         active.set(true);
         activateCores();
-        PrintHelper.printMsg(getFullName(), "jestem aktywny.");
         return true;
     }
 
     @Override
-    public boolean deactivate() {
+    public boolean deactivateObject() {
         active.set(false);
         deactivateCores();
         return true;
     }
 
     private void activateCores() {
-        PrintHelper.printMsg(getFullName(), "aktywuje rdzenie...");
-        for (int i = 0; i < getCores(); i++) {
-            Core core = new Core(tasksBlockingQueue, this, i);
+        PrintHelper.printMsg(toString(), "aktywuje rdzenie...");
+        for (int i = 0; i < getNumberOfCores(); i++) {
+            Core core = new Core(tasksBlockingQueue, processingTasksBlockingQueue, this, queueValue, i);
             cores.add(core);
             Thread coreThread = new Thread(core);
             coreThreads.add(coreThread);
             coreThread.setDaemon(true);
             coreThread.start();
         }
-        PrintHelper.printMsg(getFullName(), "aktywowalem rdzenie.");
+        PrintHelper.printMsg(toString(), "aktywowalem rdzenie.");
     }
 
     private void deactivateCores() {
-        PrintHelper.printMsg(getFullName(), "deaktywuje rdzenie...");
+        PrintHelper.printMsg(toString(), "deaktywuje rdzenie...");
         for (Thread thread : coreThreads) {
             thread.interrupt();
         }
         coreThreads.clear();
         cores.clear();
-        PrintHelper.printMsg(getFullName(), "deaktywowalem rdzenie.");
+        PrintHelper.printMsg(toString(), "deaktywowalem rdzenie.");
 
     }
 
     @Override
-    public boolean reload() {
-        if (active.get()) {
-            return false;
-        } else {
-            reloadEntityObcject();
-            reloadAvailableTypes();
-            return true;
-        }
-    }
-
-    private void reloadEntityObcject() {
-        if (getEntityObject() != null) {
-            moduleService.refresh(getEntityObject());
-        }
+    public void reloadData() {
+        reloadEntityObcject();
+        reloadAvailableTypes();
     }
 
     // should be common objects (from SystemStorage)
     private void reloadAvailableTypes() {
+        PrintHelper.printMsg(toString(), "Przeladowywanie typow...");
         availableTypes.clear();
         if (getEntityObject() != null) {
             Set<TaskType> taskTypes = getEntityObject().getTaskTypes();
             for (TaskType t : taskTypes) {
-                TypeImpl type = new TypeImpl(t, taskTypeService);
-                availableTypes.add(type);
+                TypeImpl type = systemStorage.getTypeObject(t);
+                if (type != null) {
+                    availableTypes.add(type);
+                    PrintHelper.printMsg(toString(), "Dodano typ: " + type.getName());
+                } else {
+                    TypeImpl newType = systemStorage.addAndGetExtraType(t);
+                    availableTypes.add(newType);
+                    PrintHelper.printMsg(toString(), "Dodano extra typ: " + newType.getName());
+                }
             }
         }
-    }
-
-    @Override
-    public boolean save() {
-        if (active.get()) {
-            return false;
-        } else {
-            saveEntityObject();
-            return true;
-        }
-//        saveTaskTypes();
-    }
-
-    private void saveEntityObject() {
-        if (getEntityObject() != null) {
-            moduleService.update(getEntityObject());
-        }
+        PrintHelper.printMsg(toString(), "Przeladowano liste typow.");
     }
 
     @Override
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        executionWriteLock.lock();
+        try {
+            getEntityObject().setName(name);
+        } finally {
+            executionWriteLock.unlock();
+        }
     }
 
     @Override
     public String getName() {
-        return getEntityObject().getName();
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getName();
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
-    public String getFullName() {
+    @Override
+    public String toString() {
         return taskDispatcher.getName() + " - " + getEntityObject().getName();
     }
 
@@ -164,7 +150,12 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public Integer getEfficiency() {
-        return getEntityObject().getEfficiency();
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getEfficiency();
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
@@ -173,8 +164,13 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
     }
 
     @Override
-    public Integer getCores() {
-        return getEntityObject().getCores();
+    public Integer getNumberOfCores() {
+        executionReadLock.lock();
+        try {
+            return getEntityObject().getCores();
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
@@ -189,7 +185,12 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public List<Type> getAvailableTypes() {
-        return availableTypes;
+        executionReadLock.lock();
+        try {
+            return availableTypes;
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override
@@ -199,7 +200,8 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public void processTask(Task task) throws ProcessingAbilityException {
-        PrintHelper.printMsg(getFullName(), "Odebralem zadanie - przekazuje do kolejki.");
+        PrintHelper.printMsg(toString(), "Odebralem zadanie - przekazuje do kolejki.");
+        queueValue.addAndGet(task.getDifficulty());
         tasksBlockingQueue.add(task);
     }
 
@@ -210,25 +212,36 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
 
     @Override
     public int getQueueValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return queueValue.get();
     }
 
     @Override
     public List<Task> getWaitingTasks() {
-        Task peek = tasksBlockingQueue.peek(); // for now, only we return only first element
-        List<Task> result = new ArrayList<>();
-        result.add(peek);
-        return result;
+        executionWriteLock.lock();
+        try {
+            List<Task> tasks = new ArrayList<>();
+            tasks.addAll(tasksBlockingQueue);
+            return tasks;
+        } finally {
+            executionWriteLock.unlock();
+        }
     }
 
     @Override
     public List<Task> getProcessingTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        executionWriteLock.lock();
+        try {
+            List<Task> tasks = new ArrayList<>();
+            tasks.addAll(processingTasksBlockingQueue);
+            return tasks;
+        } finally {
+            executionWriteLock.unlock();
+        }
     }
 
     @Override
     public int getNumberOfProcessingTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return processingTasksBlockingQueue.size();
     }
 
     @Override
@@ -252,10 +265,15 @@ public class ProcessingUnitImpl extends AbstractModelObject<Module> implements P
      * @param task
      */
     protected void returnTask(Task task) {
+        executionWriteLock.lock();
         try {
+            processingTasksBlockingQueue.remove(task);
             taskDispatcher.returnTaskFromProcessingUnit(task);
         } catch (SystemIntegrityException ex) {
             Logger.getLogger(ProcessingUnitImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            executionWriteLock.unlock();
         }
     }
+
 }

@@ -8,8 +8,6 @@ package pl.edu.uj.fais.wpz.msom.model;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
@@ -20,98 +18,29 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
  *
  * @author jarep
  */
-public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task> implements Task {
+public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task, TaskService> implements Task {
 
-    private final TaskService taskService;
     private Type type;
     private ProcessingUnit lastProcessingUnit;
 
-    private final AtomicBoolean active = new AtomicBoolean(false);
     private final AtomicBoolean finished = new AtomicBoolean(false);
     private final AtomicInteger currentPercentage = new AtomicInteger();
     private final AtomicInteger executionCounter = new AtomicInteger();
-
-    private final ReentrantReadWriteLock executionLock = new ReentrantReadWriteLock();
-    private final Lock executionReadLock = executionLock.readLock();
-    private final Lock executionWriteLock = executionLock.writeLock();
 
     private final AtomicLong waitingTime = new AtomicLong();
     private final AtomicLong processingTime = new AtomicLong();
 
     private final Long instanceId;
 
-    public TaskImpl(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService TaskService, Long instanceId) {
-        this.taskService = TaskService;
+    public TaskImpl(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService taskService, Long instanceId) {
+        super(entityObject, taskService);
         this.instanceId = instanceId;
-        setEntityObject(entityObject);
     }
 
     @Override
-    public boolean reload() {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Nie mozna przeladowac zadania gdy jest aktywne.");
-            return false;
-        }
-        executionWriteLock.lock();
-        try {
-            if (active.get()) {
-                PrintHelper.printAlert(getName(), "Nie mozna przeladowac zadania gdy jest aktywne.");
-                return false;
-            } else {
-                reloadEntityObcject();
-                PrintHelper.printMsg(getName(), "Przeladowano zadanie.");
-                return true;
-            }
-        } finally {
-            executionWriteLock.unlock();
-        }
-
-    }
-
-    private void reloadEntityObcject() {
-        executionWriteLock.lock();
-        try {
-            if (getEntityObject() != null) {
-                taskService.refresh(getEntityObject());
-            }
-        } finally {
-            executionWriteLock.unlock();
-        }
-    }
-
-    @Override
-    public boolean save() {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Nie mozna zapisac zadania gdy jest aktywne.");
-            return false;
-        }
-        executionWriteLock.lock();
-        try {
-            if (active.get()) {
-                PrintHelper.printAlert(getName(), "Nie mozna zapisac zadania gdy jest aktywne.");
-                return false;
-            } else {
-                return saveEntityObject();
-            }
-        } finally {
-            executionWriteLock.unlock();
-        }
-    }
-
-    private boolean saveEntityObject() {
-        executionWriteLock.lock();
-        try {
-            if (getEntityObject() != null) {
-                taskService.update(getEntityObject());
-                PrintHelper.printMsg(getName(), "Zapisano zadanie.");
-                return true;
-            } else {
-                PrintHelper.printError(getName(), "Nie mozna zapisac do bazy - entity is null");
-                return false;
-            }
-        } finally {
-            executionWriteLock.lock();
-        }
+    protected void reloadData() {
+        super.reloadData();
+        // clean time and others?
     }
 
     @Override
@@ -124,26 +53,19 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
         }
     }
 
-    public boolean setType(TypeImpl type) {
-        if (active.get()) {
-            PrintHelper.printAlert(getName(), "Nie mozna zmienic typu - zadanie jest aktywne.");
+    public boolean setType(final TypeImpl newType) {
+        if (newType != null) {
+            return executeIfNonActive(new Executable() {
+
+                @Override
+                public boolean execute() {
+                    type = newType;
+                    getEntityObject().setTaskType(newType.getEntityObject());
+                    return true;
+                }
+            }, executionWriteLock);
+        } else {
             return false;
-        }
-        executionWriteLock.lock();
-        try {
-            if (active.get()) {
-                PrintHelper.printAlert(getName(), "Nie mozna zmienic typu - zadanie jest aktywne.");
-                return false;
-            } else if (type == null || getEntityObject() == null || type.getEntityObject() == null) {
-                PrintHelper.printError(getName(), "Nie mozna zmienic typu - typ lub entity jest nullem.");
-                return false;
-            } else {
-                this.type = type;
-                getEntityObject().setTaskType(type.getEntityObject());
-                return true;
-            }
-        } finally {
-            executionWriteLock.unlock();
         }
     }
 
@@ -178,30 +100,7 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
                 PrintHelper.printError(getName(), "Proba wykonania zakonczonego zadania!");
                 return false;
             } else {
-                currentPercentage.set(0);
-                try {
-                    PrintHelper.printMsg(getName(), "ktos mnie bedzie przetwarzal...");
-                    int millis = 1000 * type.getDifficulty();
-                    int interval = millis / 100;
-                    // AKTUALIZACJA LACZNEGO CZASU OCZEKIWANIA
-                    // ZATRZYMANIE POMIARU CZASU OCZEKIWANIA
-                    // moze tutaj przekazanie danych - statystyk do obiektu typu?
-                    // START POMIARU CZASU PRZETWARZANIA
-                    for (int i = 0; i < 100; i++) {
-                        Thread.sleep(interval);
-                        currentPercentage.set(i);
-                        if ((i % 10) == 0) {
-                            PrintHelper.printMsg(getName(), " ... " + i + "% ...");
-                        }
-                    }
-                    // AKTUALIZACJA LACZNEGO CZASU PRZETWARZANIA (zadanie moze byc wielokrotnie przetwarzane)
-                    // moze tutaj przekazanie danych - statystyk do obiektu typu?
-                    PrintHelper.printMsg(getName(), "wykonano mnie po raz: " + executionCounter.incrementAndGet());
-                    currentPercentage.set(0);
-                    // WZNOWIENIE POMIARU CZASU OCZEKIWANIA
-                } catch (InterruptedException ex) {
-                    PrintHelper.printAlert(getName(), "Przerwano w trakcie przetwarzania. (interrupted exception)");
-                }
+                process();
             }
         } finally {
             executionReadLock.unlock();
@@ -212,6 +111,33 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
             return true;
         } finally {
             executionWriteLock.unlock();
+        }
+    }
+
+    private void process() {
+        currentPercentage.set(0);
+        try {
+            PrintHelper.printMsg(getName(), "ktos mnie bedzie przetwarzal...");
+            int millis = 1000 * type.getDifficulty();
+            int interval = millis / 100;
+            // AKTUALIZACJA LACZNEGO CZASU OCZEKIWANIA
+            // ZATRZYMANIE POMIARU CZASU OCZEKIWANIA
+            // moze tutaj przekazanie danych - statystyk do obiektu typu?
+            // START POMIARU CZASU PRZETWARZANIA
+            for (int i = 0; i < 100; i++) {
+                Thread.sleep(interval);
+                currentPercentage.set(i);
+                if ((i % 10) == 0) {
+                    PrintHelper.printMsg(getName(), " ... " + i + "% ...");
+                }
+            }
+            // AKTUALIZACJA LACZNEGO CZASU PRZETWARZANIA (zadanie moze byc wielokrotnie przetwarzane)
+            // moze tutaj przekazanie danych - statystyk do obiektu typu?
+            PrintHelper.printMsg(getName(), "wykonano mnie po raz: " + executionCounter.incrementAndGet());
+            currentPercentage.set(0);
+            // WZNOWIENIE POMIARU CZASU OCZEKIWANIA
+        } catch (InterruptedException ex) {
+            PrintHelper.printAlert(getName(), "Przerwano w trakcie przetwarzania. (interrupted exception)");
         }
     }
 
@@ -227,15 +153,19 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
                 PrintHelper.printAlert(getName(), "Nie mozna ponownie zakonczyc zadania.");
                 return false;
             } else {
-                finished.set(true);
-                // KONIEC POMIARU CZASU OCZEKIWANIA
-                // moze tutaj przekazanie danych - statystyk do obiektu typu?
+                finish();
                 PrintHelper.printMsg(getName(), "zakonczono mnie...");
                 return true;
             }
         } finally {
             executionWriteLock.unlock();
         }
+    }
+
+    private void finish() {
+        finished.set(true);
+        // KONIEC POMIARU CZASU OCZEKIWANIA
+        // moze tutaj przekazanie danych - statystyk do obiektu typu?
     }
 
     @Override
@@ -274,61 +204,32 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     }
 
     @Override
-    public boolean isActive() {
-        return active.get();
+    protected boolean activateObject() {
+        active.set(true);
+        // START POMIARU CZASU OCZEKIWANIA
+        return true;
     }
 
     @Override
-    public boolean activate() {
-        if (active.get()) {
-            PrintHelper.printMsg(getName(), "Nie mozna ponownie aktywowac zadania.");
-            return false;
-        }
-        executionWriteLock.lock();
-        try {
-            if (active.get()) {
-                PrintHelper.printMsg(getName(), "Nie mozna ponownie aktywowac zadania.");
-                return false;
-            } else {
-                active.set(true);
-                // START POMIARU CZASU OCZEKIWANIA
-                PrintHelper.printMsg(getName(), "Zadanie aktywowane - gotowe do przetwarzania.");
-                return true;
-            }
-        } finally {
-            executionWriteLock.unlock();
-        }
-    }
-
-    @Override
-    public boolean deactivate() {
-        if (!active.get()) {
-            PrintHelper.printMsg(getName(), "Nie mozna ponownie deaktywowac zadania.");
-            return false;
-        }
-        executionWriteLock.lock();
-        try {
-            if (!active.get()) {
-                PrintHelper.printMsg(getName(), "Nie mozna ponownie deaktywowac zadania.");
-                return false;
-            } else {
-                active.set(false);
-                // CZY KONCZYC POMIAR CZASU? - czy tylko w metodzie finishTask()
-                // Deaktywowanie zadania odblokowuje jego edycje, ale nie zakancza zadania,
-                // wiec raczej deaktywacja nie powinna wplywac na czas oczekiwania
-                PrintHelper.printMsg(getName(), "Zadanie deaktywowane.");
-                return true;
-            }
-        } finally {
-            executionWriteLock.unlock();
-        }
+    protected boolean deactivateObject() {
+        active.set(false);
+        // CZY KONCZYC POMIAR CZASU? - czy tylko w metodzie finishTask()
+        // Deaktywowanie zadania odblokowuje jego edycje, ale nie zakancza zadania,
+        // wiec raczej deaktywacja nie powinna wplywac na czas oczekiwania
+        return true;
     }
 
     @Override
     public String toString() {
         executionReadLock.lock();
         try {
-            return "TaskImpl{" + "name=" + getName() + ", active=" + active + ", type=" + type.getName() + '}';
+            String string = "TaskImpl{" + "name=" + getName() + ", active=" + active.get() + ", type=";
+            if (type == null) {
+                string = string + "---";
+            } else {
+                string = string + type.getName();
+            }
+            return string;
         } finally {
             executionReadLock.unlock();
         }
