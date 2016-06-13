@@ -109,7 +109,7 @@ public class ProcessingUnitMockup extends AbstractModelMockupObject<Module> impl
     }
 
     @Override
-    public Integer getCores() {
+    public Integer getNumberOfCores() {
         return getEntityObject().getCores();
     }
 

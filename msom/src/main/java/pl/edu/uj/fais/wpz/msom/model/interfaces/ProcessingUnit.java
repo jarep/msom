@@ -14,7 +14,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
  *
  * @author jarep
  */
-public interface ProcessingUnit extends IModelObject<Module>, Activatable {
+public interface ProcessingUnit extends IModelObject<Module>, IActivatable {
 
     /**
      * Set name for this Processing Unit
@@ -60,11 +60,11 @@ public interface ProcessingUnit extends IModelObject<Module>, Activatable {
     public void setCores(Integer cores);
 
     /**
-     * Get number of cores in Processing Units
+     * Get number of cores in Processing Unit
      *
      * @return Number of cores
      */
-    public Integer getCores();
+    public Integer getNumberOfCores();
 
     /**
      * Set given type as supported by this Processing Unit.

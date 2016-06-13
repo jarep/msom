@@ -117,10 +117,12 @@ public class ProcessingSystemMockup extends AbstractModelMockupObject<Model> imp
 
     /**
      * For now it is only mockup - should be implemented
+     * @return 
      */
     @Override
-    public void stopSimulation() {
+    public boolean stopSimulation() {
         locked = false;
+        return true;
     }
 
     @Override

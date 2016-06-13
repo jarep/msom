@@ -43,8 +43,10 @@ public interface ProcessingSystem extends IModelObject<Model> {
 
     /**
      * Stop simulation.
+     *
+     * @return {@code true} if successfully stopped, otherwise {@code false}
      */
-    public void stopSimulation();
+    public boolean stopSimulation();
 
     /**
      * Check that this Processing System can be modified.

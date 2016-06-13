@@ -11,7 +11,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
  *
  * @author jarep
  */
-public interface Type extends IModelObject<TaskType>, Activatable {
+public interface Type extends IModelObject<TaskType>, IActivatable {
 
     /**
      * Get name of type

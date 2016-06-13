@@ -9,7 +9,7 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
  *
  * @author jarep
  */
-public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task>, Activatable {
+public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task>, IActivatable {
 
     /**
      * Get type of task

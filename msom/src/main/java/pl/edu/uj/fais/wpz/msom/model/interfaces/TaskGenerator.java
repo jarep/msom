@@ -9,6 +9,6 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
  *
  * @author jarep
  */
-public interface TaskGenerator extends Activatable {
+public interface TaskGenerator extends IActivatable {
 
 }

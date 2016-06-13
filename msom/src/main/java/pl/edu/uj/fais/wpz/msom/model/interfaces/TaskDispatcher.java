@@ -17,7 +17,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
  *
  * @author jarep
  */
-public interface TaskDispatcher extends IModelObject<ControllerUnit>, Activatable {
+public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatable {
 
     /**
      * Set name for this Task Dispatcher
