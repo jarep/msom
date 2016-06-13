@@ -116,6 +116,9 @@
     <!--Processing Paths-->
     <definition name="processingpaths" extends="common">
         <put-attribute name="title" value="Processing Paths Management" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/processingpaths.js" />
+        </put-list-attribute>
     </definition>
     
     <definition name="processingpaths/new" extends="processingpaths">

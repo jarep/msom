@@ -6,6 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.dao;
 
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModelDao;
@@ -39,6 +40,12 @@ public class ModelDaoImpl extends AbstractDao<Model, Long> implements ModelDao {
 
         List list = controllersByModel.list();
         return !list.isEmpty();
+    }
+    
+    @Override
+    public List<Model> findAll() {
+        return getCurrentSession().createCriteria(daoType).
+                setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
     }
 
 }
