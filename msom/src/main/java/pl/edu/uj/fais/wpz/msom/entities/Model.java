@@ -10,7 +10,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
@@ -70,9 +69,5 @@ public class Model extends AbstractEntity {
         this.controllerUnits = controllerUnits;
     }
     
-    //@PreRemove
-    //private void preRemove() {
-    //    this.setFirstControllerUnit(null);
-    //}
 
 }
