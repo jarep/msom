@@ -3,51 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
-import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
-import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
  *
  * @author jarep
  */
-public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task> implements Task {
-    
-    private final TaskService taskService;
+public class TypeMockup extends AbstractModelMockupObject<TaskType> implements Type {
 
-    public TaskMockup(pl.edu.uj.fais.wpz.msom.entities.Task entityObject, TaskService TaskService) {
-        this.taskService = TaskService;
+    private final TaskTypeService taskTypeService;
+
+    public TypeMockup(TaskType entityObject, TaskTypeService taskTypeService) {
+        this.taskTypeService = taskTypeService;
         setEntityObject(entityObject);
-    }
-    
-    @Override
-    public void reload() {
-        reloadEntityObcject();
-    }
-
-    private void reloadEntityObcject() {
-        if (getEntityObject() != null) {
-            taskService.refresh(getEntityObject());
-        }
-    }
-
-    @Override
-    public void save() {
-        saveEntityObject();
-    }
-
-    private void saveEntityObject() {
-        if (getEntityObject() != null) {
-            taskService.update(getEntityObject());
-        }
-    }
-
-    @Override
-    public Type getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -56,48 +28,67 @@ public class TaskMockup extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.enti
     }
 
     @Override
-    public Integer getDifficulty() {
-        return getEntityObject().getTaskType().getDifficulty();
+    public boolean reload() {
+        reloadEntityObcject();
+        return true;
+    }
+
+    private void reloadEntityObcject() {
+        if (getEntityObject() != null) {
+            taskTypeService.refresh(getEntityObject());
+        }
     }
 
     @Override
-    public boolean processTask() {
+    public boolean save() {
+        saveEntityObject();
+        return true;
+    }
+
+    private void saveEntityObject() {
+        if (getEntityObject() != null) {
+            taskTypeService.update(getEntityObject());
+        }
+    }
+
+    @Override
+    public int getDifficulty() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void finishTask() {
+    public boolean activate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean deactivate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Integer getProcessingTime() {
+    public boolean isActive() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Integer getWaitingTime() {
+    public double getAvgProcessingTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ProcessingUnit getLastProcessingUnit() {
+    public double getAvgWaitingTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public int getExecutionCounter() {
+    public int getNumberOfGeneratedTasks() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public double getPercentageOfCurrentExecution() {
+    public int getNumberOfFinishedTasks() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-   
+
 }

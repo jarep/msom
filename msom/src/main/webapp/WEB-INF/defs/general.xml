@@ -153,7 +153,24 @@
     <definition name="models/view" extends="models">
         <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
     </definition>
+   
+    <!--Processing System Mockups-->
+    <definition name="processingsystemmockup" extends="common">
+        <put-attribute name="title" value="Processing System Mockups" />
+    </definition>
     
+    <definition name="processingsystemmockup/list" extends="processingsystemmockup">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystemmockup/list.jsp" />
+    </definition>
+    
+    <definition name="processingsystemmockup/view" extends="processingsystemmockup">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystemmockup/view.jsp" />
+    </definition>
+    
+    <definition name="processingsystemmockup/simulate" extends="processingsystemmockup">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystemmockup/simulate.jsp" />
+    </definition>
+      
     <!--Processing Systems-->
     <definition name="processingsystem" extends="common">
         <put-attribute name="title" value="Processing Systems" />

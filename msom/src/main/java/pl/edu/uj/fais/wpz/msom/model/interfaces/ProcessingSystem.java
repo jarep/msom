@@ -43,8 +43,10 @@ public interface ProcessingSystem extends IModelObject<Model> {
 
     /**
      * Stop simulation.
+     *
+     * @return {@code true} if successfully stopped, otherwise {@code false}
      */
-    public void stopSimulation();
+    public boolean stopSimulation();
 
     /**
      * Check that this Processing System can be modified.
@@ -57,7 +59,8 @@ public interface ProcessingSystem extends IModelObject<Model> {
      * Create new Task Dispatcher and assign to this Processing System.
      *
      * @param name Name of task dispatcher
-     * @return created task dispatcher object
+     * @return created task dispatcher object or null if system is active and
+     * can not be changed
      */
     public TaskDispatcher createTaskDispatcher(String name);
 
@@ -65,10 +68,12 @@ public interface ProcessingSystem extends IModelObject<Model> {
      * Add existing Task Dispatcher to this Processing System.
      *
      * @param taskDispatcher Task Dispatcher
+     * @return {@code false} if system is active and can not be changed,
+     * otherwise {@code true}
      * @throws SystemIntegrityException when correlated processing paths leads
      * to other Processing System
      */
-    public void addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException;
+    public boolean addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException;
 
     /**
      * Get list of Task Dispatchers assigned to this Processing System.
@@ -82,10 +87,12 @@ public interface ProcessingSystem extends IModelObject<Model> {
      * generator.
      *
      * @param taskDispatcher First task dispatcher
+     * @return {@code false} if system is active and can not be changed,
+     * otherwise {@code true}
      * @throws SystemIntegrityException if given Task Dispatcher is assigned to
      * other Processing System
      */
-    public void setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException;
+    public boolean setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException;
 
     /**
      * Get first Task Dispatcher, which should receive tasks from task generator
@@ -116,7 +123,8 @@ public interface ProcessingSystem extends IModelObject<Model> {
      * tasks.
      *
      * @param distributionType Type of distribution
-     * @return {@code true} if successfully changed, otherwise {@code false}
+     * @return {@code false} if system is active and can not be changed,
+     * otherwise {@code true}
      */
     public boolean setDistributionType(DistributionType distributionType);
 
@@ -127,39 +135,5 @@ public interface ProcessingSystem extends IModelObject<Model> {
      * @return Type of distribution
      */
     public DistributionType getDistributionType();
-
-    /**
-     * Get the average processing time for tasks of given type in current
-     * simulation.
-     *
-     * @param type Type of task
-     * @return The number of milliseconds
-     */
-    public double getAvgProcessingTimeByType(Type type);
-
-    /**
-     * Get the average waiting time for tasks of given type in current
-     * simulation.
-     *
-     * @param type Type of task
-     * @return The number of milliseconds
-     */
-    public double getAvgWaitingTimeByType(Type type);
-
-    /**
-     * Get number of generated tasks of given type.
-     *
-     * @param type Type of task
-     * @return
-     */
-    public int getNumberOfGeneratedTasksByType(Type type);
-
-    /**
-     * Get number of finished tasks of given type.
-     *
-     * @param type Type of task
-     * @return
-     */
-    public int getNumberOfFinishedTasksByType(Type type);
 
 }

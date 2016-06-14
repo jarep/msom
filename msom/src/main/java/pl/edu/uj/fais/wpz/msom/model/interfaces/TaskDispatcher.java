@@ -17,7 +17,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
  *
  * @author jarep
  */
-public interface TaskDispatcher  extends IModelObject<ControllerUnit> {
+public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatable {
 
     /**
      * Set name for this Task Dispatcher
@@ -168,6 +168,13 @@ public interface TaskDispatcher  extends IModelObject<ControllerUnit> {
      * @return List of types to finished
      */
     public List<Type> getTypesToFinished();
+
+    /**
+     * Get all types for which have defined path in this task dispatcher.
+     *
+     * @return List of types.
+     */
+    public List<Type> getAllSupportedTypes();
 
     /**
      * Receive task from Processing Unit after processing.

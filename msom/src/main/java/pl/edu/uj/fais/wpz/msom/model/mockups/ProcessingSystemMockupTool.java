@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingSystemTool {
+public class ProcessingSystemMockupTool {
 
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
@@ -34,7 +34,7 @@ public class ProcessingSystemTool {
 
     private final List<ProcessingSystem> localProcessingSystems = new ArrayList<>();
 
-    public ProcessingSystemTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    public ProcessingSystemMockupTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
@@ -51,9 +51,6 @@ public class ProcessingSystemTool {
     }
 
     public ProcessingSystem reloadProcessingSystem(ProcessingSystem processingSystemToReload) {
-        if(processingSystemToReload.isLocked()){
-            return processingSystemToReload;
-        }
         return reloadProcessingSystemFromDatabase(processingSystemToReload.getId());
     }
 
@@ -72,7 +69,7 @@ public class ProcessingSystemTool {
         for (Model m : models) {
             Long id = m.getId();
             if (!isProcessingSystemOnLocalList(id)) {
-                ProcessingSystemImpl processingSystem = new ProcessingSystemImpl(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+                ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
                 localProcessingSystems.add(processingSystem);
             }
         }
@@ -109,7 +106,7 @@ public class ProcessingSystemTool {
         localProcessingSystems.clear();
         List<Model> models = modelService.findAll();
         for (Model m : models) {
-            ProcessingSystemImpl p = new ProcessingSystemImpl(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            ProcessingSystemMockup p = new ProcessingSystemMockup(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
             localProcessingSystems.add(p);
         }
     }
@@ -119,7 +116,7 @@ public class ProcessingSystemTool {
 
         Model model = modelService.find(id);
         if (model != null) {
-            ProcessingSystemImpl processingSystem = new ProcessingSystemImpl(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            ProcessingSystemMockup processingSystem = new ProcessingSystemMockup(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
             localProcessingSystems.add(processingSystem);
             return processingSystem;
         }
@@ -144,7 +141,7 @@ public class ProcessingSystemTool {
         }
         Model model = modelService.find(id);
         if (model != null) {
-            ProcessingSystemImpl system = new ProcessingSystemImpl(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            ProcessingSystemMockup system = new ProcessingSystemMockup(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
             localProcessingSystems.add(system);
             return system;
         }
@@ -152,11 +149,7 @@ public class ProcessingSystemTool {
     }
 
     public ProcessingSystem reloadProcessingSystem(long id) {
-        ProcessingSystem processingSystem = getProcessingSystem(id);
-        if(processingSystem.isLocked()){
-            return null;
-        } 
-        return reloadProcessingSystem(processingSystem);
+        return reloadProcessingSystem(getProcessingSystem(id));
     }
 
 }

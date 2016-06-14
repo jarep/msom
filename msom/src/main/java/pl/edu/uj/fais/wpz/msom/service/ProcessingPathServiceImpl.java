@@ -72,6 +72,11 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
     }
 
     @Override
+    public List<TaskType> getSupportedTaskTypesByControllerUnit(ControllerUnit controllerUnit) {
+        return processingPathDao.getSupportedTaskTypesByControllerUnit(controllerUnit);
+    }
+
+    @Override
     public boolean removeProcessingPathsByControllerUnit(ControllerUnit controllerUnit) {
         List<ProcessingPath> paths = getProcessingPathsComingOutFromTheControllerUnit(controllerUnit);
         for (ProcessingPath p : paths) {

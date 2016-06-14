@@ -5,6 +5,7 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.junit.After;
@@ -144,6 +145,67 @@ public class TaskDaoImplTest extends DomainAwareBase {
 
         assertTrue(taskDao.removeTask(task));
 
+    }
+
+    /**
+     * Test of getTasksByType method, of class TaskDaoImpl.
+     */
+    @Test
+    public void testGetTasksByType() {
+        TaskType type1 = new TaskType("T1", 596);
+        Task task1 = new Task("Z1", type1);
+        Task task2 = new Task("Z2", type1);
+        Task task3 = new Task("Z3", type1);
+
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(task1);
+        tasks.add(task2);
+        tasks.add(task3);
+
+        taskTypeDao.add(type1);
+        taskDao.add(task1);
+        taskDao.add(task2);
+        taskDao.add(task3);
+
+        List<Task> tasksByType = taskDao.getTasksByType(type1);
+        assertTrue(tasksByType.size() == 3);
+        assertTrue(tasksByType.containsAll(tasks));
+
+        taskDao.removeTask(task1);
+        taskDao.removeTask(task2);
+        taskDao.removeTask(task3);
+        taskTypeDao.remove(type1);
+    }
+
+  
+    /**
+     * Test of getTasksByTaskTypeId method, of class TaskDaoImpl.
+     */
+    @Test
+    public void testGetTasksByTaskTypeId() {
+        TaskType type1 = new TaskType("T1", 596);
+        Task task1 = new Task("Z1", type1);
+        Task task2 = new Task("Z2", type1);
+        Task task3 = new Task("Z3", type1);
+
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(task1);
+        tasks.add(task2);
+        tasks.add(task3);
+
+        taskTypeDao.add(type1);
+        taskDao.add(task1);
+        taskDao.add(task2);
+        taskDao.add(task3);
+
+        List<Task> tasksByType = taskDao.getTasksByTaskTypeId(type1.getId());
+        assertTrue(tasksByType.size() == 3);
+        assertTrue(tasksByType.containsAll(tasks));
+
+        taskDao.removeTask(task1);
+        taskDao.removeTask(task2);
+        taskDao.removeTask(task3);
+        taskTypeDao.remove(type1);
     }
 
 }

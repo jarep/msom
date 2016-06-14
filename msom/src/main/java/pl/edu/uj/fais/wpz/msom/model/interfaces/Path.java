@@ -33,6 +33,6 @@ public interface Path extends IModelObject<ProcessingPath> {
      *
      * @return TaskDispatcher or null
      */
-    public TaskDispatcher forwardTo();
+    public TaskDispatcher getNextTaskDispatcher();
     
 }

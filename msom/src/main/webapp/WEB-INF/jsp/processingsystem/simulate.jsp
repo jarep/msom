@@ -4,15 +4,16 @@
 <p class="lead">
 </p>
 <h3>Processing System <strong>${processingSystem.name}</strong></h3>
-<span>Temporary buttons:</span>
-<a href="/msom/processingsystem/reset/${processingSystem.id}">Reset</a> |
-<a href="/msom/processingsystem/simulate/${processingSystem.id}">Next simulation step</a>
-<br/>
-<span>Proposed buttons:</span>
-<a href="#">Start simulation</a> |
-<a href="#">Stop simulation</a> |
-<a href="#">Clean simulation data and unlock processing system</a>
 
+<div class="btn-group">
+    <a class="btn btn-danger" href="/msom/processingsystem/reset/${processingSystem.id}">RESET</a>
+    <a class="btn btn-success" href="/msom/processingsystem/start/${processingSystem.id}">START</a>
+    <a class="btn btn-warning" href="/msom/processingsystem/stop/${processingSystem.id}">STOP</a> 
+    <a class="btn btn-info" href="/msom/processingsystem/simulate/${processingSystem.id}">REFRESH VIEW</a> 
+</div>
+<div style="margin: 10px 0; padding: 25px;" class="bg-info">
+    <samp>${message}</samp>
+</div>
 
 <div class="processing-container">
     <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
@@ -22,7 +23,7 @@
                 <h5>Processing units:</h5>
                 <c:forEach items="${taskDispatcher.getProcessingUnits()}" var="processingUnit">
                     <div class="single-unit">
-                        <h6><strong>${processingUnit.name}</strong> [cores: ${processingUnit.cores}] [eff: ${processingUnit.efficiency}]</h6> 
+                        <h6><strong>${processingUnit.name}</strong> [cores: ${processingUnit.numberOfCores}] [eff: ${processingUnit.efficiency}]</h6> 
                         <p class="unit-details">
                             Available types: 
                             <c:forEach items="${processingUnit.getAvailableTypes()}" var="availableType">
@@ -31,41 +32,51 @@
                         </p>
                         <div class="tasks-box">
                             <p class="simulation-parameters">
-                                <span> Tasks in progress <em>4</em> </span> <br/>
-                                <span> Processed  <em>51.50 %</em> </span> <br/>
-                                <span> Avg. processing time: <em>48</em> </span> 
+                                <span> Tasks in progress <em>${processingUnit.numberOfProcessingTasks}</em> </span> <br/>
+                                <span> Processed  <em>...</em> </span> <br/>
+                                <span> Avg. processing time: <em>...</em> </span> 
                             </p>
                             <p class="details-toogle"> - Show/hide details - </p>
                             <ul class="tasks-list"> 
-                                <li>ID 47 - Task1 [A] 55.01% {TWT: 254; TPT: 0; PC: 0}</li>
-                                <li>ID 48 - Task2 [B] 05.54% {TWT: 124; TPT: 7; PC: 1}</li>
-                                <li>ID 50 - Task1 [A] 78.12% {TWT: 455; TPT: 0; PC: 0}</li>
-                                <li>ID 57 - Task5 [A] 38.14% {TWT: 156; TPT: 12; PC: 2}</li>
+                                <c:forEach items="${processingUnit.getProcessingTasks()}" var="task">
+                                    <li class="progress" style="height:35px; margin-bottom: 5px;">
+                                        ${task}<br/>
+                                        <span class="progress-bar" role="progressbar" aria-valuenow="70"
+                                              aria-valuemin="0" aria-valuemax="100" style="width:${task.getPercentageOfCurrentExecution()}%">
+                                            <strong>${task.getPercentageOfCurrentExecution()}%</strong>
+                                        </span>
+                                    </li>
+                                </c:forEach>
+
                             </ul>
                         </div>
-                        <div class="tasks-box">
-                            <p class="simulation-parameters">
-                                <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
-                                <span> Queue Value: <em>${processingUnit.queueValue}</em> </span> <br/>
-                                <span> Avg. waiting time: <em>48</em> </span> 
-                            </p>
-                            <p class="details-toogle"> - Show/hide details - </p>
-                            <ul class="tasks-list"> 
-                                <li>ID 65 - Task1 [A] {TWT: 2155; TPT: 0; PC: 0}</li>
-                                <li>ID 66 - Task2 [B] {TWT: 123; TPT: 0; PC: 0}</li>
-                                <li>ID 67 - Task1 [A] {TWT: 456; TPT: 125; PC: 3}</li>
-                                <li>ID 69 - Task5 [A] {TWT: 68; TPT: 0; PC: 0}</li>
-                                <li>ID 72 - Task1 [A] {TWT: 1544; TPT: 356; PC: 2}</li>
-                                <li>ID 73 - Task5 [A] {TWT: 14; TPT: 0; PC: 0}</li>
-                                <li> - - - - - - ................. - - - - - - </li>
-                            </ul> 
-                        </div>
-
-                    </div>
-                </c:forEach>
+            <div class="tasks-box">
+                <p class="simulation-parameters">
+                    <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
+                    <span> Queue Value: <em>${processingUnit.queueValue}<em> </span> <br/>
+                    <span> Avg. waiting time: <em>...</em> </span> 
+                    </p>
+                    <p class="details-toogle"> - Show/hide details - </p>
+                    <ul class="tasks-list"> 
+                        <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
+                            <li>${waitingTask}</li>
+                            </c:forEach>
+                    </ul> 
             </div>
+
+            </div>
+        </c:forEach>
         </div>
-    </c:forEach>
+        <div>
+            <h6>Coming out paths</h6>
+            <ul class="paths">
+                <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
+                    <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
+                    </c:forEach>
+            </ul>
+        </div>
+    </div>
+</c:forEach>
 </div>
 <div id="monitoring">
     <h4>Types statistics</h4>
@@ -99,3 +110,4 @@
     <p>TPT - Total Processing Time</p>
     <p>PC - Processing Count</p>
 </div>
+

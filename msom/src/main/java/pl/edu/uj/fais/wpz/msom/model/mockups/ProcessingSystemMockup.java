@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-public class ProcessingSystemMockup extends AbstractModelObject<Model> implements ProcessingSystem {
+public class ProcessingSystemMockup extends AbstractModelMockupObject<Model> implements ProcessingSystem {
 
     private final ControllerUnitService controllerUnitService;
     private final DistributionService distributionService;
@@ -54,9 +54,10 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     }
 
     @Override
-    public void reload() {
+    public boolean reload() {
         reloadEntityObcject();
         reloadTaskDispatchers();
+        return true;
     }
 
     private void reloadEntityObcject() {
@@ -77,9 +78,10 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     }
 
     @Override
-    public void save() {
+    public boolean save() {
         saveEntityObject();
         saveTaskDispatchers();
+        return true;
     }
 
     private void saveEntityObject() {
@@ -115,10 +117,12 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
 
     /**
      * For now it is only mockup - should be implemented
+     * @return 
      */
     @Override
-    public void stopSimulation() {
+    public boolean stopSimulation() {
         locked = false;
+        return true;
     }
 
     @Override
@@ -127,7 +131,7 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     }
 
     @Override
-    public void addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
+    public boolean addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -137,7 +141,7 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     }
 
     @Override
-    public void setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
+    public boolean setFirstTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -164,26 +168,6 @@ public class ProcessingSystemMockup extends AbstractModelObject<Model> implement
     @Override
     public boolean isLocked() {
         return locked;
-    }
-
-    @Override
-    public double getAvgProcessingTimeByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getAvgWaitingTimeByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getNumberOfGeneratedTasksByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getNumberOfFinishedTasksByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

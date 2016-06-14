@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.uj.fais.wpz.msom.model;
+package pl.edu.uj.fais.wpz.msom.model.mockups;
 
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
@@ -12,7 +12,7 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
  * @author jarep
  * @param <Entity>
  */
-public abstract class AbstractModelObject<Entity> {
+public abstract class AbstractModelMockupObject<Entity> {
 
     private Entity entityObject;
 
@@ -31,5 +31,5 @@ public abstract class AbstractModelObject<Entity> {
         return ((AbstractEntity) entityObject).getId();
     }
     
-    public abstract void reload();
+    public abstract boolean reload();
 }

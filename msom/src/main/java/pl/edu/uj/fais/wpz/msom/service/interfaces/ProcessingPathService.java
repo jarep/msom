@@ -76,6 +76,14 @@ public interface ProcessingPathService extends IService<ProcessingPath> {
     public List<TaskType> getTaskTypesToFinishedByControllerUnit(ControllerUnit controllerUnit);
 
     /**
+     * Get all Task Types supported by given Controller Unit.
+     *
+     * @param controllerUnit
+     * @return list of Task Types
+     */
+    public List<TaskType> getSupportedTaskTypesByControllerUnit(ControllerUnit controllerUnit);
+
+    /**
      * Remove Processing Paths coming out from given Controller Unit to another
      * Controller Unit (or to the same Controller Unit when task should be
      * finished in given Controller Unit).

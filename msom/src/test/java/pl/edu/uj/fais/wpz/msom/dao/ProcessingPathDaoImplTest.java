@@ -77,6 +77,11 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
     private final List<TaskType> taskTypesToFinished3 = new ArrayList<>();
     private final List<TaskType> taskTypesToFinished4 = new ArrayList<>();
 
+    private final List<TaskType> supportedTaskTypes1 = new ArrayList<>();
+    private final List<TaskType> supportedTaskTypes2 = new ArrayList<>();
+    private final List<TaskType> supportedTaskTypes3 = new ArrayList<>();
+    private final List<TaskType> supportedTaskTypes4 = new ArrayList<>();
+
     public ProcessingPathDaoImplTest() {
     }
 
@@ -157,6 +162,7 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
         ProcessingPath path5 = new ProcessingPath(controller1, taskType5, Boolean.FALSE, controller3);
         pathsFromController1.addAll(Arrays.asList(path1, path2, path3, path4, path5));
         taskTypesToProcessing1.addAll(Arrays.asList(taskType1, taskType3));
+        supportedTaskTypes1.addAll(Arrays.asList(taskType1, taskType2, taskType3, taskType4, taskType5));
 
         // from controller2
         ProcessingPath path6 = new ProcessingPath(controller2, taskType3, Boolean.TRUE, controller2);
@@ -164,6 +170,7 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
         pathsFromController2.addAll(Arrays.asList(path6, path7));
         taskTypesToProcessing2.addAll(Arrays.asList(taskType3));
         taskTypesToFinished2.addAll(Arrays.asList(taskType3));
+        supportedTaskTypes2.addAll(Arrays.asList(taskType3, taskType4));
 
         // from controller3
         ProcessingPath path8 = new ProcessingPath(controller3, taskType1, Boolean.FALSE, controller3);
@@ -172,12 +179,14 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
         pathsFromController3.addAll(Arrays.asList(path8, path9, path10));
         taskTypesToProcessing3.addAll(Arrays.asList(taskType2));
         taskTypesToFinished3.addAll(Arrays.asList(taskType1, taskType2, taskType5));
+        supportedTaskTypes3.addAll(Arrays.asList(taskType1, taskType2, taskType5));
 
         // from controller4
         ProcessingPath path11 = new ProcessingPath(controller4, taskType4, Boolean.TRUE, controller4);
         pathsFromController4.add(path11);
         taskTypesToProcessing4.addAll(Arrays.asList(taskType4));
         taskTypesToFinished4.addAll(Arrays.asList(taskType4));
+        supportedTaskTypes4.addAll(Arrays.asList(taskType4));
 
         pathsToController2.addAll(Arrays.asList(path3, path4, path6));
         pathsToController3.addAll(Arrays.asList(path1, path2, path5, path8, path9, path10));
@@ -335,6 +344,29 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
         List<TaskType> taskTypes4 = processingPathDao.getTaskTypesToFinishedByControllerUnit(controllers.get(3));
         assertTrue(taskTypes4.size() == taskTypesToFinished4.size());
         assertTrue(taskTypes4.containsAll(taskTypesToFinished4));
+    }
+
+    /**
+     * Test of getSupportedTaskTypesByControllerUnit method, of class
+     * ProcessingPathDaoImpl.
+     */
+    @Test
+    public void testGetSupportedTaskTypesByControllerUnit() {
+        List<TaskType> taskTypes1 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(0));
+        assertTrue(taskTypes1.size() == supportedTaskTypes1.size());
+        assertTrue(taskTypes1.containsAll(supportedTaskTypes1));
+
+        List<TaskType> taskTypes2 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(1));
+        assertTrue(taskTypes2.size() == supportedTaskTypes2.size());
+        assertTrue(taskTypes2.containsAll(supportedTaskTypes2));
+
+        List<TaskType> taskTypes3 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(2));
+        assertTrue(taskTypes3.size() == supportedTaskTypes3.size());
+        assertTrue(taskTypes3.containsAll(supportedTaskTypes3));
+
+        List<TaskType> taskTypes4 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(3));
+        assertTrue(taskTypes4.size() == supportedTaskTypes4.size());
+        assertTrue(taskTypes4.containsAll(supportedTaskTypes4));
     }
 
 }

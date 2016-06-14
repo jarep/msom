@@ -20,14 +20,17 @@ public interface IModelObject<Entity> {
     public Long getId();
 
     /**
-     * Cancel changes and reload data from database.
+     * Cancel changes and reload data from database if object is not active.
+     *
+     * @return {@code true} if reload, else {@code false}.
      */
-    public void reload();
+    public boolean reload();
 
     /**
-     * Save changes to database
+     * Save changes to database if object is not active.
+     *
+     * @return {@code true} if saved, else {@code false}.
      */
-    public void save();
-
+    public boolean save();
 
 }
