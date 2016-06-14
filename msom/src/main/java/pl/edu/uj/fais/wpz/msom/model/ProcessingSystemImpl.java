@@ -281,25 +281,4 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     public boolean isLocked() {
         return active.get();
     }
-
-    @Override
-    public double getAvgProcessingTimeByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getAvgWaitingTimeByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getNumberOfGeneratedTasksByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getNumberOfFinishedTasksByType(Type type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }
