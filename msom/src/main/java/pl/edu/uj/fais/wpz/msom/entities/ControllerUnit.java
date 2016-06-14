@@ -28,7 +28,7 @@ public class ControllerUnit extends AbstractEntity {
     private Model model;
 
     /**
-     * Constructor
+     * Default Constructor required by hibernate
      */
     public ControllerUnit() {
     }

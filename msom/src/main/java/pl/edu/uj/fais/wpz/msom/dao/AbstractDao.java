@@ -29,12 +29,12 @@ public abstract class AbstractDao<E, K extends Serializable> implements IDao<E, 
     private SessionFactory sessionFactory;
 
     /**
-     * Data acces object type, used by hybernate
+     * Data access object type, used by hybernate
      */
     protected Class<? extends E> daoType;
 
     /**
-     * sets data acces object type, used by hybernate
+     * sets data access object type, used by hybernate
      */
     public AbstractDao() {
         daoType = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
@@ -57,7 +57,7 @@ public abstract class AbstractDao<E, K extends Serializable> implements IDao<E, 
     }
 
     /**
-     * @return current data acces session
+     * @return current data access session
      */
     protected Session getCurrentSession() {
         return sessionFactory.getCurrentSession();

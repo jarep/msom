@@ -8,7 +8,7 @@ package pl.edu.uj.fais.wpz.msom.service.interfaces;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
 
 /**
- *
+ * Service of processing system model
  * @author jarep
  */
 public interface ModelService extends IService<Model> {

@@ -13,7 +13,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
- *
+ * Service for controller unit
  * @author jarep
  */
 public interface ControllerUnitService extends IService<ControllerUnit> {

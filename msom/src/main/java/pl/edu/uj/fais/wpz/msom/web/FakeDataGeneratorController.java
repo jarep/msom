@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.edu.uj.fais.wpz.msom.web.helpers.EntityGenerator;
 
 /**
- *
+ * Temporaty generator, created for test early relase of system
  * @author jaroslaw
  */
 @Controller
@@ -25,7 +25,7 @@ public class FakeDataGeneratorController {
     /**
      *
      * @param model to use in method
-     * @return  path to view fake data generator
+     * @return path to view fake data generator
      */
     @RequestMapping(value = "/fakedatagenerator", method = RequestMethod.GET)
     public String generateFakeData(Model model) {

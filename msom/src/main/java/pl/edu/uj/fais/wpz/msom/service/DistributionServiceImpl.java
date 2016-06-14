@@ -15,7 +15,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Distribution;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 
 /**
- *
+ * Service for distribution implementation
  * @author paweldylag
  */
 @Service(value = "distributionService")

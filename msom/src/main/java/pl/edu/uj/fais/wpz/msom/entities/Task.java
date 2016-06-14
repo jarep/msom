@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- *
+ * Entity represent task
  * @author jaroslaw
  */
 @Entity
@@ -24,7 +24,7 @@ public class Task extends AbstractEntity {
     private TaskType taskType;
 
     /**
-     * Constructor
+     * Default Constructor required by hibernate
      */
     public Task() {
     }

@@ -21,7 +21,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 
 /**
- *
+ * Provides CRUD for controller unit controller
  * @author jarep
  */
 @Controller

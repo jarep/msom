@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- *
+ * Provides CRUD for excepction controller
  * @author debra
  */
 @ControllerAdvice
@@ -25,7 +25,7 @@ public class ExceptionsController {
      * @param e excepction
      * @param request
      * @param model  to use in method
-     * @return path to view errorpage
+     * @return path to view error page
      */
     @ExceptionHandler(TypeMismatchException.class)
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
@@ -39,7 +39,7 @@ public class ExceptionsController {
      * @param e excepction
      * @param request
      * @param model to use in method
-     * @return path to view errorpage
+     * @return path to view error page
      */
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)

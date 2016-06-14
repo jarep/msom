@@ -16,8 +16,8 @@ import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 
-/**
- *
+/** 
+ * Service of processing module implementation
  * @author paweldylag
  */
 @Service(value = "moduleService")

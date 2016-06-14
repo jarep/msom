@@ -12,7 +12,7 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModelDao;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
 
 /**
- *
+ * Data access object for model of processing system implementation
  * @author jarep
  */
 @Repository(value = "modelDao")

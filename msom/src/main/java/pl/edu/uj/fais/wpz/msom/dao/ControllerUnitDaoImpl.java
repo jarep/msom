@@ -14,7 +14,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
- *
+ * Data access object for Controller unit implementation 
  * @author jarep
  */
 @Repository(value = "controllerUnitDao")

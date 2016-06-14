@@ -28,7 +28,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 import pl.edu.uj.fais.wpz.msom.web.helpers.ModuleForm;
 
 /**
- *
+ *  Provides CRUD for processing modules
  * @author paweldylag
  */
 @Controller

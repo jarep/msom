@@ -10,7 +10,7 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
  * Entity represents type of task.
- *
+ * Entity represent type of task
  * @author jaroslaw
  */
 @Entity
@@ -20,7 +20,7 @@ public class TaskType extends AbstractEntity {
     private Integer difficulty;
     
     /**
-     * Constructor
+     * Default Constructor required by hibernate
      */
     public TaskType() {
     }

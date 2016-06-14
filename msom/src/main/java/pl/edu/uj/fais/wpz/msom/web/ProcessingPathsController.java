@@ -22,7 +22,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 
 /**
- *
+ * Provides CRUD for processing paths of controller
  * @author jarep
  */
 @Controller
@@ -42,7 +42,7 @@ public class ProcessingPathsController {
      * @param controllerId id controller
      * @param model actual model
      * @param redirectAttributes is used for response messages about method action
-     * @return
+     * @return path to view with new processing path site
      */
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.GET)
     public String createProcessingPath(@PathVariable("controllerId") long controllerId, Model model, RedirectAttributes redirectAttributes) {
@@ -70,7 +70,7 @@ public class ProcessingPathsController {
      * @param controllerId id controller
      * @param path path from controller
      * @param redirectAttributes is used for response messages about method action
-     * @return
+     * @return redirect to controller units site
      */
     @RequestMapping(value = "/processingpaths/new/{controllerId}", method = RequestMethod.POST)
     public String addProcessingPath(@PathVariable("controllerId") long controllerId, @ModelAttribute(value = "path") ProcessingPath path, RedirectAttributes redirectAttributes) {
@@ -88,7 +88,7 @@ public class ProcessingPathsController {
      * @param controllerId
      * @param pathId id path from controller
      * @param redirectAttributes is used for response messages about method action
-     * @return
+     * @return redirect to controller units site
      */
     @RequestMapping(value = "/processingpaths/remove/{controllerId}/{pathId}", method = RequestMethod.POST)
     public String deleteProcessingPath(@PathVariable("controllerId") long controllerId, @PathVariable("pathId") long pathId, RedirectAttributes redirectAttributes) {

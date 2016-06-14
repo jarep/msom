@@ -6,7 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.entities;
 
 /**
- *
+ * Defines types of probability distribution
  * @author paweldylag
  */
 public enum DistributionType {

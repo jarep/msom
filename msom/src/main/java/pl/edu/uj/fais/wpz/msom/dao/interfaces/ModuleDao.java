@@ -10,7 +10,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 
 /**
- *
+ * Data access object for processing module
  * @author paweldylag
  */
 public interface ModuleDao extends IDao<Module, Long> {

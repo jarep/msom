@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- * Basic Module (Single server) entity structure
+ * entity of processing module
  *
  * @author paweldylag
  */
@@ -48,7 +48,7 @@ public class Module extends AbstractEntity {
     private ControllerUnit controllerUnit;
 
     /**
-     * Constructor
+     * Default Constructor required by hibernate
      */
     public Module() {
     }

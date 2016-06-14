@@ -11,7 +11,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
- *
+ * Service of processing path
  * @author jarep
  */
 public interface ProcessingPathService extends IService<ProcessingPath> {

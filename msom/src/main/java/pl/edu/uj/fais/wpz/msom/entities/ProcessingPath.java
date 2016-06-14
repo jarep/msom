@@ -53,7 +53,7 @@ public class ProcessingPath extends AbstractEntity {
     private ControllerUnit nextControllerUnit;
 
     /**
-     * Contructor
+     * Default Constructor required by hibernate
      */
     public ProcessingPath() {
     }

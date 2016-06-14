@@ -11,7 +11,7 @@ import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.IService;
 
 /**
- *
+ * Service skeleton required by hibernate
  * @author jarep
  * @param <T>
  */
@@ -19,7 +19,7 @@ public abstract class AbstractService<T extends AbstractEntity> implements IServ
 
     /**
      *
-     * @return Data acces object
+     * @return Data access object
      */
     public abstract IDao getDao();
 

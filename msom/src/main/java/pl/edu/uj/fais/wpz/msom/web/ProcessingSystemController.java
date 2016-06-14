@@ -23,7 +23,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
- *
+ * Provides CRUD for processing system controller
  * @author jarep
  */
 @Controller
@@ -64,7 +64,7 @@ public class ProcessingSystemController {
      *
      * @param id Processing System
      * @param model actual model
-     * @return  path to view with processing system view
+     * @return path to view with processing system site
      */
     @RequestMapping(value = "/processingsystem/view/{id}", method = RequestMethod.GET)
     public String viewProcessingSystem(@PathVariable("id") long id, Model model) {

@@ -15,7 +15,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 
 /**
- *
+ * Service of task representation implementation
  * @author jaroslaw
  */
 @Service(value = "taskService")
@@ -27,7 +27,7 @@ public class TaskServiceImpl extends AbstractService<Task> implements TaskServic
 
     /**
      *
-     * @return task data acces object
+     * @return task data access object
      */
     public TaskDao getTaskDao() {
         return taskDao;

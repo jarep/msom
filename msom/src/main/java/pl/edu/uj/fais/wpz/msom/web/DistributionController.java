@@ -19,7 +19,7 @@ import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 
 /**
- *
+ * Provides CRUD for disrtibution controller
  * @author paweldylag
  */
 @Controller

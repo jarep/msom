@@ -19,7 +19,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 
 /**
- *
+ * Service of processing path implementation
  * @author jarep
  */
 @Service(value = "processingPathService")

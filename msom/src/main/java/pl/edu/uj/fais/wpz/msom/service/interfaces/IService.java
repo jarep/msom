@@ -9,7 +9,7 @@ import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- *
+ * Interface for service required by hibernate
  * @author jarep
  * @param <T>
  */

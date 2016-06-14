@@ -8,7 +8,7 @@ package pl.edu.uj.fais.wpz.msom.service.interfaces;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 
 /**
- *
+ * Service of task representation
  * @author jaroslaw
  */
 public interface TaskService extends IService<Task> {

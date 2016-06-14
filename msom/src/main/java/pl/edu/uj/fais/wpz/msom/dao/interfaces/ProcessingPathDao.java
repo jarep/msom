@@ -11,7 +11,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
- *
+ * Data access object for path of processing
  * @author jarep
  */
 public interface ProcessingPathDao extends IDao<ProcessingPath, Long> {

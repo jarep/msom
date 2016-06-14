@@ -14,7 +14,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 
 /**
- *
+ * Data access object for processing module implementation
  * @author paweldylag
  */
 @Repository(value = "moduleDao")

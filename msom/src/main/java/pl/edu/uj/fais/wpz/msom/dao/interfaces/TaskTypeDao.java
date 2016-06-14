@@ -8,7 +8,7 @@ package pl.edu.uj.fais.wpz.msom.dao.interfaces;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
- *
+ * Data access object for type of task
  * @author jaroslaw
  */
 public interface TaskTypeDao extends IDao<TaskType, Long> {

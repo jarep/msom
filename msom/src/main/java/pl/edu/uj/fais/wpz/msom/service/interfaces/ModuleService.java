@@ -10,7 +10,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 
 /**
- *
+ * Service of processing module
  * @author paweldylag
  */
 public interface ModuleService extends IService<Module> {

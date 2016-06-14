@@ -19,7 +19,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 
 /**
- *
+ * Provides CRUD for models of processing system controller
  * @author jarep
  */
 @Controller

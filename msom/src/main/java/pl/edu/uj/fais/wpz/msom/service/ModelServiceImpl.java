@@ -15,7 +15,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 
 /**
- *
+ * Service of processing system model implementation
  * @author jarep
  */
 @Service(value = "modelService")
@@ -27,7 +27,7 @@ public class ModelServiceImpl extends AbstractService<Model> implements ModelSer
 
     /**
      *
-     * @return model data acces object
+     * @return model data access object
      */
     public ModelDao getModelDao() {
         return modelDao;

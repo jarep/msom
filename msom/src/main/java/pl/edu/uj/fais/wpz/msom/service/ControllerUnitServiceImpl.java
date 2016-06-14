@@ -23,7 +23,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
- *
+ * Service for controller unit implementation
  * @author jarep
  */
 @Service(value = "controllerUnitService")

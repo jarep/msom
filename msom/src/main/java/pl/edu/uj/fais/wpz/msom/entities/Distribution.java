@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- * Basic Module (Single server) entity structure
+ * Entity of distribution entity
  * @author paweldylag
  */
 @Entity
@@ -32,7 +32,7 @@ public class Distribution extends AbstractEntity {
     }
 
     /**
-     * Constructor
+     * Default Constructor required by hibernate
      */
     public Distribution() {
     }

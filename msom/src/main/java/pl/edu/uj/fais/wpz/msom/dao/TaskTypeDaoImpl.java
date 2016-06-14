@@ -12,7 +12,7 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
- *
+ * Data access object for type of task implementaion
  * @author jaroslaw
  */
 @Repository(value = "taskTypeDao")

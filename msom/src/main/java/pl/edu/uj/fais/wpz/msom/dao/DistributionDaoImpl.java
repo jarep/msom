@@ -10,7 +10,7 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.DistributionDao;
 import pl.edu.uj.fais.wpz.msom.entities.Distribution;
 
 /**
- *
+ * Data access object for distribution entity implementation
  * @author paweldylag
  */
 @Repository(value = "distributionDao")

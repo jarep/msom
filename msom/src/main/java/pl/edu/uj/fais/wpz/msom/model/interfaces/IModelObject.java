@@ -6,7 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
 /**
- *
+ * Required by hibernate
  * @author jarep
  * @param <Entity>
  */

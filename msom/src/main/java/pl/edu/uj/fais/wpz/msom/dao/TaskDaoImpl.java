@@ -10,7 +10,7 @@ import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 
 /**
- *
+ * Data access object for entity represent task implementaion
  * @author jaroslaw
  */
 @Repository(value = "taskDao")

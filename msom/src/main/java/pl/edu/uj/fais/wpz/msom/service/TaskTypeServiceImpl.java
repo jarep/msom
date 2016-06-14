@@ -15,7 +15,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
- *
+ * Service of task type implementation
  * @author jaroslaw
  */
 @Service(value = "taskTypeService")
@@ -27,7 +27,7 @@ public class TaskTypeServiceImpl extends AbstractService<TaskType> implements Ta
 
     /**
      *
-     * @return type task data acces object
+     * @return type task data access object
      */
     public TaskTypeDao getTaskTypeDao() {
         return taskTypeDao;

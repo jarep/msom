@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
- *
+ * Entity of processing system model
  * @author jarep
  */
 @Entity
@@ -21,7 +21,7 @@ public class Model extends AbstractEntity {
     private String name;
 
     /**
-     * Constructor
+     * Default Constructor required by hibernate
      */
     public Model() {
     }

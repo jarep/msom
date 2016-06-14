@@ -20,7 +20,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
- *
+ * Provides CRUD for task controller
  * @author jaroslaw
  */
 @Controller
@@ -35,7 +35,7 @@ public class TasksController {
     /**
      * show tasks used in model
      * @param model
-     * @return tasks used in model
+     * @return path to site with tasks used in model
      */
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public String showTasks(Model model) {
@@ -68,7 +68,7 @@ public class TasksController {
      * Creates form for new task
      *
      * @param model Model to bind to HTML form
-     * @return path to view with new tasks
+     * @return path to view with new task site
      */
     @RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
     public String createTask(Model model) {
@@ -120,7 +120,7 @@ public class TasksController {
      *
      * @param task Task to update (bounded from HTML form)
      * @param redirectAttributes redirect response message about executed method
-     * @return redirects to view with to tasks
+     * @return redirects to view with task
      */
     @RequestMapping(value = "/tasks/update", method = RequestMethod.POST)
     public String updateTask(@ModelAttribute(value = "task") Task task, RedirectAttributes redirectAttributes) {

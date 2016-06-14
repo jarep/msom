@@ -8,7 +8,7 @@ package pl.edu.uj.fais.wpz.msom.service.interfaces;
 import pl.edu.uj.fais.wpz.msom.entities.Distribution;
 
 /**
- *
+ * Service for distribution
  * @author paweldylag
  */
 public interface DistributionService extends IService<Distribution> {

@@ -18,7 +18,7 @@ import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
 /**
- *
+ * Provides CRUD for controller task type
  * @author jaroslaw
  */
 @Controller
@@ -30,7 +30,7 @@ public class TaskTypesController {
     /**
      * Method shows what task types have the model
      * @param model model which we want data
-     * @return list of task types
+     * @return path to site with list of task types
      */
     @RequestMapping(value = "/tasktypes", method = RequestMethod.GET)
     public String showTaskTypes(Model model) {
@@ -45,7 +45,7 @@ public class TaskTypesController {
      *
      * @param id taskType's ID
      * @param redirectAttributes redirect response message about executed method
-     * @return redirects to tasktypes if everything was ok
+     * @return redirects to task types site
      */
     @RequestMapping(value = "/tasktypes/remove/{id}", method = RequestMethod.POST)
     public String deleteTaskType(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
@@ -77,7 +77,7 @@ public class TaskTypesController {
      *
      * @param taskType Type to save
      * @param redirectAttributes is used for response messages about method action
-     * @return redirects to tasktypes
+     * @return redirects to task types site
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.POST)
     public String addTaskType(@ModelAttribute(value = "taskType") TaskType taskType, RedirectAttributes redirectAttributes) {
@@ -95,7 +95,7 @@ public class TaskTypesController {
      *
      * @param id taskType's ID
      * @param model Model to put taskType to
-     * @return  path to view with tasktypes view
+     * @return path to view with tasktypes site
      */
     @RequestMapping(value = "/tasktypes/{id}", method = RequestMethod.GET)
     public String getTaskType(@PathVariable("id") long id, Model model) {
@@ -111,7 +111,7 @@ public class TaskTypesController {
      *
      * @param taskType Type of task to update (bounded from HTML form)
      * @param redirectAttributes is used for response messages about method action
-     * @return redirects to view with to taskType
+     * @return redirects to view with to task type
      */
     @RequestMapping(value = "/tasktypes/update", method = RequestMethod.POST)
     public String updateTaskType(@ModelAttribute(value = "taskType") TaskType taskType, RedirectAttributes redirectAttributes) {
