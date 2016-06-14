@@ -41,11 +41,23 @@ public class ModelDaoImpl extends AbstractDao<Model, Long> implements ModelDao {
         List list = controllersByModel.list();
         return !list.isEmpty();
     }
-    
+
     @Override
     public List<Model> findAll() {
         return getCurrentSession().createCriteria(daoType).
                 setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+    }
+
+    @Override
+    public boolean detachFirstTaskDispatcher(Model model) {
+        Query detachQuery = getCurrentSession().createQuery(
+                "UPDATE Model AS m"
+                + " SET firstcontrollerunit_id=null"
+                + " WHERE m.id = :id");
+        detachQuery.setParameter("id", model.getId());
+        
+        int executeUpdate = detachQuery.executeUpdate();
+        return executeUpdate>0;
     }
 
 }

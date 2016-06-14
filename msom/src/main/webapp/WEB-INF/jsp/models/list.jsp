@@ -38,7 +38,12 @@
         <tr>
             <td>${m.id}</td>
             <td>${m.name}</td>
-            <td>${m.firstControllerUnit.name}</td>
+            <td>${m.firstControllerUnit.name} 
+                <c:if test="${m.firstControllerUnit.id>0}">
+                    <sf:form action="models/remove-first-task-dispatcher/${m.id}" method="post" cssStyle="display: inline;">
+                        <input type="submit" class="btn-sm btn-danger" value="x" id="remove-btn" />
+                    </sf:form>
+                </c:if>
             <td>
             <c:forEach items="#{m.controllerUnits}" var="controllerUnit" varStatus="loop">    
                 ${controllerUnit.name}<c:if test="${!loop.last}"><br/></c:if>
