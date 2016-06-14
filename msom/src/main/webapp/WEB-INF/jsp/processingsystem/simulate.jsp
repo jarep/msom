@@ -38,38 +38,45 @@
                             </p>
                             <p class="details-toogle"> - Show/hide details - </p>
                             <ul class="tasks-list"> 
-                                <c:forEach items="${processingUnit.getProcessingTasks()}" var="waitingTask">
-                                    <li>${waitingTask}</li>
-                                    </c:forEach>
+                                <c:forEach items="${processingUnit.getProcessingTasks()}" var="task">
+                                    <li class="progress" style="height:35px; margin-bottom: 5px;">
+                                        ${task}<br/>
+                                        <span class="progress-bar" role="progressbar" aria-valuenow="70"
+                                              aria-valuemin="0" aria-valuemax="100" style="width:${task.getPercentageOfCurrentExecution()}%">
+                                            <strong>${task.getPercentageOfCurrentExecution()}%</strong>
+                                        </span>
+                                    </li>
+                                </c:forEach>
+
                             </ul>
                         </div>
-                        <div class="tasks-box">
-                            <p class="simulation-parameters">
-                                <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
-                                <span> Queue Value: <em>${processingUnit.queueValue}<em> </span> <br/>
-                                <span> Avg. waiting time: <em>...</em> </span> 
-                            </p>
-                            <p class="details-toogle"> - Show/hide details - </p>
-                            <ul class="tasks-list"> 
-                                <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
-                                    <li>${waitingTask}</li>
-                                    </c:forEach>
-                            </ul> 
-                        </div>
-                        
-                    </div>
-                </c:forEach>
+            <div class="tasks-box">
+                <p class="simulation-parameters">
+                    <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
+                    <span> Queue Value: <em>${processingUnit.queueValue}<em> </span> <br/>
+                    <span> Avg. waiting time: <em>...</em> </span> 
+                    </p>
+                    <p class="details-toogle"> - Show/hide details - </p>
+                    <ul class="tasks-list"> 
+                        <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
+                            <li>${waitingTask}</li>
+                            </c:forEach>
+                    </ul> 
             </div>
-            <div>
-                <h6>Coming out paths</h6>
-                <ul class="paths">
-                    <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
-                        <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
-                        </c:forEach>
-                </ul>
+
             </div>
+        </c:forEach>
         </div>
-    </c:forEach>
+        <div>
+            <h6>Coming out paths</h6>
+            <ul class="paths">
+                <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
+                    <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
+                    </c:forEach>
+            </ul>
+        </div>
+    </div>
+</c:forEach>
 </div>
 <div id="monitoring">
     <h4>Types statistics</h4>
@@ -103,3 +110,4 @@
     <p>TPT - Total Processing Time</p>
     <p>PC - Processing Count</p>
 </div>
+
