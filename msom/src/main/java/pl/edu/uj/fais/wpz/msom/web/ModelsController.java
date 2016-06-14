@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
-import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 
 /**
@@ -65,6 +63,19 @@ public class ModelsController {
         return "redirect:/models";
     }
 
+    @RequestMapping(value = "/models/remove-first-task-dispatcher/{id}", method = RequestMethod.POST)
+    public String removeFirstTaskDispatcher(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+        pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);
+        if ((m != null) && modelService.detachFirstTaskDispatcher(m))  {
+            redirectAttributes.addFlashAttribute("msg", "First task dispatcher was detached");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to detach first task dispatcher");
+        }
+
+        return "redirect:/models";
+    }
+    
+    
     @RequestMapping(value = "/models/{id}", method = RequestMethod.GET)
     public String getModel(@PathVariable("id") long id, Model model) {
         pl.edu.uj.fais.wpz.msom.entities.Model m = modelService.find(id);

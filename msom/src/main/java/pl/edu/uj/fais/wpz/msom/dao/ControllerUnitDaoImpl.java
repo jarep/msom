@@ -34,6 +34,8 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
             return true;
         } else if (isReferencedToAnyProcessingPath(controllerUnit)) {
             return true;
+        } else if (isReferencedToAnyModelAsFirstControllerUnit(controllerUnit)) {
+            return true;
         }
         return false;
     }
@@ -71,6 +73,19 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
         List pathsByNextController = pathsByNextControllerUnitQuery.list();
 
         return !pathsByController.isEmpty() || !pathsByNextController.isEmpty();
+    }
+
+    private boolean isReferencedToAnyModelAsFirstControllerUnit(ControllerUnit controllerUnit) {
+        Query modelsByControllerUnitQuery = getCurrentSession().createQuery(
+                "SELECT m FROM Model AS m"
+                + " JOIN m.firstControllerUnit AS controller "
+                + "WHERE controller.id = :id");
+        Long controllerUnitId = controllerUnit.getId();
+        modelsByControllerUnitQuery.setParameter("id", controllerUnitId);
+        modelsByControllerUnitQuery.setMaxResults(1);
+
+        List list = modelsByControllerUnitQuery.list();
+        return !list.isEmpty();
     }
 
     @Override

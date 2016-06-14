@@ -23,4 +23,12 @@ public interface ModelDao extends IDao<Model, Long> {
     @Override
     public boolean remove(Model model);
 
+    /**
+     * Set firstTaskDispatcher as null for given model.
+     *
+     * @param model
+     * @return
+     */
+    public boolean detachFirstTaskDispatcher(Model model);
+
 }
