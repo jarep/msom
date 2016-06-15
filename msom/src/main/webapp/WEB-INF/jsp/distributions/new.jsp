@@ -7,9 +7,17 @@
     <sf:form method="post" action="new" modelAttribute="distribution">
     <div class="form-group">
         <label for="type">Type of distribution</label>
-        <sf:select path="type">
+        <sf:select path="type" class="form-control" >
             <sf:options items="${distributionTypes}" />
         </sf:select>
+    </div>
+    <div class="form-group">
+        <label for="parameterA">Parameter A (Double)</label>
+        <sf:input path="parameterA" class="form-control" type="number" step="0.01"/>
+    </div>
+    <div class="form-group">
+        <label for="parameterB">Parameter B (Double)</label>
+        <sf:input path="parameterB" class="form-control" type="number" step="0.01"/>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>

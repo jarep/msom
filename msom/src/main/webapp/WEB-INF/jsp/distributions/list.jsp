@@ -30,6 +30,8 @@
     <tr>
         <th>Id</th>
         <th>Type</th>
+        <th>Parameter A</th>
+        <th>Parameter B</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -37,6 +39,8 @@
         <tr>
             <td>${distribution.id}</td>
             <td>${distribution.type}</td>
+            <td>${distribution.parameterA}</td>
+            <td>${distribution.parameterB}</td>
             <td><a href="distributions/${distribution.id}">Edit</a></td>
             <td>
         <sf:form action="distributions/remove/${distribution.id}" method="post">
