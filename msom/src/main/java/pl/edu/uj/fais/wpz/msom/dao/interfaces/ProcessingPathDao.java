@@ -76,11 +76,12 @@ public interface ProcessingPathDao extends IDao<ProcessingPath, Long> {
     public List<TaskType> getTaskTypesToFinishedByControllerUnit(ControllerUnit controllerUnit);
 
     /**
-     * Get all Task Types supported by given Controller Unit.
+     * Get all Task Types known by given Controller Unit - all types for which
+     * have defined path in given controller unit.
      *
      * @param controllerUnit
      * @return list of Task Types
      */
-    public List<TaskType> getSupportedTaskTypesByControllerUnit(ControllerUnit controllerUnit);
+    public List<TaskType> getKnownTaskTypesByControllerUnit(ControllerUnit controllerUnit);
 
 }

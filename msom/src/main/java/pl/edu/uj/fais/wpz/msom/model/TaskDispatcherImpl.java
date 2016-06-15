@@ -7,7 +7,7 @@ package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
@@ -41,6 +41,8 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
 
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
     private final List<Path> comingOutPahts = new ArrayList<>();
+    private final List<Type> knownTypes = new ArrayList<>();
+    private final AtomicBoolean first = new AtomicBoolean(false);
 
     public TaskDispatcherImpl(ControllerUnit entityObject, SystemStorage systemStorage) {
         super(entityObject, systemStorage.getControllerUnitService());
@@ -48,6 +50,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
         this.moduleService = systemStorage.getModuleService();
         this.pathService = systemStorage.getPathService();
         reloadProcessingUnits();
+        reloadKnownTypes();
     }
 
     @Override
@@ -86,6 +89,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     protected void reloadData() {
         reloadEntityObcject();
         reloadProcessingUnits();
+        reloadKnownTypes();
     }
 
     private void reloadProcessingUnits() {
@@ -96,8 +100,30 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                 ProcessingUnitImpl p = new ProcessingUnitImpl(m, this, systemStorage);
                 processingUnits.add(p);
             }
+            System.out.println("Wczytano processing units.");
+        } else {
+            PrintHelper.printAlert(getName(), "Nie wczytano processing units - kontroler == null");
         }
-        System.out.println("Wczytano processing units.");
+    }
+
+    private void reloadKnownTypes() {
+        knownTypes.clear();
+        if (getEntityObject() != null) {
+            List<TaskType> knownTaskTypesByControllerUnit = pathService.getKnownTaskTypesByControllerUnit(getEntityObject());
+            for (TaskType type : knownTaskTypesByControllerUnit) {
+                TypeImpl typeObject = systemStorage.getTypeObject(type);
+                if (typeObject != null) {
+                    knownTypes.add(typeObject);
+                } else {
+                    typeObject = systemStorage.addAndGetExtraType(type);
+                    knownTypes.add(typeObject);
+                    PrintHelper.printAlert(toString(), "Dodano extra typ: " + typeObject.getName());
+                }
+            }
+            System.out.println("Wczytano typy dla kontrolera.");
+        } else {
+            PrintHelper.printAlert(getName(), "Nie wczytano typow dla kontrolera - kontroler == null");
+        }
     }
 
     /**
@@ -119,9 +145,13 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                         PathImpl pathImpl = new PathImpl(entity, typeObject, forwardTo, pathService);
                         comingOutPahts.add(pathImpl);
                     }
+                    PrintHelper.printMsg(getName(), "Przeladowano sciezki kontrolera.");
+                    return true;
+                } else {
+                    PrintHelper.printAlert(getName(), "Nie przaladowano sciezek - kontroler == null");
+                    return false;
                 }
-                PrintHelper.printMsg(getName(), "Przeladowano sciezki kontrolera.");
-                return true;
+
             }
         }, executionWriteLock);
     }
@@ -157,6 +187,14 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
         } finally {
             executionReadLock.unlock();
         }
+    }
+    
+    protected void markAsFirst(){
+        first.set(true);
+    }
+    
+    public boolean isFirst(){
+        return first.get();
     }
 
     @Override
@@ -231,9 +269,13 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     }
 
     @Override
-    public List<Type> getAllSupportedTypes() {
-        List<TaskType> supportedTaskTypesByControllerUnit = pathService.getSupportedTaskTypesByControllerUnit(getEntityObject());
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Type> getAllKnownTypes() {
+        executionReadLock.lock();
+        try {
+            return knownTypes;
+        } finally {
+            executionReadLock.unlock();
+        }
     }
 
     @Override

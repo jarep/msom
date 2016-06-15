@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.edu.uj.fais.wpz.msom.model.ProcessingSystemTool;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
@@ -119,10 +123,28 @@ public class ProcessingSystemController {
             model.addAttribute("errorMsg", "404 Bad Request...");
             return "errorpage";
         }
-        processingSystem.startSimulation();
+
+        String msg = "";
+        try {
+            if (processingSystem.validate()) {
+                processingSystem.startSimulation();
+                msg = "Rozpoczęto symulację modelu o id " + id;
+            } else {
+                msg = "Nie mozna rozpoczac symulacji modelu o id " + id;
+            }
+        } catch (SystemIntegrityException ex) {
+            msg = msg + ex.getMessage();
+            msg = msg + "(jestli zdefiniowano - sprobuj kliknac reset)";
+        } catch (ProcessingAbilityException ex) {
+            msg = msg + "ProcessingAbilityException";
+        } catch (PathDefinitionExcpetion ex) {
+            msg = msg + "PathDefinitionExcpetion";
+        } catch (PathDefinitionInfinityLoopExcpetion ex) {
+            msg = msg + "PathDefinitionInfinityLoopExcpetion";
+        }
 
         model.addAttribute("processingSystem", processingSystem);
-        model.addAttribute("message", "Rozpoczęto symulację modelu o id " + id);
+        model.addAttribute("message", msg);
         return "processingsystem/simulate";
     }
 

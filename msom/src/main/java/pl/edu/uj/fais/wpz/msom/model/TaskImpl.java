@@ -229,7 +229,22 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
             } else {
                 string = string + type.getName();
             }
+            string += "}";
             return string;
+        } finally {
+            executionReadLock.unlock();
+        }
+    }
+
+    public String getShortName() {
+        executionReadLock.lock();
+        try {
+            String shortName = getName();
+            if (type == null) {
+            } else {
+                shortName += ", " + type.getName();
+            }
+            return shortName;
         } finally {
             executionReadLock.unlock();
         }
