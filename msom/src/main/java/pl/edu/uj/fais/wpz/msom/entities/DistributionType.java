@@ -13,6 +13,7 @@ public enum DistributionType {
   
   LINEAR("linear"),
   GAUSSIAN("gaussian"),
+  POISSON("poisson"),
   UNKNOWN("unknown");  
     
     
