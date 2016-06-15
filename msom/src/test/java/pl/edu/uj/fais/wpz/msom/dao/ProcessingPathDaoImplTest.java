@@ -352,19 +352,19 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
      */
     @Test
     public void testGetSupportedTaskTypesByControllerUnit() {
-        List<TaskType> taskTypes1 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(0));
+        List<TaskType> taskTypes1 = processingPathDao.getKnownTaskTypesByControllerUnit(controllers.get(0));
         assertTrue(taskTypes1.size() == supportedTaskTypes1.size());
         assertTrue(taskTypes1.containsAll(supportedTaskTypes1));
 
-        List<TaskType> taskTypes2 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(1));
+        List<TaskType> taskTypes2 = processingPathDao.getKnownTaskTypesByControllerUnit(controllers.get(1));
         assertTrue(taskTypes2.size() == supportedTaskTypes2.size());
         assertTrue(taskTypes2.containsAll(supportedTaskTypes2));
 
-        List<TaskType> taskTypes3 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(2));
+        List<TaskType> taskTypes3 = processingPathDao.getKnownTaskTypesByControllerUnit(controllers.get(2));
         assertTrue(taskTypes3.size() == supportedTaskTypes3.size());
         assertTrue(taskTypes3.containsAll(supportedTaskTypes3));
 
-        List<TaskType> taskTypes4 = processingPathDao.getSupportedTaskTypesByControllerUnit(controllers.get(3));
+        List<TaskType> taskTypes4 = processingPathDao.getKnownTaskTypesByControllerUnit(controllers.get(3));
         assertTrue(taskTypes4.size() == supportedTaskTypes4.size());
         assertTrue(taskTypes4.containsAll(supportedTaskTypes4));
     }

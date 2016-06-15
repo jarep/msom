@@ -18,6 +18,7 @@ import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
@@ -42,21 +43,17 @@ public class SystemStorage extends Activatable {
     private final TaskTypeService taskTypeService;
 
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
+    private TaskDispatcherImpl firstTaskDispatcher = null;
     /**
-     * Types supported by first task dispatcher.
+     * All types available in this processing system - used by any processing
+     * unit or any processing path.
      */
-    private final List<TypeImpl> supportedTypes = new ArrayList<>();
-    /**
-     * Types not supported by first task dispatcher but available to process by
-     * some processing unit.
-     */
-    private final List<TypeImpl> extraTypes = new ArrayList<>();
+    private final List<TypeImpl> allTypes = new ArrayList<>();
 
     /**
      * All generated tasks.
      */
     private final BlockingQueue<TaskImpl> tasksBlockingQueue = new LinkedBlockingQueue<>();
-//    private final List<TaskImpl> tasks = new ArrayList<>();
     private final DistributionType distributionType = DistributionType.UNKNOWN;
 
     protected SystemStorage(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
@@ -127,7 +124,7 @@ public class SystemStorage extends Activatable {
             @Override
             public boolean execute() {
                 PrintHelper.printMsg(getName(), "Czyszczenie listy typow...");
-                supportedTypes.clear();
+                allTypes.clear();
                 PrintHelper.printMsg(getName(), "Wyczyszczono liste typow.");
                 return true;
             }
@@ -140,17 +137,24 @@ public class SystemStorage extends Activatable {
             @Override
             public boolean execute() {
                 PrintHelper.printMsg(getName(), "Dodawanie typu...");
-                supportedTypes.add(type);
+                allTypes.add(type);
                 PrintHelper.printMsg(getName(), "Dodano typ: " + type.getName());
                 return true;
             }
         }, executionWriteLock);
     }
 
+    /**
+     * Get Type object associated with given taskType by typeId (entity object)
+     * if this type is available in this processing system.
+     *
+     * @param typeId
+     * @return Type or null if this type is not available
+     */
     public TypeImpl getTypeObject(Long typeId) {
         executionReadLock.lock();
         try {
-            for (TypeImpl t : supportedTypes) {
+            for (TypeImpl t : allTypes) {
                 if (t.getId().equals(typeId)) {
                     return t;
                 }
@@ -163,26 +167,32 @@ public class SystemStorage extends Activatable {
 
     /**
      * Get Type object associated with given taskType (entity object) if this
-     * type is supported by this processing system. Type is supported if first
-     * task dispatcher has defined paths for this type.
+     * type is available in this processing system.
      *
      * @param taskType
-     * @return Type or null if this type is not supported
+     * @return Type or null if this type is not available
      */
     public TypeImpl getTypeObject(TaskType taskType) {
         return getTypeObject(taskType.getId());
     }
 
+    /**
+     * Get Type object associated with given taskType (entity object). Add task
+     * type if is not yet available in this processing system and return.
+     *
+     * @param taskType
+     * @return Type object
+     */
     protected TypeImpl addAndGetExtraType(TaskType taskType) {
         executionWriteLock.lock();
         try {
-            for (TypeImpl type : extraTypes) {
+            for (TypeImpl type : allTypes) {
                 if (type.getId().equals(taskType.getId())) {
                     return type;
                 }
             }
             TypeImpl newType = new TypeImpl(taskType, taskTypeService);
-            extraTypes.add(newType);
+            allTypes.add(newType);
             return newType;
         } finally {
             executionWriteLock.unlock();
@@ -190,15 +200,35 @@ public class SystemStorage extends Activatable {
     }
 
     /**
-     * Get all supported types.Type is supported if first task dispatcher has
-     * defined paths for this type.
+     * Get all types available in this processing system - used by any
+     * processing unit or any processing path.
+     *
+     * @return List of types
+     */
+    public List<TypeImpl> getAllTypes() {
+        executionReadLock.lock();
+        try {
+            return allTypes;
+        } finally {
+            executionReadLock.unlock();
+        }
+    }
+
+    /**
+     * Get all supported types. Type is supported if first task dispatcher has
+     * defined paths for this type. If First task dispatcher is not defined list
+     * of supported tasks will be empty.
      *
      * @return List of supported types
      */
-    public List<TypeImpl> getAllSupportedTypes() {
+    public List<Type> getSupportedTypes() {
         executionReadLock.lock();
         try {
-            return supportedTypes;
+            if (firstTaskDispatcher != null) {
+                return firstTaskDispatcher.getAllKnownTypes();
+            } else {
+                return new ArrayList<>();
+            }
         } finally {
             executionReadLock.unlock();
         }
@@ -224,6 +254,7 @@ public class SystemStorage extends Activatable {
             public boolean execute() {
                 PrintHelper.printMsg(getName(), "Czyszczenie listy task dispatchers ...");
                 taskDispatchers.clear();
+                firstTaskDispatcher = null;
                 PrintHelper.printMsg(getName(), "Wyczyszczono liste task dispatchers.");
                 return true;
             }
@@ -278,10 +309,28 @@ public class SystemStorage extends Activatable {
         }
     }
 
+    protected boolean setFirstTaskDispatcher(final TaskDispatcherImpl taskDispatcher) {
+        return executeIfNonActive(new Executable() {
+
+            @Override
+            public boolean execute() {
+                PrintHelper.printMsg(getName(), "Ustawianie pierszwgo kontrolera ...");
+                firstTaskDispatcher = taskDispatcher;
+                PrintHelper.printMsg(getName(), "Ustawiono pierwszy kontroler.");
+                return true;
+            }
+        }, executionWriteLock);
+    }
+
+    /**
+     * Get first task dispatcher for processing system or null if not defined
+     *
+     * @return First task dispatcher or null
+     */
     public TaskDispatcher getFirstTaskDispatcher() {
         executionReadLock.lock();
         try {
-            return taskDispatchers.get(0); // UWAGA - TYLKO TYMCZASOWO - w bazie nie przechowujemy informacji, ktory controler jest pierwszy - trzeba to dobudowac!!!!
+            return firstTaskDispatcher;
         } finally {
             executionReadLock.unlock();
         }

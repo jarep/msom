@@ -111,7 +111,7 @@ public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, M
                 } else {
                     TypeImpl newType = systemStorage.addAndGetExtraType(t);
                     availableTypes.add(newType);
-                    PrintHelper.printMsg(toString(), "Dodano extra typ: " + newType.getName());
+                    PrintHelper.printAlert(toString(), "Dodano extra typ: " + newType.getName());
                 }
             }
         }

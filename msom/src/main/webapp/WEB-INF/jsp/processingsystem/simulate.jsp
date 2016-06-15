@@ -18,7 +18,7 @@
 <div class="processing-container">
     <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
         <div class="task-dispatcher">
-            <h4>${taskDispatcher.name}</h4>
+            <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.first}"><em>- first controller -</em></c:if></h4>
             <div class="processing-units">
                 <h5>Processing units:</h5>
                 <c:forEach items="${taskDispatcher.getProcessingUnits()}" var="processingUnit">
@@ -53,17 +53,16 @@
                         <div class="tasks-box">
                             <p class="simulation-parameters">
                                 <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
-                                <span> Queue Value: <em>${processingUnit.queueValue}<em> </span> <br/>
+                                <span> Queue Value: <em>${processingUnit.queueValue}</em> </span> <br/>
                                 <span> Avg. waiting time: <em>...</em> </span> 
                             </p>
                             <p class="details-toogle"> - Show/hide details - </p>
                             <ul class="tasks-list"> 
                                 <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
                                     <li>${waitingTask}</li>
-                                </c:forEach>
+                                    </c:forEach>
                             </ul> 
                         </div>
-
                     </div>
                 </c:forEach>
             </div>
@@ -72,7 +71,7 @@
                 <ul class="paths">
                     <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
                         <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
-                    </c:forEach>
+                        </c:forEach>
                 </ul>
             </div>
         </div>
