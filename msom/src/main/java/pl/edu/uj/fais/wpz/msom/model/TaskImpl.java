@@ -24,10 +24,26 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
     private ProcessingUnit lastProcessingUnit;
 
     private final AtomicBoolean finished = new AtomicBoolean(false);
+    private final AtomicBoolean processed = new AtomicBoolean(false);
     private final AtomicInteger currentPercentage = new AtomicInteger();
     private final AtomicInteger executionCounter = new AtomicInteger();
 
+    /**
+     * Time threshold (in milliseconds) used to dynamic evaluate waiting time
+     */
+    private final AtomicLong timeThreshold = new AtomicLong();
+    /**
+     * Waiting time (in milliseconds) used to dynamic evaluate waiting time.
+     */
     private final AtomicLong waitingTime = new AtomicLong();
+
+    /**
+     * Waiting time (in milliseconds) used during processing.
+     */
+    private final AtomicLong staticWaitingTime = new AtomicLong();
+    /**
+     * Processing time (in milliseconds).
+     */
     private final AtomicLong processingTime = new AtomicLong();
 
     private final Long instanceId;
@@ -40,7 +56,7 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
     @Override
     protected void reloadData() {
         super.reloadData();
-        // clean time and others?
+        cleanTimers();
     }
 
     @Override
@@ -99,6 +115,8 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
             } else if (finished.get()) {
                 PrintHelper.printError(getName(), "Proba wykonania zakonczonego zadania!");
                 return false;
+            } else if (processed.get()) {
+                PrintHelper.printError(getName(), "Proba ponownego przetwarzania zadania w trakcie przetwarzania!");
             } else {
                 process();
             }
@@ -116,26 +134,25 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
 
     private void process() {
         currentPercentage.set(0);
+        staticWaitingTime.addAndGet((System.currentTimeMillis()) - timeThreshold.get()); // ???
+        processed.set(true);  // getWaitingTime() przestaje korzystac z thresholda i waiting time, zwraca bezposrednio staticWaitingTime
         try {
             PrintHelper.printMsg(getName(), "ktos mnie bedzie przetwarzal...");
             int millis = 1000 * type.getDifficulty();
             int interval = millis / 100;
-            // AKTUALIZACJA LACZNEGO CZASU OCZEKIWANIA
-            // ZATRZYMANIE POMIARU CZASU OCZEKIWANIA
-            // moze tutaj przekazanie danych - statystyk do obiektu typu?
-            // START POMIARU CZASU PRZETWARZANIA
             for (int i = 0; i < 100; i++) {
                 Thread.sleep(interval);
                 currentPercentage.set(i);
+                processingTime.addAndGet(interval);
                 if ((i % 10) == 0) {
                     PrintHelper.printMsg(getName(), " ... " + i + "% ...");
                 }
             }
-            // AKTUALIZACJA LACZNEGO CZASU PRZETWARZANIA (zadanie moze byc wielokrotnie przetwarzane)
-            // moze tutaj przekazanie danych - statystyk do obiektu typu?
-            PrintHelper.printMsg(getName(), "wykonano mnie po raz: " + executionCounter.incrementAndGet());
+            waitingTime.set(staticWaitingTime.get());
+            timeThreshold.set(System.currentTimeMillis());
+            processed.set(false); // getWaitingTime() zaczyna korzystac z tresholda i waiting time, przestaje zwracac staticWaitingTime
             currentPercentage.set(0);
-            // WZNOWIENIE POMIARU CZASU OCZEKIWANIA
+            PrintHelper.printMsg(getName(), "wykonano mnie po raz: " + executionCounter.incrementAndGet());
         } catch (InterruptedException ex) {
             PrintHelper.printAlert(getName(), "Przerwano w trakcie przetwarzania. (interrupted exception)");
         }
@@ -164,8 +181,11 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
 
     private void finish() {
         finished.set(true);
-        // KONIEC POMIARU CZASU OCZEKIWANIA
-        // moze tutaj przekazanie danych - statystyk do obiektu typu?
+        processed.set(false);
+        Long currentTime = (System.currentTimeMillis());
+        waitingTime.addAndGet(currentTime - timeThreshold.get());
+        staticWaitingTime.set(waitingTime.get());
+        timeThreshold.set(currentTime);
     }
 
     @Override
@@ -180,7 +200,12 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
 
     @Override
     public Long getWaitingTime() {
-        return waitingTime.get();
+        if (finished.get() || processed.get()) {
+            Long result = staticWaitingTime.get();
+            return result;
+        } else { // task is waiting
+            return System.currentTimeMillis() - timeThreshold.get() + waitingTime.get();
+        }
     }
 
     @Override
@@ -206,16 +231,20 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
     @Override
     protected boolean activateObject() {
         active.set(true);
-        // START POMIARU CZASU OCZEKIWANIA
+        cleanTimers();
         return true;
+    }
+
+    private void cleanTimers() {
+        waitingTime.set(0);
+        staticWaitingTime.set(0);
+        processingTime.set(0);
+        timeThreshold.set(System.currentTimeMillis());
     }
 
     @Override
     protected boolean deactivateObject() {
         active.set(false);
-        // CZY KONCZYC POMIAR CZASU? - czy tylko w metodzie finishTask()
-        // Deaktywowanie zadania odblokowuje jego edycje, ale nie zakancza zadania,
-        // wiec raczej deaktywacja nie powinna wplywac na czas oczekiwania
         return true;
     }
 

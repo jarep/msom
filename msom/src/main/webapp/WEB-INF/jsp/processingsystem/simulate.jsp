@@ -18,7 +18,7 @@
 <div class="processing-container">
     <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
         <div class="task-dispatcher">
-            <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.first}"><em>- first controller -</em></c:if></h4>
+            <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.isFirst()}"><em>- first controller -</em></c:if></h4>
                 <div class="processing-units">
                     <h5>Processing units:</h5>
                 <c:forEach items="${taskDispatcher.getProcessingUnits()}" var="processingUnit">
