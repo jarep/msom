@@ -17,6 +17,7 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
@@ -273,9 +274,9 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
 
     @Override
     public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        if(systemStorage.getFirstTaskDispatcher()==null){
+        if (systemStorage.getFirstTaskDispatcher() == null) {
             throw new SystemIntegrityException("Nie zdefiniowano pierwszego kontrolera.");
-        } 
+        }
         // required other validations ...
         return true;
     }
@@ -294,4 +295,10 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     public boolean isLocked() {
         return active.get();
     }
+
+    @Override
+    public List<Type> getAllTypes() {
+        return systemStorage.getAllTypes();
+    }
+
 }

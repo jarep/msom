@@ -20,7 +20,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
  */
 public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.msom.entities.Task, TaskService> implements Task {
 
-    private Type type;
+    private TypeImpl type;
     private ProcessingUnit lastProcessingUnit;
 
     private final AtomicBoolean finished = new AtomicBoolean(false);
@@ -134,8 +134,11 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
 
     private void process() {
         currentPercentage.set(0);
-        staticWaitingTime.addAndGet((System.currentTimeMillis()) - timeThreshold.get()); // ???
+        Long currentWaitingTime = (System.currentTimeMillis()) - timeThreshold.get();
+        staticWaitingTime.addAndGet(currentWaitingTime);
+        type.addWaitingTime(currentWaitingTime.intValue());
         processed.set(true);  // getWaitingTime() przestaje korzystac z thresholda i waiting time, zwraca bezposrednio staticWaitingTime
+        type.incrementProcessingCounter();
         try {
             PrintHelper.printMsg(getName(), "ktos mnie bedzie przetwarzal...");
             int millis = 1000 * type.getDifficulty();
@@ -144,6 +147,7 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
                 Thread.sleep(interval);
                 currentPercentage.set(i);
                 processingTime.addAndGet(interval);
+                type.addProcessingTime(interval);
                 if ((i % 10) == 0) {
                     PrintHelper.printMsg(getName(), " ... " + i + "% ...");
                 }
@@ -182,10 +186,13 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
     private void finish() {
         finished.set(true);
         processed.set(false);
-        Long currentTime = (System.currentTimeMillis());
-        waitingTime.addAndGet(currentTime - timeThreshold.get());
+        Long currentTime =  System.currentTimeMillis();
+        Long currentWaitingTime = currentTime - timeThreshold.get();
+        waitingTime.addAndGet(currentWaitingTime);
         staticWaitingTime.set(waitingTime.get());
+        type.addWaitingTime(currentWaitingTime.intValue());
         timeThreshold.set(currentTime);
+        type.incrementNumberOfFinishedTasks();
     }
 
     @Override
@@ -231,6 +238,7 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
     @Override
     protected boolean activateObject() {
         active.set(true);
+        type.incrementNumberOfGeneratedTasks();
         cleanTimers();
         return true;
     }

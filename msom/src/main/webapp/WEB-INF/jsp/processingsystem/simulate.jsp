@@ -83,32 +83,29 @@
         </div>
     </c:forEach>
 </div>
+<hr/>
 <div id="monitoring">
     <h4>Types statistics</h4>
-    <div class="type">
-        <h4>Type A</h4>
-        <p>Generated tasks: <strong>75</strong></p>
-        <p>Finished tasks: <strong>37</strong></p>
-        <p>Avg. waiting time: <strong>485.2</strong></p>
-        <p>Avg. processing time: <strong>3.5</strong></p>
-    </div>
-
-    <div class="type">
-        <h4>Type B</h4>
-        <p>Generated tasks: <strong>456</strong></p>
-        <p>Finished tasks: <strong>357</strong></p>
-        <p>Avg. waiting time: <strong>127</strong></p>
-        <p>Avg. processing time: <strong>0.5</strong></p>
-    </div>
-
-    <div class="type">
-        <h4>Type C</h4>
-        <p>Generated tasks: <strong>3</strong></p>
-        <p>Finished tasks: <strong>1</strong></p>
-        <p>Avg. waiting time: <strong>245</strong></p>
-        <p>Avg. processing time: <strong>55.2</strong></p>
-    </div>
+    <table class="table table-condensed table-striped">
+        <tr>
+            <th>Type</th>
+            <th>Generated tasks</th>
+            <th>Finished tasks</th>
+            <th>Avg. waiting time</th>
+            <th>Avg. processing time</th>
+        </tr>
+        <c:forEach items="${processingSystem.getAllTypes()}" var="type">
+            <tr>
+                <td>${type.name}</td>
+                <td>${type.getNumberOfGeneratedTasks()}</td>
+                <td>${type.getNumberOfFinishedTasks()}</td>
+                <td>${type.getAvgWaitingTime()}</td>
+                <td>${type.getAvgProcessingTime()}</td>
+            </tr>
+        </c:forEach>
+    </table>
 </div>
+<hr/>
 <div id="footer">
     <h4>Explanation of shortcuts</h4>
     <p><strong>twt</strong> - Total Waiting Time</p>
