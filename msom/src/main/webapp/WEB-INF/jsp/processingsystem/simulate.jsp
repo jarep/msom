@@ -1,6 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
+<script type="text/javascript">
+window.setTimeout(function(){ document.location.reload(true); }, 10000);
+</script>
+
 <p class="lead">
 </p>
 <h3>Processing System <strong>${processingSystem.name}</strong></h3>
