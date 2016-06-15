@@ -5,6 +5,8 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
@@ -14,6 +16,12 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  * @author jarep
  */
 public class TypeImpl extends ActivatableAbstractModelObject<TaskType, TaskTypeService> implements Type {
+
+    private final AtomicInteger numberOfGeneratedTasks = new AtomicInteger();
+    private final AtomicInteger numberOfFinishedTasks = new AtomicInteger();
+    private final AtomicLong totalWaitingTime = new AtomicLong();
+    private final AtomicLong totalProcessingTime = new AtomicLong();
+    private final AtomicLong processingCounter = new AtomicLong();
 
     public TypeImpl(TaskType entityObject, TaskTypeService taskTypeService) {
         super(entityObject, taskTypeService);
@@ -38,25 +46,53 @@ public class TypeImpl extends ActivatableAbstractModelObject<TaskType, TaskTypeS
             executionReadLock.unlock();
         }
     }
-    
+
+    protected void incrementNumberOfGeneratedTasks() {
+        numberOfGeneratedTasks.incrementAndGet();
+    }
+
+    protected void incrementNumberOfFinishedTasks() {
+        numberOfFinishedTasks.incrementAndGet();
+    }
+
+    protected void addProcessingTime(int millis) {
+        totalProcessingTime.addAndGet(millis);
+    }
+
+    protected void incrementProcessingCounter() {
+        processingCounter.incrementAndGet();
+    }
+
+    protected void addWaitingTime(int millis) {
+        totalWaitingTime.addAndGet(millis);
+    }
+
     @Override
     public double getAvgProcessingTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (processingCounter.get() > 0) {
+            return totalProcessingTime.get() / processingCounter.get();
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public double getAvgWaitingTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (numberOfGeneratedTasks.get() > 0) {
+            return totalWaitingTime.get() / numberOfGeneratedTasks.get();
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public int getNumberOfGeneratedTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return numberOfGeneratedTasks.get();
     }
 
     @Override
     public int getNumberOfFinishedTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return numberOfFinishedTasks.get();
     }
 
 }

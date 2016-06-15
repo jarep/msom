@@ -7,7 +7,7 @@
                    url: addr.replace("simulate", "refresh"),
                    dataType : "html",
                    success : function(data) {
-                       $(".processing-container").html(data);
+                       $(".simulation-container").html(data);
                    }
                 });
             }, 10000);

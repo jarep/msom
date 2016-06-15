@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
+<div class="processing-container">
 <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
     <div class="task-dispatcher">
         <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.first}"><em>- first controller -</em></c:if></h4>
@@ -67,3 +68,27 @@
         </div>
     </div>
 </c:forEach>
+</div>
+<hr/>
+<div id="monitoring">
+    <h4>Types statistics</h4>
+    <table class="table table-condensed table-striped">
+        <tr>
+            <th>Type</th>
+            <th>Generated tasks</th>
+            <th>Finished tasks</th>
+            <th>Avg. waiting time</th>
+            <th>Avg. processing time</th>
+        </tr>
+        <c:forEach items="${processingSystem.getAllTypes()}" var="type">
+            <tr>
+                <td>${type.name}</td>
+                <td>${type.getNumberOfGeneratedTasks()}</td>
+                <td>${type.getNumberOfFinishedTasks()}</td>
+                <td>${type.getAvgWaitingTime()}</td>
+                <td>${type.getAvgProcessingTime()}</td>
+            </tr>
+        </c:forEach>
+    </table>
+</div>
+<hr/>

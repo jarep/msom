@@ -48,7 +48,7 @@ public class SystemStorage extends Activatable {
      * All types available in this processing system - used by any processing
      * unit or any processing path.
      */
-    private final List<TypeImpl> allTypes = new ArrayList<>();
+    private final List<Type> allTypes = new ArrayList<>();
 
     /**
      * All generated tasks.
@@ -154,9 +154,9 @@ public class SystemStorage extends Activatable {
     public TypeImpl getTypeObject(Long typeId) {
         executionReadLock.lock();
         try {
-            for (TypeImpl t : allTypes) {
+            for (Type t : allTypes) {
                 if (t.getId().equals(typeId)) {
-                    return t;
+                    return (TypeImpl) t;
                 }
             }
             return null;
@@ -186,9 +186,9 @@ public class SystemStorage extends Activatable {
     protected TypeImpl addAndGetExtraType(TaskType taskType) {
         executionWriteLock.lock();
         try {
-            for (TypeImpl type : allTypes) {
+            for (Type type : allTypes) {
                 if (type.getId().equals(taskType.getId())) {
-                    return type;
+                    return (TypeImpl) type;
                 }
             }
             TypeImpl newType = new TypeImpl(taskType, taskTypeService);
@@ -205,7 +205,7 @@ public class SystemStorage extends Activatable {
      *
      * @return List of types
      */
-    public List<TypeImpl> getAllTypes() {
+    public List<Type> getAllTypes() {
         executionReadLock.lock();
         try {
             return allTypes;

@@ -17,34 +17,8 @@
     <samp>${message}</samp>
 </div>
 
-<div class="processing-container">
+<div class="simulation-container">
 <tiles:insertDefinition name="processingsystem/refresh" />  
-</div>
-<div id="monitoring">
-    <h4>Types statistics</h4>
-    <div class="type">
-        <h4>Type A</h4>
-        <p>Generated tasks: <strong>75</strong></p>
-        <p>Finished tasks: <strong>37</strong></p>
-        <p>Avg. waiting time: <strong>485.2</strong></p>
-        <p>Avg. processing time: <strong>3.5</strong></p>
-    </div>
-
-    <div class="type">
-        <h4>Type B</h4>
-        <p>Generated tasks: <strong>456</strong></p>
-        <p>Finished tasks: <strong>357</strong></p>
-        <p>Avg. waiting time: <strong>127</strong></p>
-        <p>Avg. processing time: <strong>0.5</strong></p>
-    </div>
-
-    <div class="type">
-        <h4>Type C</h4>
-        <p>Generated tasks: <strong>3</strong></p>
-        <p>Finished tasks: <strong>1</strong></p>
-        <p>Avg. waiting time: <strong>245</strong></p>
-        <p>Avg. processing time: <strong>55.2</strong></p>
-    </div>
 </div>
 <div id="footer">
     <h4>Explanation of shortcuts</h4>

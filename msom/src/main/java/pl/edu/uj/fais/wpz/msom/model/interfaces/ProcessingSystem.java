@@ -136,4 +136,12 @@ public interface ProcessingSystem extends IModelObject<Model> {
      */
     public DistributionType getDistributionType();
 
+    /**
+     * Get all types available in this processing system - used by any
+     * processing unit or any processing path.
+     *
+     * @return List of types
+     */
+    public List<Type> getAllTypes();
+
 }
