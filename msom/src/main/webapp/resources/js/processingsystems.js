@@ -5,6 +5,7 @@
                 $.ajax({
                    type: "GET",
                    url: addr.replace("simulate", "refresh"),
+                   dataType : "html",
                    success : function(data) {
                        $(".processing-container").html(data);
                    }
