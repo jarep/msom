@@ -173,7 +173,7 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     @Override
-    public List<Type> getAllSupportedTypes() {
+    public List<Type> getAllKnownTypes() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

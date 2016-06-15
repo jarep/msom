@@ -17,7 +17,6 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
@@ -57,36 +56,46 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     }
 
     private void initializeSystemStorage() {
+        reloadTypes(); // types are reloaded before reloaded task dispatchers, because we need type objects for task dispatchers
         reloadTaskDispatchers();
-        reloadTypes();
         reloadPaths(); // paths are reloaded after reloaded task dispatchers, because we need all task dispatchers to create connection between them
     }
 
     @Override
     protected void reloadData() {
         reloadEntityObcject();
+        reloadTypes(); // types are reloaded before reloaded task dispatchers, because we need type objects for task dispatchers
         reloadTaskDispatchers();
-        reloadTypes();
-        reloadPaths();
+        reloadPaths(); // paths are reloaded after reloaded task dispatchers, because we need all task dispatchers to create connection between them
     }
 
     private void reloadTaskDispatchers() {
         systemStorage.cleanTasksDispatchers();
         if (getEntityObject() != null) {
             List<ControllerUnit> controllersByModel = controllerUnitService.getControllersByModel(getEntityObject());
+            ControllerUnit firstControllerUnit = getEntityObject().getFirstControllerUnit();
             for (ControllerUnit controllerUnit : controllersByModel) {
                 TaskDispatcherImpl td = new TaskDispatcherImpl(controllerUnit, systemStorage);
                 systemStorage.addTaskDispatcher(td);
+                if (firstControllerUnit != null && firstControllerUnit.getId().equals(td.getId())) {
+                    td.markAsFirst();
+                    systemStorage.setFirstTaskDispatcher(td);
+                }
             }
+        }
+        if (getFirstTaskDispatcher() == null) {
+            PrintHelper.printAlert(getName(), "Nie wskazano pierwszego kontrolera!");
         }
     }
 
+    /**
+     * Reload all types available in this processing system - used by any
+     * processing unit or any processing path
+     */
     private void reloadTypes() {
         systemStorage.cleanTypes();
         if (getEntityObject() != null) {
             List<TaskType> allTaskTypes = taskTypeService.findAll(); // UWAGA - powinny byc tylko te, ktore sa powiazane z tym modelem!!! 
-            //czyli wlasciwie te, ktore obsluguje pierwszy controller
-//            getFirstTaskDispatcher().getAllSupportedTypes();
             for (TaskType taskType : allTaskTypes) {
                 TypeImpl type = new TypeImpl(taskType, taskTypeService);
                 systemStorage.addType(type);
@@ -264,7 +273,11 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
 
     @Override
     public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(systemStorage.getFirstTaskDispatcher()==null){
+            throw new SystemIntegrityException("Nie zdefiniowano pierwszego kontrolera.");
+        } 
+        // required other validations ...
+        return true;
     }
 
     @Override

@@ -12,4 +12,8 @@ package pl.edu.uj.fais.wpz.msom.model.exceptions;
  */
 public class SystemIntegrityException extends Exception {
 
+    public SystemIntegrityException(String message) {
+        super(message);
+    }
+
 }

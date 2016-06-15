@@ -174,7 +174,7 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
      *
      * @return List of types.
      */
-    public List<Type> getAllSupportedTypes();
+    public List<Type> getAllKnownTypes();
 
     /**
      * Receive task from Processing Unit after processing.

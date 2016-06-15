@@ -22,9 +22,9 @@ window.setTimeout(function(){ document.location.reload(true); }, 10000);
 <div class="processing-container">
     <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
         <div class="task-dispatcher">
-            <h4>${taskDispatcher.name}</h4>
-            <div class="processing-units">
-                <h5>Processing units:</h5>
+            <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.first}"><em>- first controller -</em></c:if></h4>
+                <div class="processing-units">
+                    <h5>Processing units:</h5>
                 <c:forEach items="${taskDispatcher.getProcessingUnits()}" var="processingUnit">
                     <div class="single-unit">
                         <h6><strong>${processingUnit.name}</strong> [cores: ${processingUnit.numberOfCores}] [eff: ${processingUnit.efficiency}]</h6> 
@@ -44,7 +44,10 @@ window.setTimeout(function(){ document.location.reload(true); }, 10000);
                             <ul class="tasks-list"> 
                                 <c:forEach items="${processingUnit.getProcessingTasks()}" var="task">
                                     <li class="progress" style="height:35px; margin-bottom: 5px;">
-                                        ${task}<br/>
+                                        ${task.shortName} 
+                                        (ex.: ${task.executionCounter}, 
+                                        twt: ${task.waitingTime}, 
+                                        tpt: ${task.processingTime}) <br/>
                                         <span class="progress-bar" role="progressbar" aria-valuenow="70"
                                               aria-valuemin="0" aria-valuemax="100" style="width:${task.getPercentageOfCurrentExecution()}%">
                                             <strong>${task.getPercentageOfCurrentExecution()}%</strong>
@@ -57,17 +60,19 @@ window.setTimeout(function(){ document.location.reload(true); }, 10000);
                         <div class="tasks-box">
                             <p class="simulation-parameters">
                                 <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
-                                <span> Queue Value: <em>${processingUnit.queueValue}<em> </span> <br/>
+                                <span> Queue Value: <em>${processingUnit.queueValue}</em> </span> <br/>
                                 <span> Avg. waiting time: <em>...</em> </span> 
                             </p>
                             <p class="details-toogle"> - Show/hide details - </p>
                             <ul class="tasks-list"> 
                                 <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
-                                    <li>${waitingTask}</li>
-                                </c:forEach>
+                                    <li>${waitingTask.shortName} 
+                                        (ex.: ${waitingTask.executionCounter}, 
+                                        twt: ${waitingTask.waitingTime}, 
+                                        tpt: ${waitingTask.processingTime}) </li>
+                                    </c:forEach>
                             </ul> 
                         </div>
-
                     </div>
                 </c:forEach>
             </div>
@@ -76,7 +81,7 @@ window.setTimeout(function(){ document.location.reload(true); }, 10000);
                 <ul class="paths">
                     <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
                         <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
-                    </c:forEach>
+                        </c:forEach>
                 </ul>
             </div>
         </div>
@@ -110,7 +115,7 @@ window.setTimeout(function(){ document.location.reload(true); }, 10000);
 </div>
 <div id="footer">
     <h4>Explanation of shortcuts</h4>
-    <p>TWT - Total Waiting Time</p>
-    <p>TPT - Total Processing Time</p>
-    <p>PC - Processing Count</p>
+    <p><strong>twt</strong> - Total Waiting Time</p>
+    <p><strong>tpt</strong> - Total Processing Time</p>
+    <p><strong>ex.</strong> - Execution counter - how many times this task was processed</p>
 </div>
