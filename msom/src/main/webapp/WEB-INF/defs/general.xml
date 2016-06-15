@@ -186,6 +186,12 @@
     
     <definition name="processingsystem/simulate" extends="processingsystem">
         <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/simulate.jsp" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/processingsystems.js" />
+        </put-list-attribute>
+    </definition>
+    
+    <definition name="processingsystem/refresh" template="/WEB-INF/jsp/processingsystem/refresh.jsp">
     </definition>
     
 </tiles-definitions>

@@ -65,10 +65,7 @@ public class ProcessingSystemController {
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
-        if (processingSystem == null) {
-            model.addAttribute("errorMsg", "404 Bad Request...");
-            return "errorpage";
-        }
+        if (processingSystem == null) throw new NullPointerException();
 
         model.addAttribute("processingSystem", processingSystem);
 
@@ -81,15 +78,26 @@ public class ProcessingSystemController {
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
-        if (processingSystem == null) {
-            model.addAttribute("errorMsg", "404 Bad Request...");
-            return "errorpage";
-        }
+        if (processingSystem == null) throw new NullPointerException();
 
         model.addAttribute("message", "Hello!");
         model.addAttribute("processingSystem", processingSystem);
 
         return "processingsystem/simulate";
+    }
+    
+    @RequestMapping(value = "/processingsystem/refresh/{id}", method = RequestMethod.GET)
+    public String refreshProcessingSystem(@PathVariable("id") long id, Model model) {
+        setProcessingSystemToolIfDoesNotExist();
+
+        ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
+
+        if (processingSystem == null) throw new NullPointerException();
+
+        model.addAttribute("message", "Hello!");
+        model.addAttribute("processingSystem", processingSystem);
+
+        return "processingsystem/refresh";
     }
 
     @RequestMapping(value = "/processingsystem/reset/{id}", method = RequestMethod.GET)
@@ -106,10 +114,7 @@ public class ProcessingSystemController {
             model.addAttribute("message", "Przeladowano system!");
         }
 
-        if (processingSystem == null) {
-            model.addAttribute("errorMsg", "404 Bad Request...");
-            return "errorpage";
-        }
+        if (processingSystem == null) throw new NullPointerException();
 
         return "processingsystem/simulate";
     }
@@ -119,10 +124,7 @@ public class ProcessingSystemController {
         setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
-        if (processingSystem == null) {
-            model.addAttribute("errorMsg", "404 Bad Request...");
-            return "errorpage";
-        }
+        if (processingSystem == null) throw new NullPointerException();
 
         String msg = "";
         try {
@@ -153,10 +155,7 @@ public class ProcessingSystemController {
         setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
-        if (processingSystem == null) {
-            model.addAttribute("errorMsg", "404 Bad Request...");
-            return "errorpage";
-        }
+        if (processingSystem == null) throw new NullPointerException();
         processingSystem.stopSimulation();
 
         model.addAttribute("processingSystem", processingSystem);
