@@ -27,11 +27,17 @@ public class Distribution extends AbstractEntity {
     private Double parameterA;
     private Double parameterB;
 
+    public Distribution() {
+    }
+
     public Distribution(DistributionType type) {
         this.type = type;
     }
 
-    public Distribution() {
+    public Distribution(DistributionType type, Double parameterA, Double parameterB) {
+        this.type = type;
+        this.parameterA = parameterA;
+        this.parameterB = parameterB;
     }
 
     public DistributionType getType() {
