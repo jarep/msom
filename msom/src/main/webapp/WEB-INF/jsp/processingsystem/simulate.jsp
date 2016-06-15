@@ -19,8 +19,8 @@
     <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
         <div class="task-dispatcher">
             <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.first}"><em>- first controller -</em></c:if></h4>
-            <div class="processing-units">
-                <h5>Processing units:</h5>
+                <div class="processing-units">
+                    <h5>Processing units:</h5>
                 <c:forEach items="${taskDispatcher.getProcessingUnits()}" var="processingUnit">
                     <div class="single-unit">
                         <h6><strong>${processingUnit.name}</strong> [cores: ${processingUnit.numberOfCores}] [eff: ${processingUnit.efficiency}]</h6> 
@@ -40,7 +40,10 @@
                             <ul class="tasks-list"> 
                                 <c:forEach items="${processingUnit.getProcessingTasks()}" var="task">
                                     <li class="progress" style="height:35px; margin-bottom: 5px;">
-                                        ${task}<br/>
+                                        ${task.shortName} 
+                                        (ex.: ${task.executionCounter}, 
+                                        twt: ${task.waitingTime}, 
+                                        tpt: ${task.processingTime}) <br/>
                                         <span class="progress-bar" role="progressbar" aria-valuenow="70"
                                               aria-valuemin="0" aria-valuemax="100" style="width:${task.getPercentageOfCurrentExecution()}%">
                                             <strong>${task.getPercentageOfCurrentExecution()}%</strong>
@@ -59,7 +62,10 @@
                             <p class="details-toogle"> - Show/hide details - </p>
                             <ul class="tasks-list"> 
                                 <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
-                                    <li>${waitingTask}</li>
+                                    <li>${waitingTask.shortName} 
+                                        (ex.: ${waitingTask.executionCounter}, 
+                                        twt: ${waitingTask.waitingTime}, 
+                                        tpt: ${waitingTask.processingTime}) </li>
                                     </c:forEach>
                             </ul> 
                         </div>
@@ -105,7 +111,7 @@
 </div>
 <div id="footer">
     <h4>Explanation of shortcuts</h4>
-    <p>TWT - Total Waiting Time</p>
-    <p>TPT - Total Processing Time</p>
-    <p>PC - Processing Count</p>
+    <p><strong>twt</strong> - Total Waiting Time</p>
+    <p><strong>tpt</strong> - Total Processing Time</p>
+    <p><strong>ex.</strong> - Execution counter - how many times this task was processed</p>
 </div>
