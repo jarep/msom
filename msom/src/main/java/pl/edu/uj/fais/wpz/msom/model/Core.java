@@ -6,7 +6,6 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Task;
