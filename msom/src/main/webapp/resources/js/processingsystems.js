@@ -3,9 +3,10 @@
         if (addr.includes("simulate")) {
             setInterval(function(){ 
                 $.ajax({
-                   type: "GET",
-                   url: addr.replace("simulate", "refresh"),
+                   type : "GET",
+                   url : addr.replace("simulate", "refresh"),
                    dataType : "html",
+                   cache : false,
                    success : function(data) {
                        $(".simulation-container").html(data);
                    }
