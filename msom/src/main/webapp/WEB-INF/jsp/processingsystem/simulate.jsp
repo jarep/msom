@@ -13,10 +13,7 @@
     <a class="btn btn-warning" href="/msom/processingsystem/stop/${processingSystem.id}">STOP</a> 
     <a class="btn btn-info" href="/msom/processingsystem/simulate/${processingSystem.id}">REFRESH VIEW</a> 
 </div>
-<div style="margin: 10px 0; padding: 25px;" class="bg-info">
-    <samp>${message}</samp>
-</div>
-
+<input type="hidden" id="isLocked" name="isLocked" value="${isLocked}"/>
 <div class="simulation-container">
 <tiles:insertDefinition name="processingsystem/refresh" />  
 </div>

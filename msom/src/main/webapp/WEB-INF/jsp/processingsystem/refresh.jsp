@@ -1,6 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
+<div style="margin: 10px 0; padding: 25px;" class="bg-info">
+    <samp>${message}</samp>
+</div>
 <div class="processing-container">
 <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
     <div class="task-dispatcher">

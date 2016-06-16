@@ -82,6 +82,7 @@ public class ProcessingSystemController {
 
         model.addAttribute("message", "Hello!");
         model.addAttribute("processingSystem", processingSystem);
+        model.addAttribute("isLocked", processingSystem.isLocked());
 
         return "processingsystem/simulate";
     }
@@ -114,7 +115,8 @@ public class ProcessingSystemController {
             model.addAttribute("message", "Przeladowano system!");
         }
 
-        if (processingSystem == null) throw new NullPointerException();
+        //if (processingSystem == null) throw new NullPointerException();
+        model.addAttribute("isLocked", processingSystem.isLocked());
 
         return "processingsystem/simulate";
     }
@@ -136,7 +138,7 @@ public class ProcessingSystemController {
             }
         } catch (SystemIntegrityException ex) {
             msg = msg + ex.getMessage();
-            msg = msg + "(jestli zdefiniowano - sprobuj kliknac reset)";
+            msg = msg + "(jesli zdefiniowano - sprobuj kliknac reset)";
         } catch (ProcessingAbilityException ex) {
             msg = msg + "ProcessingAbilityException";
         } catch (PathDefinitionExcpetion ex) {
@@ -147,6 +149,7 @@ public class ProcessingSystemController {
 
         model.addAttribute("processingSystem", processingSystem);
         model.addAttribute("message", msg);
+        model.addAttribute("isLocked", processingSystem.isLocked());
         return "processingsystem/simulate";
     }
 
@@ -155,11 +158,12 @@ public class ProcessingSystemController {
         setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
-        if (processingSystem == null) throw new NullPointerException();
+        //if (processingSystem == null) throw new NullPointerException();
         processingSystem.stopSimulation();
 
         model.addAttribute("processingSystem", processingSystem);
         model.addAttribute("message", "Zatrzymano symulację modelu o id " + id);
+        model.addAttribute("isLocked", processingSystem.isLocked());
         return "processingsystem/simulate";
     }
 
