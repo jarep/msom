@@ -12,6 +12,6 @@
                        $(".simulation-container").html(data);
                    }
                 });
-            }, 10000);
+            }, 1000);
         }
     });
