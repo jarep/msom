@@ -99,11 +99,11 @@ public class SystemStorage extends Activatable {
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Czyszczenie danych symulacji...");
+                PrintHelper.printMsg(getName(), "Clearing simulation data");
                 cleanTasks();
                 cleanTasksDispatchers();
                 cleanTypes();
-                PrintHelper.printMsg(getName(), "Wyczyszczono dane symulacji.");
+                PrintHelper.printMsg(getName(), "Simulation data cleared.");
                 return true;
             }
         }, executionWriteLock);
@@ -123,9 +123,9 @@ public class SystemStorage extends Activatable {
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Czyszczenie listy typow...");
+                PrintHelper.printMsg(getName(), "Clearing types list");
                 allTypes.clear();
-                PrintHelper.printMsg(getName(), "Wyczyszczono liste typow.");
+                PrintHelper.printMsg(getName(), "Types list cleared");
                 return true;
             }
         }, executionWriteLock);
@@ -136,9 +136,9 @@ public class SystemStorage extends Activatable {
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Dodawanie typu...");
+                PrintHelper.printMsg(getName(), "Adding type");
                 allTypes.add(type);
-                PrintHelper.printMsg(getName(), "Dodano typ: " + type.getName());
+                PrintHelper.printMsg(getName(), "Type added: " + type.getName());
                 return true;
             }
         }, executionWriteLock);
@@ -239,9 +239,9 @@ public class SystemStorage extends Activatable {
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Dodawanie TaskDispatcher ...");
+                PrintHelper.printMsg(getName(), "Adding task dispatcher");
                 taskDispatchers.add(taskDispatcher);
-                PrintHelper.printMsg(getName(), "Dodano TaskDispatcher: " + taskDispatcher.getName());
+                PrintHelper.printMsg(getName(), "Task dispatcher added: " + taskDispatcher.getName());
                 return true;
             }
         }, executionWriteLock);
@@ -252,10 +252,10 @@ public class SystemStorage extends Activatable {
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Czyszczenie listy task dispatchers ...");
+                PrintHelper.printMsg(getName(), "Clearing task dispatcher list");
                 taskDispatchers.clear();
                 firstTaskDispatcher = null;
-                PrintHelper.printMsg(getName(), "Wyczyszczono liste task dispatchers.");
+                PrintHelper.printMsg(getName(), "Task dispatcher list cleared");
                 return true;
             }
         }, executionWriteLock);
@@ -314,9 +314,9 @@ public class SystemStorage extends Activatable {
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Ustawianie pierszwgo kontrolera ...");
+                PrintHelper.printMsg(getName(), "Setting up first controller");
                 firstTaskDispatcher = taskDispatcher;
-                PrintHelper.printMsg(getName(), "Ustawiono pierwszy kontroler.");
+                PrintHelper.printMsg(getName(), "First controller set up");
                 return true;
             }
         }, executionWriteLock);
@@ -337,7 +337,7 @@ public class SystemStorage extends Activatable {
     }
 
     public void addNewTask(TaskImpl task) {
-        PrintHelper.printMsg(getName(), "Odebralem zadanie...");
+        PrintHelper.printMsg(getName(), "Received task");
         try {
             tasksBlockingQueue.add(task);
             getFirstTaskDispatcher().receiveTask(task);

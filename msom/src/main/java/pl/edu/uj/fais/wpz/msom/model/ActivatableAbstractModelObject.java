@@ -54,9 +54,9 @@ public abstract class ActivatableAbstractModelObject<Entity extends AbstractEnti
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Zapisuje obiekt do bazy danych...");
+                PrintHelper.printMsg(getName(), "Saving object to database");
                 service.update(entityObject);
-                PrintHelper.printMsg(getName(), "Zapisano obiekt.");
+                PrintHelper.printMsg(getName(), "Object saved to database");
                 return true;
             }
         }, executionWriteLock);
@@ -88,9 +88,9 @@ public abstract class ActivatableAbstractModelObject<Entity extends AbstractEnti
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Wczytywanie obiektu z bazy danych...");
+                PrintHelper.printMsg(getName(), "Loading object from database");
                 service.refresh(entityObject);
-                PrintHelper.printMsg(getName(), "Wczytano obiekt.");
+                PrintHelper.printMsg(getName(), "Object loaded from database");
                 return true;
             }
         }, executionWriteLock);
@@ -106,9 +106,9 @@ public abstract class ActivatableAbstractModelObject<Entity extends AbstractEnti
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Przeladowywanie obiektu ...");
+                PrintHelper.printMsg(getName(), "Reloading object");
                 reloadData();
-                PrintHelper.printMsg(getName(), "Przeladowano obiekt.");
+                PrintHelper.printMsg(getName(), "Object reloaded");
                 return true;
             }
         }, executionWriteLock);
@@ -133,9 +133,9 @@ public abstract class ActivatableAbstractModelObject<Entity extends AbstractEnti
 
             @Override
             public boolean execute() {
-                PrintHelper.printMsg(getName(), "Zapisywanie obiektu ...");
+                PrintHelper.printMsg(getName(), "Saving object");
                 boolean result = saveData();
-                PrintHelper.printMsg(getName(), "Przeladowano obiekt.");
+                PrintHelper.printMsg(getName(), "Object saved");
                 return result;
             }
         }, executionWriteLock);

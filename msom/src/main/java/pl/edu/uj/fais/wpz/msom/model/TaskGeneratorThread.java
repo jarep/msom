@@ -35,26 +35,26 @@ public class TaskGeneratorThread implements Runnable {
 
     @Override
     public void run() {
-        PrintHelper.printMsg(getName(), "Poczatek generowania zadan");
+        PrintHelper.printMsg(getName(), "Starting task generation");
         if (taskEntitiesWrappers.size() > 0) {
             while (active.get()) {
                 int millis = ThreadLocalRandom.current().nextInt(1000);
                 try {
-                    PrintHelper.printMsg(getName(), "Nastepne zadanie za: " + millis + " ms.");
+                    PrintHelper.printMsg(getName(), "Next task in: " + millis + " ms.");
                     Thread.sleep(millis);
                     generateTask();
                 } catch (InterruptedException ex) {
-                    PrintHelper.printAlert(getName(), "Umieram... (interrupted exception)");
+                    PrintHelper.printAlert(getName(), "Dying... (interrupted exception)");
                 }
             }
         } else {
-            PrintHelper.printError(getName(), "Nie ma zadnych zadan do wygenerowania!");
+            PrintHelper.printError(getName(), "No more tasks to generate");
         }
-        PrintHelper.printMsg(getName(), "Koniec generowania zadan");
+        PrintHelper.printMsg(getName(), "Task generation finished");
     }
 
     private void generateTask() {
-        PrintHelper.printMsg(getName(), "Generuje zadanie...");
+        PrintHelper.printMsg(getName(), "Generating task");
         int index = ThreadLocalRandom.current().nextInt(taskEntitiesWrappers.size());
         TaskEntityWrapper taskEntityWrapper = taskEntitiesWrappers.get(index);
         TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), taskService, taskEntityWrapper.incrementAndGetInstanceCounter());
@@ -62,7 +62,7 @@ public class TaskGeneratorThread implements Runnable {
         TypeImpl type = systemStorage.getTypeObject(typeId);
         task.setType(type);
         task.activate();
-        PrintHelper.printMsg(getName(), "Wygenerowalem zadanie: " + task.toString());
+        PrintHelper.printMsg(getName(), "Task generated: " + task.toString());
         systemStorage.addNewTask(task);
     }
 
@@ -73,11 +73,11 @@ public class TaskGeneratorThread implements Runnable {
     }
 
     protected void deactive() {
-        PrintHelper.printMsg(getName(), "deaktywacja...");
+        PrintHelper.printMsg(getName(), "Deactivating");
         taskEntitiesWrappers.clear();
         availableTypes.clear();
         active.set(false);
-        PrintHelper.printMsg(getName(), "deaktywowano.");
+        PrintHelper.printMsg(getName(), "Deactivated.");
     }
 
     protected boolean isActive() {
@@ -85,20 +85,20 @@ public class TaskGeneratorThread implements Runnable {
     }
 
     private void initializeTypes() {
-        PrintHelper.printMsg(getName(), "inicializuje typy...");
+        PrintHelper.printMsg(getName(), "Initiallizing types");
         availableTypes.clear();
         availableTypes.addAll(systemStorage.getSupportedTypes());
-        PrintHelper.printMsg(getName(), "lista typow gotowa - zapisano " + availableTypes.size() + " typy/ow.");
+        PrintHelper.printMsg(getName(), "Types list ready - saved " + availableTypes.size() + " types");
     }
 
     private void initializeTaskEntities() {
-        PrintHelper.printMsg(getName(), "inicializuje liste zadan...");
+        PrintHelper.printMsg(getName(), "Initiallizing task list");
         taskEntitiesWrappers.clear();
         for (Task taskEntity : getTaskEntitiesToGenerate()) {
             TaskEntityWrapper entityWrapper = new TaskEntityWrapper(taskEntity, taskEntity.getTaskType().getId());
             taskEntitiesWrappers.add(entityWrapper);
         }
-        PrintHelper.printMsg(getName(), "lista zadan gotowa - zapisano " + taskEntitiesWrappers.size() + " zadan.");
+        PrintHelper.printMsg(getName(), "Task list ready - saved " + taskEntitiesWrappers.size() + " tasks");
     }
 
     private List<Task> getTaskEntitiesToGenerate() {

@@ -55,18 +55,18 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
 
     @Override
     protected boolean activateObject() {
-        PrintHelper.printMsg(getName(), "aktywuje processing units...");
+        PrintHelper.printMsg(getName(), "Activating processing units");
         activateProcessingUnits();
-        PrintHelper.printMsg(getName(), "aktywowalem processing units.");
+        PrintHelper.printMsg(getName(), "Processing units activated");
         active.set(true);
         return true;
     }
 
     @Override
     protected boolean deactivateObject() {
-        PrintHelper.printMsg(getName(), "deaktywuje processing units...");
+        PrintHelper.printMsg(getName(), "Deactivating processing units");
         deactivateProcessingUnits();
-        PrintHelper.printMsg(getName(), "deaktywowalem processing units.");
+        PrintHelper.printMsg(getName(), "Processing units deactivated");
         active.set(false);
         return true;
     }
@@ -100,9 +100,9 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                 ProcessingUnitImpl p = new ProcessingUnitImpl(m, this, systemStorage);
                 processingUnits.add(p);
             }
-            System.out.println("Wczytano processing units.");
+            System.out.println("Processing units loaded");
         } else {
-            PrintHelper.printAlert(getName(), "Nie wczytano processing units - kontroler == null");
+            PrintHelper.printAlert(getName(), "Processing units not loaded - controller is null");
         }
     }
 
@@ -117,12 +117,12 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                 } else {
                     typeObject = systemStorage.addAndGetExtraType(type);
                     knownTypes.add(typeObject);
-                    PrintHelper.printAlert(toString(), "Dodano extra typ: " + typeObject.getName());
+                    PrintHelper.printAlert(toString(), "Added extra type: " + typeObject.getName());
                 }
             }
-            System.out.println("Wczytano typy dla kontrolera.");
+            System.out.println("Loaded types for controller");
         } else {
-            PrintHelper.printAlert(getName(), "Nie wczytano typow dla kontrolera - kontroler == null");
+            PrintHelper.printAlert(getName(), "Controller types not loaded - controller is null");
         }
     }
 
@@ -145,10 +145,10 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                         PathImpl pathImpl = new PathImpl(entity, typeObject, forwardTo, pathService);
                         comingOutPahts.add(pathImpl);
                     }
-                    PrintHelper.printMsg(getName(), "Przeladowano sciezki kontrolera.");
+                    PrintHelper.printMsg(getName(), "Reloading controller's paths");
                     return true;
                 } else {
-                    PrintHelper.printAlert(getName(), "Nie przaladowano sciezek - kontroler == null");
+                    PrintHelper.printAlert(getName(), "Controller's paths not loaded - controller is null");
                     return false;
                 }
 
@@ -292,10 +292,10 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     private void forwardTaskOrFinish(Task task, Path pathForTask) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
         TaskDispatcher forwardTo = pathForTask.getNextTaskDispatcher();
         if (forwardTo == null || forwardTo.getId().equals(this.getId())) {
-            PrintHelper.printMsg(getName(), "Zadanie powinno byc zakonczone...");
+            PrintHelper.printMsg(getName(), "Task should be finished");
             task.finishTask();
         } else {
-            PrintHelper.printMsg(getName(), "ZADANIE POWINNO BYC PRZEKAZANE DO: " + forwardTo.getName() + " ...");
+            PrintHelper.printMsg(getName(), "Task should be dispatched to: " + forwardTo.getName() + " ...");
             forwardTo.receiveTask(task);
         }
     }
@@ -306,18 +306,18 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
 
     @Override
     public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        PrintHelper.printMsg(getName(), "Otrzymalem zadanie " + ((TaskImpl) task).toString());
+        PrintHelper.printMsg(getName(), "Received task " + ((TaskImpl) task).toString());
         Path pathForTask = getPathForTask(task);
         if (pathForTask != null) {
             if (pathForTask.isProcessing()) {
                 try {
-                    PrintHelper.printMsg(getName(), "Zadanie powinno byc przetworzone...");
+                    PrintHelper.printMsg(getName(), "Task should be processed");
                     ProcessingUnit unit = chooseProcessingUnit(task.getType());
                     if (unit != null) {
-                        PrintHelper.printMsg(getName(), "Wybrano modul - rozpoczynam przetwarzanie...");
+                        PrintHelper.printMsg(getName(), "Processing unit selected - processing task");
                         unit.processTask(task);
                     } else {
-                        PrintHelper.printAlert(getName(), "Nie znaleziono modulu zdolnego przetworzyc zadanie.");
+                        PrintHelper.printAlert(getName(), "Processing unit for task not found");
                         throw new ProcessingAbilityException();
                     }
                 } catch (ProcessingAbilityException ex) {
@@ -327,7 +327,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                 forwardTaskOrFinish(task, pathForTask);
             }
         } else {
-            PrintHelper.printAlert(getName(), "NIE ZNALEZIONO SCIEZKI DLA ZADANIA");
+            PrintHelper.printAlert(getName(), "PATH FOR TASK NOT FOUND");
         }
     }
 
@@ -348,7 +348,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     private ProcessingUnit chooseProcessingUnit(Type type) {
         executionReadLock.lock();
         try {
-            PrintHelper.printMsg(getName(), "Wybieram modul przetwarzajacy...");
+            PrintHelper.printMsg(getName(), "Selecting processing unit");
             int bestQueueValue = Integer.MAX_VALUE;
             ProcessingUnit processingUnitToReturn = null;
             for (ProcessingUnit unit : findProcessingUnitsForType(type)) {
@@ -367,7 +367,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     private List<ProcessingUnit> findProcessingUnitsForType(Type type) {
         executionReadLock.lock();
         try {
-            PrintHelper.printMsg(getName(), "Sprawdzam dostepne moduly...");
+            PrintHelper.printMsg(getName(), "Checking available processing units");
             List<ProcessingUnit> foundedProcessingUnits = new ArrayList<>();
             for (ProcessingUnit unit : processingUnits) {
                 List<Type> availableTypes = unit.getAvailableTypes();
@@ -378,7 +378,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                     }
                 }
             }
-            PrintHelper.printMsg(getName(), "Znalazlem " + foundedProcessingUnits.size() + " potencjalnych modulow.");
+            PrintHelper.printMsg(getName(), "Found " + foundedProcessingUnits.size() + " possible processing units.");
             return foundedProcessingUnits;
         } finally {
             executionReadLock.unlock();

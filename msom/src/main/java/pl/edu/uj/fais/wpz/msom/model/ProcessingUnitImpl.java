@@ -68,7 +68,7 @@ public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, M
     }
 
     private void activateCores() {
-        PrintHelper.printMsg(toString(), "aktywuje rdzenie...");
+        PrintHelper.printMsg(toString(), "Activating cores");
         for (int i = 0; i < getNumberOfCores(); i++) {
             Core core = new Core(tasksBlockingQueue, processingTasksBlockingQueue, this, queueValue, i);
             cores.add(core);
@@ -77,17 +77,17 @@ public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, M
             coreThread.setDaemon(true);
             coreThread.start();
         }
-        PrintHelper.printMsg(toString(), "aktywowalem rdzenie.");
+        PrintHelper.printMsg(toString(), "Cores activated");
     }
 
     private void deactivateCores() {
-        PrintHelper.printMsg(toString(), "deaktywuje rdzenie...");
+        PrintHelper.printMsg(toString(), "Deactivating cores");
         for (Thread thread : coreThreads) {
             thread.interrupt();
         }
         coreThreads.clear();
         cores.clear();
-        PrintHelper.printMsg(toString(), "deaktywowalem rdzenie.");
+        PrintHelper.printMsg(toString(), "Cores deactivated");
 
     }
 
@@ -99,7 +99,7 @@ public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, M
 
     // should be common objects (from SystemStorage)
     private void reloadAvailableTypes() {
-        PrintHelper.printMsg(toString(), "Przeladowywanie typow...");
+        PrintHelper.printMsg(toString(), "Reloading types");
         availableTypes.clear();
         if (getEntityObject() != null) {
             Set<TaskType> taskTypes = getEntityObject().getTaskTypes();
@@ -107,15 +107,15 @@ public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, M
                 TypeImpl type = systemStorage.getTypeObject(t);
                 if (type != null) {
                     availableTypes.add(type);
-                    PrintHelper.printMsg(toString(), "Dodano typ: " + type.getName());
+                    PrintHelper.printMsg(toString(), "Added type: " + type.getName());
                 } else {
                     TypeImpl newType = systemStorage.addAndGetExtraType(t);
                     availableTypes.add(newType);
-                    PrintHelper.printAlert(toString(), "Dodano extra typ: " + newType.getName());
+                    PrintHelper.printAlert(toString(), "Added extra type: " + newType.getName());
                 }
             }
         }
-        PrintHelper.printMsg(toString(), "Przeladowano liste typow.");
+        PrintHelper.printMsg(toString(), "Types list reloaded");
     }
 
     @Override
@@ -200,7 +200,7 @@ public class ProcessingUnitImpl extends ActivatableAbstractModelObject<Module, M
 
     @Override
     public void processTask(Task task) throws ProcessingAbilityException {
-        PrintHelper.printMsg(toString(), "Odebralem zadanie - przekazuje do kolejki.");
+        PrintHelper.printMsg(toString(), "Received task - adding to queue");
         queueValue.addAndGet(task.getDifficulty());
         tasksBlockingQueue.add(task);
     }

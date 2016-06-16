@@ -85,7 +85,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
             }
         }
         if (getFirstTaskDispatcher() == null) {
-            PrintHelper.printAlert(getName(), "Nie wskazano pierwszego kontrolera!");
+            PrintHelper.printAlert(getName(), "First controller not selected");
         }
     }
 
@@ -146,9 +146,9 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
 
     @Override
     public boolean startSimulation() {
-        PrintHelper.printMsg(getName(), "Rozpoczynam symulacje ...");
+        PrintHelper.printMsg(getName(), "Starting simulation");
         boolean result = activate();
-        PrintHelper.printMsg(getName(), "Symulacja rozpoczeta.");
+        PrintHelper.printMsg(getName(), "Simulation started");
         return result;
     }
 
@@ -162,25 +162,25 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     }
 
     private void activateTaskDispatchers() {
-        PrintHelper.printMsg(getName(), "Aktywuje task dispatchers ...");
+        PrintHelper.printMsg(getName(), "Activating task dispatchers");
         for (TaskDispatcher td : systemStorage.getTaskDispatchers()) {
             td.activate();
         }
-        PrintHelper.printMsg(getName(), "Aktywowalem task dispatchers.");
+        PrintHelper.printMsg(getName(), "Task dispatchers activated");
     }
 
     private void activateGenerator() {
-        PrintHelper.printMsg(getName(), "Aktywuje generator ...");
+        PrintHelper.printMsg(getName(), "Activating task generator");
         taskGenerator = new TaskGeneratorImpl(systemStorage, taskService);
         taskGenerator.activate();
-        PrintHelper.printMsg(getName(), "Aktywowalem generator.");
+        PrintHelper.printMsg(getName(), "Task generator activated");
     }
 
     @Override
     public boolean stopSimulation() {
-        PrintHelper.printMsg(getName(), "Zatrzymuje symulacje ...");
+        PrintHelper.printMsg(getName(), "Stopping simulation");
         boolean result = deactivate();
-        PrintHelper.printMsg(getName(), "Symulacja zatrzymana.");
+        PrintHelper.printMsg(getName(), "Simulation stopped");
         return result;
     }
 
@@ -212,13 +212,13 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     @Override
     public TaskDispatcher createTaskDispatcher(String name) {
         if (active.get()) {
-            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+            PrintHelper.printAlert(getName(), "Simulation is in progress - cannot modify system structure");
             return null;
         }
         executionWriteLock.lock();
         try {
             if (active.get()) {
-                PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+                PrintHelper.printAlert(getName(), "Simulation is in progress - cannot modify system structure");
                 return null;
             } else {
                 return createAndAddTaskDispatcher(name);
@@ -235,13 +235,13 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     @Override
     public boolean addTaskDispatcher(TaskDispatcher taskDispatcher) throws SystemIntegrityException {
         if (active.get()) {
-            PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+            PrintHelper.printAlert(getName(), "Simulation is in progress - cannot modify system structure");
             return false;
         }
         executionWriteLock.lock();
         try {
             if (active.get()) {
-                PrintHelper.printAlert(getName(), "Symualacja w toku - nie mozna modyfikowac systemu ...");
+                PrintHelper.printAlert(getName(), "Simulation is in progress - cannot modify system structure");
                 return false;
             } else {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -275,7 +275,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     @Override
     public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
         if (systemStorage.getFirstTaskDispatcher() == null) {
-            throw new SystemIntegrityException("Nie zdefiniowano pierwszego kontrolera.");
+            throw new SystemIntegrityException("First controller not selected");
         }
         // required other validations ...
         return true;

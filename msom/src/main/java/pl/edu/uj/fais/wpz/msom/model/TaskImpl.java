@@ -110,13 +110,13 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
         executionReadLock.lock(); // we only change atomic variables, others can read
         try {
             if (!active.get()) {
-                PrintHelper.printError(getName(), "Proba przetwarzania nieaktywnego zadania!");
+                PrintHelper.printError(getName(), "Attempt to process already active task!");
                 return false;
             } else if (finished.get()) {
-                PrintHelper.printError(getName(), "Proba wykonania zakonczonego zadania!");
+                PrintHelper.printError(getName(), "Attempt to process already finished task!");
                 return false;
             } else if (processed.get()) {
-                PrintHelper.printError(getName(), "Proba ponownego przetwarzania zadania w trakcie przetwarzania!");
+                PrintHelper.printError(getName(), "Attempt to process already being processed task!");
             } else {
                 process();
             }
@@ -140,7 +140,7 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
         processed.set(true);  // getWaitingTime() przestaje korzystac z thresholda i waiting time, zwraca bezposrednio staticWaitingTime
         type.incrementProcessingCounter();
         try {
-            PrintHelper.printMsg(getName(), "ktos mnie bedzie przetwarzal...");
+            PrintHelper.printMsg(getName(), "Somebody is going to process me. I'm so happy!");
             int millis = 1000 * type.getDifficulty();
             int interval = millis / 100;
             for (int i = 0; i < 100; i++) {
@@ -156,26 +156,26 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
             timeThreshold.set(System.currentTimeMillis());
             processed.set(false); // getWaitingTime() zaczyna korzystac z tresholda i waiting time, przestaje zwracac staticWaitingTime
             currentPercentage.set(0);
-            PrintHelper.printMsg(getName(), "wykonano mnie po raz: " + executionCounter.incrementAndGet());
+            PrintHelper.printMsg(getName(), "Processed count: " + executionCounter.incrementAndGet());
         } catch (InterruptedException ex) {
-            PrintHelper.printAlert(getName(), "Przerwano w trakcie przetwarzania. (interrupted exception)");
+            PrintHelper.printAlert(getName(), "Interrupted while processing. (interrupted exception)");
         }
     }
 
     @Override
     public boolean finishTask() {
         if (finished.get()) {
-            PrintHelper.printAlert(getName(), "Nie mozna ponownie zakonczyc zadania.");
+            PrintHelper.printAlert(getName(), "Task cannot be finished once more");
             return false;
         }
         executionWriteLock.lock();
         try {
             if (finished.get()) {
-                PrintHelper.printAlert(getName(), "Nie mozna ponownie zakonczyc zadania.");
+                PrintHelper.printAlert(getName(), "Task cannot be finished once more");
                 return false;
             } else {
                 finish();
-                PrintHelper.printMsg(getName(), "zakonczono mnie...");
+                PrintHelper.printMsg(getName(), "Finished");
                 return true;
             }
         } finally {

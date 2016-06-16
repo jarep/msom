@@ -44,19 +44,19 @@ public abstract class Activatable implements IActivatable {
     @Override
     public boolean activate() {
         if (active.get()) {
-            PrintHelper.printMsg(toString(), "Nie mozna ponownie aktywowac.");
+            PrintHelper.printMsg(toString(), "Cannot activate again.");
             return false;
         }
         executionWriteLock.lock();
         try {
             if (active.get()) {
-                PrintHelper.printMsg(toString(), "Nie mozna ponownie aktywowac.");
+                PrintHelper.printMsg(toString(), "Cannot activate again.");
                 return false;
             } else if (activateObject()) {
-                PrintHelper.printMsg(toString(), "Aktywowano.");
+                PrintHelper.printMsg(toString(), "Activated.");
                 return true;
             } else {
-                PrintHelper.printAlert(toString(), "Nie udalo sie aktywowac.");
+                PrintHelper.printAlert(toString(), "Activation failed.");
                 return false;
             }
         } finally {
@@ -87,19 +87,19 @@ public abstract class Activatable implements IActivatable {
     @Override
     public boolean deactivate() {
         if (!active.get()) {
-            PrintHelper.printMsg(toString(), "Nie mozna ponownie deaktywowac.");
+            PrintHelper.printMsg(toString(), "Cannot deactivate again.");
             return false;
         }
         executionWriteLock.lock();
         try {
             if (!active.get()) {
-                PrintHelper.printMsg(toString(), "Nie mozna ponownie deaktywowac.");
+                PrintHelper.printMsg(toString(), "Cannot deactivate again.");
                 return false;
             } else if (deactivateObject()) {
-                PrintHelper.printMsg(toString(), "Deaktywowano.");
+                PrintHelper.printMsg(toString(), "Deactivated.");
                 return true;
             } else {
-                PrintHelper.printAlert(toString(), "Nie udalo sie deaktywowac...");
+                PrintHelper.printAlert(toString(), "Deactivation failed.");
                 return false;
             }
         } finally {
@@ -122,18 +122,18 @@ public abstract class Activatable implements IActivatable {
 
     protected boolean executeIfNonActive(Executable e, Lock lock) {
         if (active.get()) {
-            PrintHelper.printAlert(toString(), "Nie mozna wykonac - obiekt aktywny ...");
+            PrintHelper.printAlert(toString(), "Cannot execute - object is active.");
             return false;
         }
         lock.lock();
         try {
             if (active.get()) {
-                PrintHelper.printAlert(toString(), "Nie mozna wykonac - obiekt aktywny ...");
+                PrintHelper.printAlert(toString(), "Cannot execute - object is active.");
                 return false;
             } else {
-                PrintHelper.printMsg(toString(), "Wykonuje ...");
+                PrintHelper.printMsg(toString(), "Executing...");
                 e.execute();
-                PrintHelper.printMsg(toString(), "Wykonano.");
+                PrintHelper.printMsg(toString(), "Done.");
             }
             return true;
         } finally {

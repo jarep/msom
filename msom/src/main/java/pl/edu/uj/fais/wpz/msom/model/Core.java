@@ -34,20 +34,20 @@ public class Core implements Runnable {
     public void run() {
         while (processingUnit.isActive()) {
             try {
-                PrintHelper.printMsg(getName(), "CZEKAM na zadanie");
+                PrintHelper.printMsg(getName(), "WAITING for task");
                 Task taskToDo = tasksBlockingQueue.take();
                 processingTasksBlockingQueue.add(taskToDo);
                 queueValue.addAndGet(0 - taskToDo.getDifficulty());
-                PrintHelper.printMsg(getName(), "ODEBRAŁEM zadanie, rozpoczynam przetwarzanie...");
+                PrintHelper.printMsg(getName(), "Received task, processing.");
                 taskToDo.processTask(processingUnit);
-                PrintHelper.printMsg(getName(), "zakonczylem przetwarzanie zadania, zwracam do processing unit.");
+                PrintHelper.printMsg(getName(), "Task processing finished. Returning to processing unit.");
                 processingUnit.returnTask(taskToDo);
             } catch (InterruptedException ex) {
-                PrintHelper.printAlert(getName(), "umieram... (interrupted exception)");
+                PrintHelper.printAlert(getName(), "Help meee! Im dying now!");
 //                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        PrintHelper.printMsg(getName(), "koniec pracy");
+        PrintHelper.printMsg(getName(), "Job is done");
     }
 
     private String getName() {

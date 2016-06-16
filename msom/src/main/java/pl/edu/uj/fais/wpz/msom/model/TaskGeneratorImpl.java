@@ -29,12 +29,12 @@ public class TaskGeneratorImpl implements TaskGenerator {
     @Override
     public boolean activate() {
         if (generator.isActive()) {
-            System.out.println("TASK GENERATOR - proba ponownej aktywacji - nie mozna wykonac.");
+            System.out.println("TASK GENERATOR - reactivating - cannot execute");
             return false;
         } else {
-            System.out.println("TASK GENERATOR - aktywuje...");
+            System.out.println("TASK GENERATOR - activating");
             launchGenerator();
-            System.out.println("TASK GENERATOR - aktywowany.");
+            System.out.println("TASK GENERATOR - activated");
             return true;
         }
     }
@@ -42,13 +42,13 @@ public class TaskGeneratorImpl implements TaskGenerator {
     @Override
     public boolean deactivate() {
         if (!generator.isActive()) {
-            System.out.println("TASK GENERATOR - proba ponownej deaktywacji - nie mozna wykonac.");
+            System.out.println("TASK GENERATOR - deactivating - cannot execute.");
             return false;
         } else {
-            System.out.println("TASK GENERATOR - deaktywuje...");
+            System.out.println("TASK GENERATOR - deactivating...");
             generator.deactive();
             generatorThread.interrupt();
-            System.out.println("TASK GENERATOR - deaktywowany.");
+            System.out.println("TASK GENERATOR - deactivated.");
             return true;
         }
     }
