@@ -8,14 +8,12 @@
 <table class="table">
     <tr>
         <th>Name</th>
-        <th>View / Edit</th>
         <th>Simulate</th>
     </tr>
     <tr>
         <c:forEach items="#{processingSystems}" var="processingSystem">
         <tr>
             <td>${processingSystem.name}</td>
-            <td><a href="/msom/processingsystem/view/${processingSystem.id}">View / Edit</a></td>
             <td><a href="/msom/processingsystem/simulate/${processingSystem.id}">Simulate</a></td>
         </tr>
     </c:forEach>

@@ -63,8 +63,7 @@ public class EntityGenerator {
 
         // Create some Models
         Model m1 = new Model("Model Pierwszy");
-        Model m2 = new Model("Model Drugi");
-        addAll(modelDao, m1, m2);
+        addAll(modelDao, m1);
 
         // Create some Task Types
         TaskType taskType1 = new TaskType("Typ A", 10);
@@ -97,10 +96,12 @@ public class EntityGenerator {
         controller2.setModel(m1);
         controller3.setModel(m1);
         controller4.setModel(m1);
-
+        
         ControllerUnit controllerX = new ControllerUnit("Kontroler Obcy");
-        controllerX.setModel(m2);
         addAll(controllerUnitDao, controller1, controller2, controller3, controller4, controllerX);
+        
+        m1.setFirstControllerUnit(controller1);
+        modelDao.update(m1);
 
         // Create some Modules
         Module module1 = new Module("Mod01", 4, 2400, controller1);
@@ -152,11 +153,8 @@ public class EntityGenerator {
         TaskProbability probability3 = new TaskProbability(distribution2, task3, m1);
         TaskProbability probability4 = new TaskProbability(distribution3, task4, m1);
         TaskProbability probability5 = new TaskProbability(distribution3, task5, m1);
-        // Create some task probabilities for model 1
-        TaskProbability probability6 = new TaskProbability(distribution1, task3, m2);
-        TaskProbability probability7 = new TaskProbability(distribution3, task7, m2);
 
-        addAll(taskProbabilityDao, probability1, probability2, probability3, probability4, probability5, probability6, probability7);
+        addAll(taskProbabilityDao, probability1, probability2, probability3, probability4, probability5);
     }
 
     public void deleteDomain() {
