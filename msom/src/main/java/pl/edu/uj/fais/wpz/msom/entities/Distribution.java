@@ -64,4 +64,9 @@ public class Distribution extends AbstractEntity {
         this.parameterB = parameterB;
     }
 
+    @Override
+    public String toString() {
+        return type + " (" + parameterA + ", " + parameterB + ")";
+    }
+    
 }
