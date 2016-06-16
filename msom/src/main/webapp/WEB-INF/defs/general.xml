@@ -153,6 +153,14 @@
     <definition name="models/view" extends="models">
         <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
     </definition>
+    
+    <definition name="models/addprobability" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/addprobability.jsp" />
+    </definition>
+    
+    <definition name="models/editprobability" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/editprobability.jsp" />
+    </definition>
    
     <!--Processing System Mockups-->
     <definition name="processingsystemmockup" extends="common">

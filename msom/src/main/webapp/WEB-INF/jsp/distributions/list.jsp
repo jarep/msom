@@ -50,3 +50,6 @@
 </tr>
 </c:forEach>
 </table>
+<div class="alert alert-warning" role="alert">
+    <em>Assigning distribution for particular tasks is available on model editing site.</em>
+</div>

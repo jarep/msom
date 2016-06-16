@@ -3,6 +3,7 @@
 <p class="lead">
     <!-- opis -->
 </p>
+<div>
 <h3>Add new distribution</h2>
     <sf:form method="post" action="new" modelAttribute="distribution">
     <div class="form-group">
@@ -21,4 +22,8 @@
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>
-
+</div>
+<br/>
+<div class="alert alert-danger" role="alert">
+    <em>Only POISSON distribution is supported.</em>
+</div>

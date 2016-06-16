@@ -4,8 +4,8 @@
     <!-- opis -->
 </p>
 <h3>Edit distribution</h2>
-<sf:form method="post" modelAttribute="distribution" action="update">
-    <sf:hidden path="id" />
+    <sf:form method="post" modelAttribute="distribution" action="update">
+        <sf:hidden path="id" />
     <div class="form-group">
         <label for="type">Type of distribution</label>
         <sf:select path="type" class="form-control" >
@@ -22,3 +22,8 @@
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>
+
+<br/>
+<div class="alert alert-danger" role="alert">
+    <em>Only POISSON distribution is supported.</em>
+</div>

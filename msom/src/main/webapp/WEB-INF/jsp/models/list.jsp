@@ -58,3 +58,6 @@
         </tr>
     </c:forEach>
 </table>
+<div class="alert alert-warning" role="alert">
+    <em>You can manage distribution for particular tasks on on model editing site.</em>
+</div>
