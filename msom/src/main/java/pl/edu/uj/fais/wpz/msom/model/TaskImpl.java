@@ -88,7 +88,6 @@ public class TaskImpl extends AbstractModelObject<pl.edu.uj.fais.wpz.msom.entiti
     }
 
     
-    
     @Override
     public boolean processTask() {
         if (currentState == State.QUEUED) {
