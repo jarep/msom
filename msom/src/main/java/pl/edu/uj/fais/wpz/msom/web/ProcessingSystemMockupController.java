@@ -26,9 +26,9 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
  *
  * @author jarep
  */
-@Controller
+//@Controller
 public class ProcessingSystemMockupController {
-
+    
     @Autowired
     private ControllerUnitService controllerUnitService;
     @Autowired
@@ -45,7 +45,7 @@ public class ProcessingSystemMockupController {
     private TaskTypeService taskTypeService;
 
     private ProcessingSystemMockupTool processingSystemTool;
-
+    
     @RequestMapping(value = "/processingsystemmockup", method = RequestMethod.GET)
     public String showAllProcessingSystems(Model model) {
         setProcessingSystemToolIfDoesNotExist();

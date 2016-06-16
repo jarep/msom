@@ -59,6 +59,7 @@ public class ProcessingSystemController {
         return "processingsystem/list";
     }
 
+    /*
     @RequestMapping(value = "/processingsystem/view/{id}", method = RequestMethod.GET)
     public String viewProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();
@@ -71,6 +72,7 @@ public class ProcessingSystemController {
 
         return "processingsystem/view";
     }
+    */
 
     @RequestMapping(value = "/processingsystem/simulate/{id}", method = RequestMethod.GET)
     public String simulateProcessingSystem(@PathVariable("id") long id, Model model) {

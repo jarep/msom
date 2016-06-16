@@ -4,7 +4,7 @@
     <!-- opis -->
 </p>
 <h3>Edit distribution</h2>
-    <sf:form method="post" modelAttribute="distribution" action="update">
+    <sf:form method="post" modelAttribute="distribution" action="update" id="distributionForm">
         <sf:hidden path="id" />
     <div class="form-group">
         <label for="type">Type of distribution</label>
