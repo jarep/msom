@@ -5,23 +5,26 @@
  */
 package pl.edu.uj.fais.wpz.msom.web.helpers;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.DistributionDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.IDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModelDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ModuleDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ProcessingPathDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
+import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskProbabilityDao;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskTypeDao;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
+import pl.edu.uj.fais.wpz.msom.entities.Distribution;
+import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
+import pl.edu.uj.fais.wpz.msom.entities.TaskProbability;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
@@ -49,6 +52,12 @@ public class EntityGenerator {
 
     @Autowired
     ProcessingPathDao processingPathDao;
+
+    @Autowired
+    TaskProbabilityDao taskProbabilityDao;
+
+    @Autowired
+    DistributionDao distributionDao;
 
     public void generateDomain() {
 
@@ -129,9 +138,30 @@ public class EntityGenerator {
         ProcessingPath path11 = new ProcessingPath(controller4, taskType4, Boolean.TRUE, controller4);
 
         addAll(processingPathDao, path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11);
+
+        // Create some distributions
+        Distribution distribution1 = new Distribution(DistributionType.POISSON, 10.0, 20.0);
+        Distribution distribution2 = new Distribution(DistributionType.POISSON, 3.0, 10.0);
+        Distribution distribution3 = new Distribution(DistributionType.POISSON, 6.0, 15.0);
+
+        addAll(distributionDao, distribution1, distribution2, distribution3);
+
+        // Create some task probabilities for model 1
+        TaskProbability probability1 = new TaskProbability(distribution1, task1, m1);
+        TaskProbability probability2 = new TaskProbability(distribution1, task2, m1);
+        TaskProbability probability3 = new TaskProbability(distribution2, task3, m1);
+        TaskProbability probability4 = new TaskProbability(distribution3, task4, m1);
+        TaskProbability probability5 = new TaskProbability(distribution3, task5, m1);
+        // Create some task probabilities for model 1
+        TaskProbability probability6 = new TaskProbability(distribution1, task3, m2);
+        TaskProbability probability7 = new TaskProbability(distribution3, task7, m2);
+
+        addAll(taskProbabilityDao, probability1, probability2, probability3, probability4, probability5, probability6, probability7);
     }
 
     public void deleteDomain() {
+        removeAll(taskProbabilityDao);
+        removeAll(distributionDao);
         removeAll(processingPathDao);
         removeAll(moduleDao);
         removeAll(controllerUnitDao);

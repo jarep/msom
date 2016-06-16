@@ -47,3 +47,6 @@
         </tr>
     </c:forEach>
 </table>
+<div class="alert alert-warning" role="alert">
+    <em>You can manage processing paths on editing site for particular controller.</em>
+</div>
