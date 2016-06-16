@@ -60,6 +60,9 @@
   
     <definition name="distributions" extends="common">
         <put-attribute name="title" value="Distribution Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/distributions.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="distributions/list" extends="distributions">

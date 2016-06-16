@@ -5,7 +5,7 @@
 </p>
 <div>
 <h3>Add new distribution</h2>
-    <sf:form method="post" action="new" modelAttribute="distribution">
+    <sf:form method="post" action="new" modelAttribute="distribution" id="distributionForm">
     <div class="form-group">
         <label for="type">Type of distribution</label>
         <sf:select path="type" class="form-control" >
