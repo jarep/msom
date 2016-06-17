@@ -11,17 +11,21 @@
                 efficiency:{
                     required : true,
                     min: 1
+                },
+                "controllerUnit.id": {
+                    required : true
                 }
             },messages:{
-                name : "Please specify module name",
+                name : "Please specify the name",
                 cores: {
-                    required : "Please specify number of cores",
-                    min : jQuery.validator.format("Needs to have at least {0} core.")
+                    required : "Please specify the number of cores",
+                    min : jQuery.validator.format("The module must have at least {0} core")
                 },
                 efficiency: {
-                    required : "Please specify efficiency",
-                    min : jQuery.validator.format("Efficiency must be higher then {0}")
-                }
+                    required : "Please specify the efficiency",
+                    min : jQuery.validator.format("The efficiency must be greater than {0}")
+                },
+                "controllerUnit.id" : "Please select the Controller Unit"
             },
             highlight: function(element) {
                 $(element).closest('.form-group').addClass('has-error');

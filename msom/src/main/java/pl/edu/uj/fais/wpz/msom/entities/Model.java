@@ -5,7 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.entities;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
@@ -20,11 +26,24 @@ public class Model extends AbstractEntity {
      */
     private String name;
 
+    @OneToOne
+    @JoinColumn(name = "firstcontrollerunit_id", nullable = true)
+    private ControllerUnit firstControllerUnit;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "model") 
+    private Set<ControllerUnit> controllerUnits = new HashSet<>();
+
     public Model() {
     }
 
     public Model(String name) {
         this.name = name;
+    }
+
+    public Model(String name, ControllerUnit firstControllerUnit, Set<ControllerUnit> controllerUnits) {
+        this.name = name;
+        this.firstControllerUnit = firstControllerUnit;
+        this.controllerUnits = controllerUnits;
     }
 
     public String getName() {
@@ -33,6 +52,22 @@ public class Model extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ControllerUnit getFirstControllerUnit() {
+        return firstControllerUnit;
+    }
+
+    public void setFirstControllerUnit(ControllerUnit firstControllerUnit) {
+        this.firstControllerUnit = firstControllerUnit;
+    }
+
+    public Set<ControllerUnit> getControllerUnits() {
+        return controllerUnits;
+    }
+
+    public void setControllerUnits(Set<ControllerUnit> controllerUnits) {
+        this.controllerUnits = controllerUnits;
     }
 
 }

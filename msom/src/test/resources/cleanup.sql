@@ -1,3 +1,5 @@
+UPDATE model SET firstcontrollerunit_id=null;
+delete from taskprobability;
 delete from task_types_per_module;
 delete from module;
 delete from processingpath;

@@ -1,15 +1,16 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
 <p class="lead">
 </p>
 <h3>Controller Unit</h3>
-<sf:form method="post" modelAttribute="controller" action="update">
+<sf:form method="post" id="controllerUnitForm" modelAttribute="controller" action="update">
     <sf:hidden path="id" />
     <div class="form-group">
         <label for="model">Model</label>
-        <sf:select name="model" path="model.id" cssClass="form-control">
+        <sf:select path="model.id" cssClass="form-control">
             <sf:options items="${modelsList}" itemLabel="name" itemValue="id" />
         </sf:select> 
     </div>
@@ -23,6 +24,22 @@
 <a class="btn btn-default" href="/msom/processingpaths/new/${controller.id}">Create new path from " <strong>${controller.name} </strong>"</a>
 <div>
     <h4>Paths from this controller</h4>
+    <c:choose>
+    <c:when test="${empty msg}">
+    </c:when>
+    <c:when test="${fn:startsWith(msg, 'Error')}">
+    <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span>${msg}</span>
+    </div>
+    </c:when>
+    <c:otherwise>
+    <div class="alert alert-success" role="alert">
+          <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+          <span>${msg}</span>
+    </div>
+    </c:otherwise>
+    </c:choose>
     <table class="table">
         <tr>
             <th>Id</th>

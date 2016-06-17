@@ -60,6 +60,9 @@
   
     <definition name="distributions" extends="common">
         <put-attribute name="title" value="Distribution Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/distributions.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="distributions/list" extends="distributions">
@@ -73,9 +76,12 @@
     <definition name="distributions/view" extends="distributions">
         <put-attribute name="body" value="/WEB-INF/jsp/distributions/view.jsp" />
     </definition>
-  
+    
     <definition name="modules" extends="common">
         <put-attribute name="title" value="Modules Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/modules.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="modules/list" extends="modules">
@@ -93,6 +99,9 @@
     <!--Controller Units-->
     <definition name="controllerunits" extends="common">
         <put-attribute name="title" value="Controller Units Management" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/controllerunits.js" />
+        </put-list-attribute>
     </definition>
     
     <definition name="controllerunits/list" extends="controllerunits">
@@ -110,6 +119,9 @@
     <!--Processing Paths-->
     <definition name="processingpaths" extends="common">
         <put-attribute name="title" value="Processing Paths Management" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/processingpaths.js" />
+        </put-list-attribute>
     </definition>
     
     <definition name="processingpaths/new" extends="processingpaths">
@@ -128,6 +140,9 @@
     <!--Models-->
     <definition name="models" extends="common">
         <put-attribute name="title" value="Models Management" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/models.js" />
+        </put-list-attribute>
     </definition>
     
     <definition name="models/list" extends="models">
@@ -140,6 +155,33 @@
     
     <definition name="models/view" extends="models">
         <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
+    </definition>
+    
+    <definition name="models/addprobability" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/addprobability.jsp" />
+    </definition>
+    
+    <definition name="models/editprobability" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/editprobability.jsp" />
+    </definition>
+   
+    <!--Processing Systems-->
+    <definition name="processingsystem" extends="common">
+        <put-attribute name="title" value="Processing Systems" />
+    </definition>
+    
+    <definition name="processingsystem/list" extends="processingsystem">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/list.jsp" />
+    </definition>
+    
+    <definition name="processingsystem/simulate" extends="processingsystem">
+        <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/simulate.jsp" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/processingsystems.js" />
+        </put-list-attribute>
+    </definition>
+    
+    <definition name="processingsystem/refresh" template="/WEB-INF/jsp/processingsystem/refresh.jsp">
     </definition>
     
 </tiles-definitions>

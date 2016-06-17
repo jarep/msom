@@ -5,11 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
+
 /**
  *
  * @author jarep
  */
-public interface Type {
+public interface Type extends IModelObject<TaskType>, IActivatable {
 
     /**
      * Get name of type
@@ -23,23 +25,38 @@ public interface Type {
      *
      * @return Integer value represents difficulty
      */
-    public Integer getDifficulty();
+    public int getDifficulty();
 
+    
     /**
      * Get the average processing time for tasks of this type in current
      * simulation.
      *
      * @return The number of milliseconds
      */
-    public Integer getAvgProcessingTime();
+    public double getAvgProcessingTime();
 
     /**
      * Get the average waiting time for tasks of this type in current
      * simulation.
      *
-     *
      * @return The number of milliseconds
      */
-    public Integer getAvgWaitingTime();
+    public double getAvgWaitingTime();
 
+    /**
+     * Get number of generated tasks of this type.
+     *
+     * @return
+     */
+    public int getNumberOfGeneratedTasks();
+
+    /**
+     * Get number of finished tasks of this type.
+     *
+     * @return
+     */
+    public int getNumberOfFinishedTasks();
+
+    
 }

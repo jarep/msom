@@ -5,9 +5,12 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao;
 
+import java.util.List;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.TaskDao;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
  *
@@ -20,6 +23,28 @@ public class TaskDaoImpl extends AbstractDao<Task, Long> implements TaskDao {
     public boolean removeTask(Task task) {
         remove(task);
         return true;
+    }
+
+    @Override
+    public List<Task> getTasksByType(TaskType taskType) {
+        Query tasksByTypeQuery = getCurrentSession().createQuery(
+                "SELECT t"
+                + " FROM Task AS t"
+                + " JOIN t.taskType AS type"
+                + " WHERE type.id = :id");
+        tasksByTypeQuery.setParameter("id", taskType.getId());
+        return tasksByTypeQuery.list();
+    }
+
+    @Override
+    public List<Task> getTasksByTaskTypeId(Long taskTypeId) {
+        Query tasksByTypeQuery = getCurrentSession().createQuery(
+                "SELECT t"
+                + " FROM Task AS t"
+                + " JOIN t.taskType AS type"
+                + " WHERE type.id = :id");
+        tasksByTypeQuery.setParameter("id", taskTypeId);
+        return tasksByTypeQuery.list();
     }
 
 }

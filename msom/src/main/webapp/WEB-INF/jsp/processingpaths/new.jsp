@@ -5,7 +5,7 @@
 </p>
 <h3>Add new Processing Path</h3>
 <div>        
-    <sf:form method="post" modelAttribute="path">
+    <sf:form method="post" modelAttribute="path" id="processingPathForm">
 
         <table class="table">
             <tr>
@@ -20,12 +20,12 @@
                     ${path.controllerUnit.name}
                 </td>
                 <td>
-                    <sf:select name="nextControllerUnit" path="nextControllerUnit.id" cssClass="form-control">
+                    <sf:select path="nextControllerUnit.id" cssClass="form-control">
                         <sf:options items="${controllers}" itemLabel="name" itemValue="id" />
                     </sf:select> 
                 </td>
                 <td>
-                    <sf:select name="taskType" path="taskType.id" cssClass="form-control">
+                    <sf:select path="taskType.id" cssClass="form-control">
                         <sf:options items="${unspecifiedTypes}" itemLabel="name" itemValue="id" />
                     </sf:select> 
                 </td>

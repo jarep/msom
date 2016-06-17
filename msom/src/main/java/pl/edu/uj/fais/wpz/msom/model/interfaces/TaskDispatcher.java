@@ -6,6 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
 import java.util.List;
+import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
@@ -16,7 +17,21 @@ import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
  *
  * @author jarep
  */
-public interface TaskDispatcher {
+public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatable {
+
+    /**
+     * Set name for this Task Dispatcher
+     *
+     * @param name Task Dispatcher name
+     */
+    public void setName(String name);
+
+    /**
+     * Get name of this Task Dispatcher
+     *
+     * @return Task Dispatcher name
+     */
+    public String getName();
 
     /**
      * Create new Processing Unit for this Task Dispatcher.
@@ -43,14 +58,29 @@ public interface TaskDispatcher {
     public List<ProcessingUnit> getProcessingUnits();
 
     /**
-     * Define processing path, if forwardTo is this Task Dispatcher, task should
-     * be finished.
+     * Define processing path, if forwardTo is this Task Dispatcher or null,
+     * task should be finished.
      *
      * @param type Type of task
      * @param processing
      * @param forwardTo
      */
     public void definePath(Type type, boolean processing, TaskDispatcher forwardTo);
+
+    /**
+     * Define processing path, if forwardTo is this Task Dispatcher or null,
+     * task should be finished.
+     *
+     * @param path
+     */
+    public void definePath(Path path);
+
+    /**
+     * Get processing paths coming out from this task dispatcher.
+     *
+     * @return List of paths
+     */
+    public List<Path> getComingOutPaths();
 
     /**
      * Remove Processing Paths coming out from this Task Dispatcher to another
@@ -138,6 +168,13 @@ public interface TaskDispatcher {
      * @return List of types to finished
      */
     public List<Type> getTypesToFinished();
+
+    /**
+     * Get all types for which have defined path in this task dispatcher.
+     *
+     * @return List of types.
+     */
+    public List<Type> getAllKnownTypes();
 
     /**
      * Receive task from Processing Unit after processing.

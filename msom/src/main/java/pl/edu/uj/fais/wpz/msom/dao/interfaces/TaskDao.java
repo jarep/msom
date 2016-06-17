@@ -5,7 +5,9 @@
  */
 package pl.edu.uj.fais.wpz.msom.dao.interfaces;
 
+import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
+import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
 /**
  *
@@ -21,5 +23,21 @@ public interface TaskDao extends IDao<Task, Long> {
      * {@code false}.
      */
     boolean removeTask(Task task);
+
+    /**
+     * Get all tasks associated with given type
+     *
+     * @param taskType Type of task (entity object)
+     * @return list of tasks (entity objects)
+     */
+    public List<Task> getTasksByType(TaskType taskType);
+
+    /**
+     * Get all tasks associated with given type
+     *
+     * @param taskTypeId Type of task id
+     * @return list of tasks (entity objects)
+     */
+    public List<Task> getTasksByTaskTypeId(Long taskTypeId);
 
 }

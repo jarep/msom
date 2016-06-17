@@ -39,4 +39,9 @@ public class ModelServiceImpl extends AbstractService<Model> implements ModelSer
         return modelDao.remove(model);
     }
 
+    @Override
+    public boolean detachFirstTaskDispatcher(Model model) {
+        return modelDao.detachFirstTaskDispatcher(model);
+    }
+
 }

@@ -109,4 +109,18 @@ public class ProcessingPathDaoImpl extends AbstractDao<ProcessingPath, Long> imp
         return types;
     }
 
+    @Override
+    public List<TaskType> getKnownTaskTypesByControllerUnit(ControllerUnit controllerUnit) {
+        Query knownTaskTypesQuery = getCurrentSession().createQuery(
+                "SELECT type"
+                + " FROM ProcessingPath AS path"
+                + " JOIN path.taskType AS type"
+                + " JOIN path.controllerUnit AS controller"
+                + " WHERE controller.id = :id");
+        knownTaskTypesQuery.setParameter("id", controllerUnit.getId());
+
+        List types = knownTaskTypesQuery.list();
+        return types;
+    }
+
 }

@@ -9,7 +9,7 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
  *
  * @author jarep
  */
-public interface Task {
+public interface Task extends IModelObject<pl.edu.uj.fais.wpz.msom.entities.Task>, IActivatable {
 
     /**
      * Get type of task
@@ -35,15 +35,16 @@ public interface Task {
     /**
      * Process task.
      *
+     * @param processingUnit 
      * @return {@code true} when successfully processed, {@code false} if task
      * was already finished
      */
-    public boolean processTask();
+    public boolean processTask(ProcessingUnit processingUnit);
 
     /**
      * Finish task.
      */
-    public void finishTask();
+    public boolean finishTask();
 
     /**
      * Check that the task is finished.
@@ -57,14 +58,28 @@ public interface Task {
      *
      * @return The number of milliseconds
      */
-    public Integer getProcessingTime();
+    public Long getProcessingTime();
 
     /**
      * Get current sum of waiting times.
      *
      * @return The number of milliseconds
      */
-    public Integer getWaitingTime();
+    public Long getWaitingTime();
+
+    /**
+     * Get how many times this task was executed.
+     *
+     * @return execution counter
+     */
+    public int getExecutionCounter();
+
+    /**
+     * Get percentage of current execution.
+     *
+     * @return percentage of execution
+     */
+    public double getPercentageOfCurrentExecution();
 
     /**
      * Get Processing Unit which processed this task as the last.

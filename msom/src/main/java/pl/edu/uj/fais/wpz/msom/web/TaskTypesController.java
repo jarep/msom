@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -38,20 +39,19 @@ public class TaskTypesController {
      * Deletes taskType with specified ID
      *
      * @param id taskType's ID
+     * @param redirectAttributes
      * @return redirects to tasktypes if everything was ok
      */
     @RequestMapping(value = "/tasktypes/remove/{id}", method = RequestMethod.POST)
-    public String deleteTaskType(@PathVariable("id") long id) {
+    public String deleteTaskType(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-        TaskType toDelete = taskTypeService.find(id);
-        boolean wasDeleted = taskTypeService.remove(toDelete);
-
-        if (!wasDeleted) {
-            // nie mozna usunac, 
-            // należy obsłużyć wyjątek i przekazać odpowiedni komunikat użytkownikowi
+        TaskType taskType = taskTypeService.find(id);
+        if ((taskType != null) && taskTypeService.remove(taskType))  {
+            redirectAttributes.addFlashAttribute("msg", "The Task Type was removed");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to remove the Task Type");
         }
 
-        // everything OK, see remaining task types
         return "redirect:/tasktypes";
     }
 
@@ -74,8 +74,12 @@ public class TaskTypesController {
      * @return redirects to tasktypes
      */
     @RequestMapping(value = "/tasktypes/new", method = RequestMethod.POST)
-    public String addTaskType(@ModelAttribute(value = "taskType") TaskType taskType) {
-        taskTypeService.add(taskType);
+    public String addTaskType(@ModelAttribute(value = "taskType") TaskType taskType, RedirectAttributes redirectAttributes) {
+        if (taskTypeService.add(taskType))  {
+            redirectAttributes.addFlashAttribute("msg", "The Task Type was added");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to add the Task Type");
+        }
 
         return "redirect:/tasktypes";
     }
@@ -90,6 +94,7 @@ public class TaskTypesController {
     @RequestMapping(value = "/tasktypes/{id}", method = RequestMethod.GET)
     public String getTaskType(@PathVariable("id") long id, Model model) {
         TaskType taskType = taskTypeService.find(id);
+        if (taskType == null) throw new NullPointerException();
         model.addAttribute("taskType", taskType);
 
         return "tasktypes/view";
@@ -102,8 +107,12 @@ public class TaskTypesController {
      * @return redirects to taskType
      */
     @RequestMapping(value = "/tasktypes/update", method = RequestMethod.POST)
-    public String updateTaskType(@ModelAttribute(value = "taskType") TaskType taskType) {
-        taskTypeService.update(taskType);
+    public String updateTaskType(@ModelAttribute(value = "taskType") TaskType taskType, RedirectAttributes redirectAttributes) {
+        if (taskTypeService.update(taskType)) {
+            redirectAttributes.addFlashAttribute("msg", "The Task Type was updated");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Error: Unable to update the Task Type");
+        }
 
         return "redirect:/tasktypes";
     }
