@@ -97,8 +97,7 @@ public class EntityGenerator {
         controller3.setModel(m1);
         controller4.setModel(m1);
         
-        ControllerUnit controllerX = new ControllerUnit("Kontroler Obcy");
-        addAll(controllerUnitDao, controller1, controller2, controller3, controller4, controllerX);
+        addAll(controllerUnitDao, controller1, controller2, controller3, controller4);
         
         m1.setFirstControllerUnit(controller1);
         modelDao.update(m1);
