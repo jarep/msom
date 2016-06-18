@@ -16,7 +16,7 @@ import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
@@ -44,6 +44,11 @@ public class SystemStorage extends Activatable {
     private final TaskTypeService taskTypeService;
 
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
+    /**
+     * Task entity wrappers with tasks to generate
+     */
+    private final List<TaskEntityWrapper> taskEntitiesWrappers = new ArrayList<>();
+
     private TaskDispatcherImpl firstTaskDispatcher = null;
     /**
      * All types available in this processing system - used by any processing
@@ -111,6 +116,7 @@ public class SystemStorage extends Activatable {
                 cleanTasks();
                 cleanTasksDispatchers();
                 cleanTypes();
+                cleanTaskEntityWrappers();
                 PrintHelper.printMsg(getName(), "Simulation data cleared.");
                 return true;
             }
@@ -139,6 +145,46 @@ public class SystemStorage extends Activatable {
         }, executionWriteLock);
     }
 
+    protected boolean cleanTaskEntityWrappers() {
+        return executeIfNonActive(new Executable() {
+
+            @Override
+            public boolean execute() {
+                PrintHelper.printMsg(getName(), "Clearing task entities list");
+                taskEntitiesWrappers.clear();
+                PrintHelper.printMsg(getName(), "Task entities list cleared");
+                return true;
+            }
+        }, executionWriteLock);
+    }
+
+    protected boolean addTaskEntityWrapper(final TaskEntityWrapper taskEntityWrapper) {
+        return executeIfNonActive(new Executable() {
+
+            @Override
+            public boolean execute() {
+                PrintHelper.printMsg(getName(), "Adding task entity wrapper");
+                taskEntitiesWrappers.add(taskEntityWrapper);
+                PrintHelper.printMsg(getName(), "Task entity wrapper was added: " + taskEntityWrapper.getTaskEntity().getName());
+                return true;
+            }
+        }, executionWriteLock);
+    }
+
+    /**
+     * Get list of task entity wrappers with tasks to generate in this model.
+     *
+     * @return list of tasks to generate
+     */
+    protected List<TaskEntityWrapper> getTaskEntityWrappers() {
+        executionReadLock.lock();
+        try {
+            return taskEntitiesWrappers;
+        } finally {
+            executionReadLock.unlock();
+        }
+    }
+
     protected boolean addType(final TypeImpl type) {
         return executeIfNonActive(new Executable() {
 
@@ -146,7 +192,7 @@ public class SystemStorage extends Activatable {
             public boolean execute() {
                 PrintHelper.printMsg(getName(), "Adding type");
                 allTypes.add(type);
-                PrintHelper.printMsg(getName(), "Type added: " + type.getName());
+                PrintHelper.printMsg(getName(), "Type was added: " + type.getName());
                 return true;
             }
         }, executionWriteLock);
@@ -349,7 +395,7 @@ public class SystemStorage extends Activatable {
         try {
             tasksBlockingQueue.add(task);
             getFirstTaskDispatcher().receiveTask(task);
-        } catch (PathDefinitionExcpetion | PathDefinitionInfinityLoopExcpetion ex) {
+        } catch (PathDefinitionException | PathDefinitionInfinityLoopExcpetion ex) {
             Logger.getLogger(SystemStorage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

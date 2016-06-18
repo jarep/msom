@@ -36,12 +36,17 @@ public class ProcessingPathDaoImpl extends AbstractDao<ProcessingPath, Long> imp
 
     @Override
     public List<ProcessingPath> getProcessingPathsLeadingToTheControllerUnit(ControllerUnit nextControllerUnit) {
+        return getProcessingPathsLeadingToTheControllerUnit(nextControllerUnit.getId());
+    }
+
+    @Override
+    public List<ProcessingPath> getProcessingPathsLeadingToTheControllerUnit(Long controllerUnitId) {
         Query pathsByNextControllerQuery = getCurrentSession().createQuery(
                 "SELECT path"
                 + " FROM ProcessingPath AS path"
                 + " JOIN path.nextControllerUnit AS nextController"
                 + " WHERE nextController.id = :id");
-        pathsByNextControllerQuery.setParameter("id", nextControllerUnit.getId());
+        pathsByNextControllerQuery.setParameter("id", controllerUnitId);
 
         List paths = pathsByNextControllerQuery.list();
         return paths;

@@ -65,7 +65,7 @@
             <h6>Coming out paths</h6>
             <ul class="paths">
                 <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
-                    <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
+                    <li>${cPath.getName()}</li>
                     </c:forEach>
             </ul>
         </div>

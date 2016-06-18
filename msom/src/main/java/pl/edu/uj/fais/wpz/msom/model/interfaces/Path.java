@@ -29,10 +29,17 @@ public interface Path extends IModelObject<ProcessingPath> {
     public boolean isProcessing();
 
     /**
+     * Return Task Dispatcher which leads path.
+     *
+     * @return 
+     */
+    public TaskDispatcher getPreviousTaskDispatcher();
+
+    /**
      * Return next Task Dispatcher or null if task should be finished.
      *
      * @return TaskDispatcher or null
      */
     public TaskDispatcher getNextTaskDispatcher();
-    
+
 }
