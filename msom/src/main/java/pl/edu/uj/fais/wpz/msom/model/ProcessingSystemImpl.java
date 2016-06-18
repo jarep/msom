@@ -52,7 +52,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
-        this.systemStorage = new SystemStorage(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+        this.systemStorage = new SystemStorage(entityObject.getId(), controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
         initializeSystemStorage();
     }
 

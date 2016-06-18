@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
@@ -50,13 +51,16 @@ public class SystemStorage extends Activatable {
      */
     private final List<Type> allTypes = new ArrayList<>();
 
+    private final AtomicLong modelId = new AtomicLong();
+
     /**
      * All generated tasks.
      */
     private final BlockingQueue<TaskImpl> tasksBlockingQueue = new LinkedBlockingQueue<>();
     private final DistributionType distributionType = DistributionType.UNKNOWN;
 
-    protected SystemStorage(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    protected SystemStorage(Long modelId, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+        this.modelId.set(modelId);
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
@@ -92,6 +96,10 @@ public class SystemStorage extends Activatable {
 
     public TaskTypeService getTaskTypeService() {
         return taskTypeService;
+    }
+
+    public Long getModelId() {
+        return modelId.get();
     }
 
     public boolean clean() {
