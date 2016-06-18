@@ -60,6 +60,9 @@
   
     <definition name="distributions" extends="common">
         <put-attribute name="title" value="Distribution Management." />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/distributions.js" />
+        </put-list-attribute>
     </definition>
   
     <definition name="distributions/list" extends="distributions">
@@ -153,24 +156,15 @@
     <definition name="models/view" extends="models">
         <put-attribute name="body" value="/WEB-INF/jsp/models/view.jsp" />
     </definition>
+    
+    <definition name="models/addprobability" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/addprobability.jsp" />
+    </definition>
+    
+    <definition name="models/editprobability" extends="models">
+        <put-attribute name="body" value="/WEB-INF/jsp/models/editprobability.jsp" />
+    </definition>
    
-    <!--Processing System Mockups-->
-    <definition name="processingsystemmockup" extends="common">
-        <put-attribute name="title" value="Processing System Mockups" />
-    </definition>
-    
-    <definition name="processingsystemmockup/list" extends="processingsystemmockup">
-        <put-attribute name="body" value="/WEB-INF/jsp/processingsystemmockup/list.jsp" />
-    </definition>
-    
-    <definition name="processingsystemmockup/view" extends="processingsystemmockup">
-        <put-attribute name="body" value="/WEB-INF/jsp/processingsystemmockup/view.jsp" />
-    </definition>
-    
-    <definition name="processingsystemmockup/simulate" extends="processingsystemmockup">
-        <put-attribute name="body" value="/WEB-INF/jsp/processingsystemmockup/simulate.jsp" />
-    </definition>
-      
     <!--Processing Systems-->
     <definition name="processingsystem" extends="common">
         <put-attribute name="title" value="Processing Systems" />
@@ -180,12 +174,14 @@
         <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/list.jsp" />
     </definition>
     
-    <definition name="processingsystem/view" extends="processingsystem">
-        <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/view.jsp" />
-    </definition>
-    
     <definition name="processingsystem/simulate" extends="processingsystem">
         <put-attribute name="body" value="/WEB-INF/jsp/processingsystem/simulate.jsp" />
+        <put-list-attribute name="javascripts">
+            <add-attribute value="/resources/js/processingsystems.js" />
+        </put-list-attribute>
+    </definition>
+    
+    <definition name="processingsystem/refresh" template="/WEB-INF/jsp/processingsystem/refresh.jsp">
     </definition>
     
 </tiles-definitions>

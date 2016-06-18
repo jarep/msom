@@ -16,7 +16,6 @@ public enum DistributionType {
   POISSON("poisson"),
   UNKNOWN("unknown");  
     
-    
   public final String text;
 
   DistributionType(String text) {

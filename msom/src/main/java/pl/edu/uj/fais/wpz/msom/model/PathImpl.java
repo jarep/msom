@@ -56,7 +56,7 @@ public class PathImpl extends ActivatableAbstractModelObject<ProcessingPath, Pro
 
     @Override
     public String getName() {
-        return "Path: Typ [" + getType().getName() + "] -> " + getNextTaskDispatcher().getName();
+        return "Path: Type [" + getType().getName() + "] -> " + getNextTaskDispatcher().getName();
     }
 
 }
