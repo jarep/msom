@@ -65,4 +65,9 @@ public class TaskServiceImpl extends AbstractService<Task> implements TaskServic
         return result;
     }
 
+    @Override
+    public List<Task> getTasksByModelId(Long modelId) {
+        return taskDao.getTasksByModelId(modelId);
+    }
+
 }

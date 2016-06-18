@@ -47,4 +47,16 @@ public class TaskDaoImpl extends AbstractDao<Task, Long> implements TaskDao {
         return tasksByTypeQuery.list();
     }
 
+    @Override
+    public List<Task> getTasksByModelId(Long modelId) {
+        Query tasksByModelQuery = getCurrentSession().createQuery(
+                "SELECT task"
+                        + " FROM TaskProbability AS p"
+                        + " JOIN p.task AS task"
+                        + " JOIN p.model AS model"
+                        + " WHERE model.id = :id");
+        tasksByModelQuery.setParameter("id", modelId);
+        return tasksByModelQuery.list();
+    }
+
 }

@@ -5,17 +5,25 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
+import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
+import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.Path;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingSystem;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.ProcessingUnit;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ControllerUnitService;
@@ -52,7 +60,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
-        this.systemStorage = new SystemStorage(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+        this.systemStorage = new SystemStorage(entityObject.getId(), controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
         initializeSystemStorage();
     }
 
@@ -60,6 +68,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
         reloadTypes(); // types are reloaded before reloaded task dispatchers, because we need type objects for task dispatchers
         reloadTaskDispatchers();
         reloadPaths(); // paths are reloaded after reloaded task dispatchers, because we need all task dispatchers to create connection between them
+        reloadTaskEntityWrappers();
     }
 
     @Override
@@ -68,6 +77,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
         reloadTypes(); // types are reloaded before reloaded task dispatchers, because we need type objects for task dispatchers
         reloadTaskDispatchers();
         reloadPaths(); // paths are reloaded after reloaded task dispatchers, because we need all task dispatchers to create connection between them
+        reloadTaskEntityWrappers();
     }
 
     private void reloadTaskDispatchers() {
@@ -107,7 +117,21 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     private void reloadPaths() {
         List<TaskDispatcher> taskDispatchers = systemStorage.getTaskDispatchers();
         for (TaskDispatcher dispatcher : taskDispatchers) {
-            ((TaskDispatcherImpl) dispatcher).reloadComingOutPaths();
+            ((TaskDispatcherImpl) dispatcher).reloadPaths();
+        }
+    }
+
+    private void reloadTaskEntityWrappers() {
+        systemStorage.cleanTaskEntityWrappers();
+        if (getEntityObject() != null) {
+            PrintHelper.printMsg(getName(), "Initiallizing task list");
+            List<Task> tasksToGenerate = taskService.getTasksByModelId(getEntityObject().getId());
+            for (Task taskEntity : tasksToGenerate) {
+                PrintHelper.printMsg(getName(), "Task: " + taskEntity.getName() + "...");
+                TaskEntityWrapper entityWrapper = new TaskEntityWrapper(taskEntity, taskEntity.getTaskType().getId());
+                systemStorage.addTaskEntityWrapper(entityWrapper);
+            }
+            PrintHelper.printMsg(getName(), "Task list ready - saved " + tasksToGenerate.size() + " tasks");
         }
     }
 
@@ -273,12 +297,113 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     }
 
     @Override
-    public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        if (systemStorage.getFirstTaskDispatcher() == null) {
-            throw new SystemIntegrityException("First controller not selected");
+    public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionException, PathDefinitionInfinityLoopExcpetion {
+        executionReadLock.lock();
+        try {
+            PrintHelper.startSection("VALIDATION");
+            validateFirstControllerUnit();
+            validateProcessingPaths();
+            validateGeneratedTasks();
+            validateInfinityLoop();
+            PrintHelper.endSection("VALIDATION");
+            return true;
+        } finally {
+            executionReadLock.unlock();
         }
-        // required other validations ...
-        return true;
+    }
+
+    private void validateFirstControllerUnit() throws SystemIntegrityException {
+        PrintHelper.startSubSection("validation first controller unit");
+        if (systemStorage.getFirstTaskDispatcher() == null) {
+            throw new SystemIntegrityException("First controller not selected.");
+        }
+        PrintHelper.endSubSection("validation first controller unit");
+    }
+
+    private void validateProcessingPaths() throws ProcessingAbilityException, PathDefinitionException, PathDefinitionInfinityLoopExcpetion, SystemIntegrityException {
+        PrintHelper.startSubSection("validation processing paths");
+        List<TaskDispatcher> taskDispatchers = getTaskDispatchers();
+        for (TaskDispatcher taskDispatcher : taskDispatchers) {
+            List<Path> leadingToPaths = taskDispatcher.getLeadingToPaths();
+            for (Path path : leadingToPaths) {
+                validateProcessingAbility(path); // throws ProcessingAbilityException
+                Type type = path.getType();
+                isKnownType(type.getId(), type.getName(), taskDispatcher);
+                validatePathIntegrity(path);
+            }
+        }
+        PrintHelper.endSubSection("validation processing paths");
+    }
+
+    /**
+     * Check that all task dispatchers can process tasks which should be
+     * processed.
+     *
+     * @param path
+     * @throws ProcessingAbilityException
+     */
+    private void validateProcessingAbility(Path path) throws ProcessingAbilityException {
+        if (path.isProcessing()) {
+            TaskDispatcher taskDispatcher = path.getPreviousTaskDispatcher();
+            List<ProcessingUnit> processingUnits = taskDispatcher.findProcessingUnitsForType(path.getType());
+            if (processingUnits.isEmpty()) {
+                throw new ProcessingAbilityException("TaskDispatcher <strong>" + taskDispatcher.getName() + "</strong> can not process tasks of type <strong>" + path.getType().getName() + "</strong>");
+            }
+        }
+    }
+
+    /**
+     * Check that first task dispatcher has defined paths for all tasks received
+     * from task generator.
+     *
+     * @throws SystemIntegrityException
+     */
+    private void validateGeneratedTasks() throws SystemIntegrityException {
+        PrintHelper.startSubSection("validation generated tasks");
+        List<TaskEntityWrapper> taskEntityWrappers = systemStorage.getTaskEntityWrappers();
+        for (TaskEntityWrapper taskEntityWrapper : taskEntityWrappers) {
+            try {
+                TaskType taskType = taskEntityWrapper.getTaskEntity().getTaskType();
+                isKnownType(taskType.getId(), taskType.getName(), getFirstTaskDispatcher());
+            } catch (PathDefinitionException ex) {
+                throw new SystemIntegrityException("Task <strong>" + taskEntityWrapper.getTaskEntity().getName() + "</strong>"
+                        + " of type <strong>" + taskEntityWrapper.getTaskEntity().getTaskType().getName() + "</strong>"
+                        + " is not supported by first task dispatcher.");
+            }
+        }
+        PrintHelper.endSubSection("validation generated tasks");
+    }
+
+    /**
+     * Check that given task type is supported by given task dispatcher
+     *
+     * @param taskType
+     * @param taskDispatcher
+     * @return
+     * @throws PathDefinitionException
+     */
+    private boolean isKnownType(Long taskTypeId, String taskTypeName, TaskDispatcher taskDispatcher) throws PathDefinitionException {
+        List<Type> allKnownTypes = taskDispatcher.getAllKnownTypes();
+        for (Type t : allKnownTypes) {
+            if (t.getId().equals(taskTypeId)) {
+                return true;
+            }
+        }
+        throw new PathDefinitionException("Type of task <strong>" + taskTypeName + "</strong>"
+                + " is not supported by "
+                + " <strong>" + taskDispatcher.getName() + "</strong>");
+    }
+
+    private void validatePathIntegrity(Path path) throws SystemIntegrityException {
+        TaskDispatcher previousTaskDispatcher = path.getPreviousTaskDispatcher();
+        TaskDispatcher nextTaskDispatcher = path.getNextTaskDispatcher();
+        if (!previousTaskDispatcher.getModelId().equals(nextTaskDispatcher.getModelId())) {
+            throw new SystemIntegrityException("Path " + path + " is incorrect.");
+        }
+    }
+
+    private void validateInfinityLoop() {
+        // TO DO
     }
 
     @Override

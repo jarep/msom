@@ -40,4 +40,11 @@ public interface TaskDao extends IDao<Task, Long> {
      */
     public List<Task> getTasksByTaskTypeId(Long taskTypeId);
 
+    /**
+     * Get tasks with defined probability for given model.
+     *
+     * @param modelId
+     * @return
+     */
+    public List<Task> getTasksByModelId(Long modelId);
 }

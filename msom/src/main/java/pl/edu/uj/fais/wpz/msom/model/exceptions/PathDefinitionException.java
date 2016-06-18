@@ -10,6 +10,10 @@ package pl.edu.uj.fais.wpz.msom.model.exceptions;
  *
  * @author jarep
  */
-public class PathDefinitionExcpetion extends Exception {
+public class PathDefinitionException extends Exception {
+
+    public PathDefinitionException(String message) {
+        super(message);
+    }
 
 }

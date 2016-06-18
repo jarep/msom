@@ -14,4 +14,8 @@ package pl.edu.uj.fais.wpz.msom.model.exceptions;
  */
 public class ProcessingAbilityException extends Exception {
 
+    public ProcessingAbilityException(String message) {
+        super(message);
+    }
+
 }
