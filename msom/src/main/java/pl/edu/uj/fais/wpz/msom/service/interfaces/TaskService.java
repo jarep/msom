@@ -6,6 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.service.interfaces;
 
 import java.util.List;
+import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 
@@ -46,4 +47,12 @@ public interface TaskService extends IService<Task> {
      * @return list of tasks (entity objects)
      */
     public List<Task> getTasksByTaskTypeIds(List<Long> taskTypeIds);
+
+    /**
+     * Get tasks with defined probability for given model. 
+     *
+     * @param modelId
+     * @return
+     */
+    public List<Task> getTasksByModelId(Long modelId);
 }

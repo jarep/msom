@@ -11,7 +11,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 
 /**
@@ -23,8 +22,10 @@ public class TaskGeneratorThread implements Runnable {
     private final AtomicBoolean active = new AtomicBoolean(false);
     private final SystemStorage systemStorage;
 
+    /**
+     * Task entity wrappers with tasks to generate
+     */
     private final List<TaskEntityWrapper> taskEntitiesWrappers = new ArrayList<>();
-    private final List<Type> availableTypes = new ArrayList<>();
 
     private final TaskService taskService;
 
@@ -38,7 +39,7 @@ public class TaskGeneratorThread implements Runnable {
         PrintHelper.printMsg(getName(), "Starting task generation");
         if (taskEntitiesWrappers.size() > 0) {
             while (active.get()) {
-                int millis = ThreadLocalRandom.current().nextInt(1000);
+                int millis = getTimeInterval();
                 try {
                     PrintHelper.printMsg(getName(), "Next task in: " + millis + " ms.");
                     Thread.sleep(millis);
@@ -48,26 +49,50 @@ public class TaskGeneratorThread implements Runnable {
                 }
             }
         } else {
-            PrintHelper.printError(getName(), "No more tasks to generate");
+            PrintHelper.printError(getName(), "There are no tasks to generate");
         }
         PrintHelper.printMsg(getName(), "Task generation finished");
     }
 
+    /**
+     * Get time after which a new task will be generated.
+     *
+     * @return number of milliseconds
+     */
+    private int getTimeInterval() {
+        return ThreadLocalRandom.current().nextInt(1000);
+    }
+
+    /**
+     * Generate task and add to systemStorage as new task.
+     */
     private void generateTask() {
         PrintHelper.printMsg(getName(), "Generating task");
         int index = ThreadLocalRandom.current().nextInt(taskEntitiesWrappers.size());
         TaskEntityWrapper taskEntityWrapper = taskEntitiesWrappers.get(index);
+
+        TaskImpl createdTask = createTask(taskEntityWrapper);
+        createdTask.activate();
+        PrintHelper.printMsg(getName(), "Task generated: " + createdTask.toString());
+
+        systemStorage.addNewTask(createdTask);
+    }
+
+    /**
+     * Create new task based on given taskEntityWrapper
+     *
+     * @param taskEntityWrapper
+     * @return created new task
+     */
+    private TaskImpl createTask(TaskEntityWrapper taskEntityWrapper) {
         TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), taskService, taskEntityWrapper.incrementAndGetInstanceCounter());
         Long typeId = taskEntityWrapper.getTypeId();
         TypeImpl type = systemStorage.getTypeObject(typeId);
         task.setType(type);
-        task.activate();
-        PrintHelper.printMsg(getName(), "Task generated: " + task.toString());
-        systemStorage.addNewTask(task);
+        return task;
     }
 
     protected void activate() {
-        initializeTypes();
         initializeTaskEntities();
         active.set(true);
     }
@@ -75,7 +100,6 @@ public class TaskGeneratorThread implements Runnable {
     protected void deactive() {
         PrintHelper.printMsg(getName(), "Deactivating");
         taskEntitiesWrappers.clear();
-        availableTypes.clear();
         active.set(false);
         PrintHelper.printMsg(getName(), "Deactivated.");
     }
@@ -84,36 +108,28 @@ public class TaskGeneratorThread implements Runnable {
         return active.get();
     }
 
-    private void initializeTypes() {
-        PrintHelper.printMsg(getName(), "Initiallizing types");
-        availableTypes.clear();
-        availableTypes.addAll(systemStorage.getSupportedTypes());
-        PrintHelper.printMsg(getName(), "Types list ready - saved " + availableTypes.size() + " types");
-    }
-
+    /**
+     * Creating list of task entity wrappers with tasks to generate in this
+     * model.
+     */
     private void initializeTaskEntities() {
         PrintHelper.printMsg(getName(), "Initiallizing task list");
         taskEntitiesWrappers.clear();
         for (Task taskEntity : getTaskEntitiesToGenerate()) {
+            PrintHelper.printMsg(getName(), "Task: " + taskEntity.getName() + "...");
             TaskEntityWrapper entityWrapper = new TaskEntityWrapper(taskEntity, taskEntity.getTaskType().getId());
             taskEntitiesWrappers.add(entityWrapper);
         }
         PrintHelper.printMsg(getName(), "Task list ready - saved " + taskEntitiesWrappers.size() + " tasks");
     }
 
+    /**
+     * Get list of task entities to generate in this model.
+     *
+     * @return list of tasks to generate
+     */
     private List<Task> getTaskEntitiesToGenerate() {
-        List<Long> idsByTypes = getIdsByTypes(availableTypes);
-        // powinny byz zadania przypisane do modelu, nie koniecznie wszystkie ktorych typ jest obslugiwany
-        List<Task> tasksByTaskTypeIds = taskService.getTasksByTaskTypeIds(idsByTypes);
-        return tasksByTaskTypeIds;
-    }
-
-    private List<Long> getIdsByTypes(List<Type> types) {
-        List<Long> ids = new ArrayList<>();
-        for (Type type : types) {
-            ids.add(type.getId());
-        }
-        return ids;
+        return taskService.getTasksByModelId(systemStorage.getModelId());
     }
 
     private String getName() {
