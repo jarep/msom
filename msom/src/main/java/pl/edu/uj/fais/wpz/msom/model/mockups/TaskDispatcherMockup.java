@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.Module;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
@@ -158,7 +158,7 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     @Override
-    public boolean validate() throws PathDefinitionExcpetion, ProcessingAbilityException {
+    public boolean validate() throws PathDefinitionException, ProcessingAbilityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -183,7 +183,7 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
     }
 
     @Override
-    public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
+    public void receiveTask(Task task) throws PathDefinitionException, PathDefinitionInfinityLoopExcpetion {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -209,6 +209,21 @@ public class TaskDispatcherMockup extends AbstractModelMockupObject<ControllerUn
 
     @Override
     public boolean isActive() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<ProcessingUnit> findProcessingUnitsForType(Type type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Path> getLeadingToPaths() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Long getModelId() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

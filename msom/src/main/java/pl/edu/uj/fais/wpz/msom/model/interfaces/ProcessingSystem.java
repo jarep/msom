@@ -8,7 +8,7 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
 import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
@@ -110,13 +110,13 @@ public interface ProcessingSystem extends IModelObject<Model> {
      * Processing System
      * @throws
      * pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException
-     * @throws pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion
+     * @throws pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException
      * @throws
      * pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion
      *
      * @return {@code true} if validation is successful, otherwise {@code false}
      */
-    public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion;
+    public boolean validate() throws SystemIntegrityException, ProcessingAbilityException, PathDefinitionException, PathDefinitionInfinityLoopExcpetion;
 
     /**
      * Set type of distribution using in this Processing System to generate

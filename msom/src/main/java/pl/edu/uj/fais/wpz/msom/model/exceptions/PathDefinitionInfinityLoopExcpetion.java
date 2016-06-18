@@ -14,4 +14,8 @@ package pl.edu.uj.fais.wpz.msom.model.exceptions;
  */
 public class PathDefinitionInfinityLoopExcpetion extends Exception {
 
+    public PathDefinitionInfinityLoopExcpetion(String message) {
+        super(message);
+    }
+
 }

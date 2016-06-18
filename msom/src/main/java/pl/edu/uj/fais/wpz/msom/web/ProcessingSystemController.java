@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.edu.uj.fais.wpz.msom.model.ProcessingSystemTool;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
@@ -60,27 +60,28 @@ public class ProcessingSystemController {
     }
 
     /*
-    @RequestMapping(value = "/processingsystem/view/{id}", method = RequestMethod.GET)
-    public String viewProcessingSystem(@PathVariable("id") long id, Model model) {
-        setProcessingSystemToolIfDoesNotExist();
+     @RequestMapping(value = "/processingsystem/view/{id}", method = RequestMethod.GET)
+     public String viewProcessingSystem(@PathVariable("id") long id, Model model) {
+     setProcessingSystemToolIfDoesNotExist();
 
-        ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
+     ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
-        if (processingSystem == null) throw new NullPointerException();
+     if (processingSystem == null) throw new NullPointerException();
 
-        model.addAttribute("processingSystem", processingSystem);
+     model.addAttribute("processingSystem", processingSystem);
 
-        return "processingsystem/view";
-    }
-    */
-
+     return "processingsystem/view";
+     }
+     */
     @RequestMapping(value = "/processingsystem/simulate/{id}", method = RequestMethod.GET)
     public String simulateProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
-        if (processingSystem == null) throw new NullPointerException();
+        if (processingSystem == null) {
+            throw new NullPointerException();
+        }
 
         model.addAttribute("message", "Hello!");
         model.addAttribute("processingSystem", processingSystem);
@@ -88,14 +89,16 @@ public class ProcessingSystemController {
 
         return "processingsystem/simulate";
     }
-    
+
     @RequestMapping(value = "/processingsystem/refresh/{id}", method = RequestMethod.GET)
     public String refreshProcessingSystem(@PathVariable("id") long id, Model model) {
         setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
 
-        if (processingSystem == null) throw new NullPointerException();
+        if (processingSystem == null) {
+            throw new NullPointerException();
+        }
 
         model.addAttribute("message", "Hello!");
         model.addAttribute("processingSystem", processingSystem);
@@ -128,31 +131,59 @@ public class ProcessingSystemController {
         setProcessingSystemToolIfDoesNotExist();
 
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
-        if (processingSystem == null) throw new NullPointerException();
+        if (processingSystem == null) {
+            throw new NullPointerException();
+        }
 
         String msg = "";
         try {
             if (processingSystem.validate()) {
                 processingSystem.startSimulation();
-                msg = "Rozpoczęto symulację modelu o id " + id;
+                msg += "Simulation of model with id " + id + " was started.";
             } else {
-                msg = "Nie mozna rozpoczac symulacji modelu o id " + id;
+                msg += "Simulation of model with id " + id + " can not be started.";
             }
-        } catch (SystemIntegrityException ex) {
-            msg = msg + ex.getMessage();
-            msg = msg + "(jesli zdefiniowano - sprobuj kliknac reset)";
-        } catch (ProcessingAbilityException ex) {
-            msg = msg + "ProcessingAbilityException";
-        } catch (PathDefinitionExcpetion ex) {
-            msg = msg + "PathDefinitionExcpetion";
-        } catch (PathDefinitionInfinityLoopExcpetion ex) {
-            msg = msg + "PathDefinitionInfinityLoopExcpetion";
+        } catch (SystemIntegrityException | ProcessingAbilityException | PathDefinitionException | PathDefinitionInfinityLoopExcpetion ex) {
+            msg += getValidationFailedMsg(ex);
         }
 
         model.addAttribute("processingSystem", processingSystem);
         model.addAttribute("message", msg);
         model.addAttribute("isLocked", processingSystem.isLocked());
         return "processingsystem/simulate";
+    }
+
+    @RequestMapping(value = "processingsystem/validate/{id}", method = RequestMethod.GET)
+    public String validateSystem(@PathVariable("id") long id, Model model) {
+        setProcessingSystemToolIfDoesNotExist();
+
+        ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
+        if (processingSystem == null) {
+            throw new NullPointerException();
+        }
+
+        String msg = "";
+        try {
+            if (processingSystem.validate()) {
+                msg += "<strong>Validation success.</strong>";
+            } else {
+                msg += "<strong>Validation failed.</strong>";
+            }
+        } catch (SystemIntegrityException | ProcessingAbilityException | PathDefinitionException | PathDefinitionInfinityLoopExcpetion ex) {
+            msg += getValidationFailedMsg(ex);
+        }
+
+        model.addAttribute("processingSystem", processingSystem);
+        model.addAttribute("message", msg);
+        model.addAttribute("isLocked", processingSystem.isLocked());
+        return "processingsystem/simulate";
+    }
+
+    private String getValidationFailedMsg(Exception ex) {
+        String msg = "<strong>Validation failed: </strong>";
+        msg += ex.getMessage();
+        msg += " (if already fixed - don't forget click \"reset\" button to reload changes)";
+        return msg;
     }
 
     @RequestMapping(value = "processingsystem/stop/{id}", method = RequestMethod.GET)

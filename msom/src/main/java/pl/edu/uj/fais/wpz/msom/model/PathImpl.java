@@ -19,12 +19,33 @@ public class PathImpl extends ActivatableAbstractModelObject<ProcessingPath, Pro
 
     private final Type type;
     private final TaskDispatcher nextTaskDispatcher;
+    private final TaskDispatcher previousTaskDispatcher;
+    private String name;
     // main service as a "service" in abstract class
 
-    public PathImpl(ProcessingPath entityObject, Type type, TaskDispatcher forwardTo, ProcessingPathService pathService) {
+    public PathImpl(ProcessingPath entityObject, Type type, TaskDispatcher previosTaskDispatcher, TaskDispatcher nextTaskDispatcher, ProcessingPathService pathService) {
         super(entityObject, pathService);
         this.type = type;
-        this.nextTaskDispatcher = forwardTo;
+        this.previousTaskDispatcher = previosTaskDispatcher;
+        this.nextTaskDispatcher = nextTaskDispatcher;
+        initializeName();
+    }
+
+    private void initializeName() {
+        name = "[" + getPreviousTaskDispatcher().getName()
+                + "] -> {" + getType().getName()
+                + "} -> [";
+        if (getPreviousTaskDispatcher().getId().equals(getNextTaskDispatcher().getId())) {
+            name += " -- finish -- " ;
+        } else {
+            name += getNextTaskDispatcher().getName();
+        }
+        name += "]";
+        if (isProcessing()) {
+            name += " {process + dispatch}";
+        } else {
+            name += " {only dispatch}";
+        }
     }
 
     @Override
@@ -44,6 +65,11 @@ public class PathImpl extends ActivatableAbstractModelObject<ProcessingPath, Pro
     }
 
     @Override
+    public TaskDispatcher getPreviousTaskDispatcher() {
+        return previousTaskDispatcher;
+    }
+
+    @Override
     public TaskDispatcher getNextTaskDispatcher() {
         return nextTaskDispatcher;
     }
@@ -56,7 +82,14 @@ public class PathImpl extends ActivatableAbstractModelObject<ProcessingPath, Pro
 
     @Override
     public String getName() {
-        return "Path: Type [" + getType().getName() + "] -> " + getNextTaskDispatcher().getName();
+        return name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    
+    
 }
