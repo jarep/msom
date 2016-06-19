@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.function.DoubleUnaryOperator;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
-import pl.edu.uj.fais.wpz.msom.model.interfaces.Generator;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.TimeIntervalGenerator;
 
 /**
  *
  * @author Adam
  */
-public class PoissonGenerator implements Generator{
+public class PoissonIntervalGenerator implements TimeIntervalGenerator{
            private PoissonDistribution distribution;
            private int maxInterval;
            private DistributionType typeOfDistribution = DistributionType.POISSON;
            
 
-    public PoissonGenerator(double lambda ,int maxInterval) {
+    public PoissonIntervalGenerator(double lambda ,int maxInterval) {
         this.distribution = new PoissonDistribution(lambda, maxInterval);
     }
     @Override

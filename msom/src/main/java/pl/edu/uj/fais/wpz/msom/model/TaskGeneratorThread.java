@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
+import pl.edu.uj.fais.wpz.msom.model.interfaces.TimeIntervalGenerator;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 
 /**
@@ -21,17 +22,14 @@ public class TaskGeneratorThread implements Runnable {
 
     private final AtomicBoolean active = new AtomicBoolean(false);
     private final SystemStorage systemStorage;
+    private final TaskEntityWrapper taskEntityWrapper;
+    private final TimeIntervalGenerator intervalGenerator;
 
-    /**
-     * Task entity wrappers with tasks to generate
-     */
-//    private final List<TaskEntityWrapper> taskEntitiesWrappers = new ArrayList<>();
 
-    private final TaskService taskService;
-
-    public TaskGeneratorThread(SystemStorage systemStorage, TaskService taskService) {
+    public TaskGeneratorThread(SystemStorage systemStorage, TaskEntityWrapper taskEntityWrapper) {
         this.systemStorage = systemStorage;
-        this.taskService = taskService;
+        this.taskEntityWrapper=taskEntityWrapper;
+        intervalGenerator = TimeIntervalGeneratorFactory.getTimeIntervalGenerator(taskEntityWrapper.getDistributionEntity());
     }
 
     @Override
@@ -47,7 +45,7 @@ public class TaskGeneratorThread implements Runnable {
                 } catch (InterruptedException ex) {
                     PrintHelper.printAlert(getName(), "Dying... (interrupted exception)");
                 }
-            }
+           }
         } else {
             PrintHelper.printError(getName(), "There are no tasks to generate");
         }
@@ -56,11 +54,11 @@ public class TaskGeneratorThread implements Runnable {
 
     /**
      * Get time after which a new task will be generated.
-     *
-     * @return number of milliseconds
+     *  
+     * @return number of seconds
      */
     private int getTimeInterval() {
-        return ThreadLocalRandom.current().nextInt(1000);
+        return (intervalGenerator.getNext()*1000);
     }
 
     /**
@@ -68,9 +66,6 @@ public class TaskGeneratorThread implements Runnable {
      */
     private void generateTask() {
         PrintHelper.printMsg(getName(), "Generating task");
-        int index = ThreadLocalRandom.current().nextInt(systemStorage.getTaskEntityWrappers().size());
-        TaskEntityWrapper taskEntityWrapper = systemStorage.getTaskEntityWrappers().get(index);
-
         TaskImpl createdTask = createTask(taskEntityWrapper);
         createdTask.activate();
         PrintHelper.printMsg(getName(), "Task generated: " + createdTask.toString());
@@ -85,7 +80,7 @@ public class TaskGeneratorThread implements Runnable {
      * @return created new task
      */
     private TaskImpl createTask(TaskEntityWrapper taskEntityWrapper) {
-        TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), taskService, taskEntityWrapper.incrementAndGetInstanceCounter());
+        TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), systemStorage.getTaskService(), taskEntityWrapper.incrementAndGetInstanceCounter());
         Long typeId = taskEntityWrapper.getTypeId();
         TypeImpl type = systemStorage.getTypeObject(typeId);
         task.setType(type);

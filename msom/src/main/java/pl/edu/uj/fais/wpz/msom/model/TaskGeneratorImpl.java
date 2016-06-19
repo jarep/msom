@@ -5,6 +5,8 @@
  */
 package pl.edu.uj.fais.wpz.msom.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskGenerator;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 
@@ -14,21 +16,28 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
  */
 public class TaskGeneratorImpl implements TaskGenerator {
 
-    private final TaskGeneratorThread generator;
-    private Thread generatorThread;
+    private List<TaskGeneratorThread> generators = new ArrayList<>();
+    private List<Thread> generatorThreads;
+    //private SystemStorage systemStorage;
+    final private List<TaskEntityWrapper> taskEntityWrappers;
 
-    public TaskGeneratorImpl(SystemStorage systemStorage, TaskService taskService) {
-        this.generator = new TaskGeneratorThread(systemStorage, taskService);
+    public TaskGeneratorImpl(SystemStorage systemStorage) {
+        //this.systemStorage=systemStorage;
+        //this.generator = new TaskGeneratorThread(systemStorage, taskService);
+        taskEntityWrappers = systemStorage.getTaskEntityWrappers();
+        for (TaskEntityWrapper taskEntityWrapper : taskEntityWrappers) {
+            generators.add(new TaskGeneratorThread(systemStorage, taskEntityWrapper ));
+        }
     }
 
     @Override
     public boolean isActive() {
-        return generator.isActive();
+        return isActivate();
     }
 
     @Override
     public boolean activate() {
-        if (generator.isActive()) {
+        if (isActivate()) {
             System.out.println("TASK GENERATOR - reactivating - cannot execute");
             return false;
         } else {
@@ -41,27 +50,40 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
     @Override
     public boolean deactivate() {
-        if (!generator.isActive()) {
+        if (!isActivate()) {
             System.out.println("TASK GENERATOR - deactivating - cannot execute.");
             return false;
         } else {
-            System.out.println("TASK GENERATOR - deactivating...");
-            generator.deactive();
-            generatorThread.interrupt();
-            System.out.println("TASK GENERATOR - deactivated.");
+            for (TaskGeneratorThread generator : generators) {
+                System.out.println("TASK GENERATOR - deactivating gen...");
+                generator.deactive();
+
+        }
+            for (Thread generatorThread  : generatorThreads) {
+                generatorThread.interrupt();
+                System.out.println("TASK GENERATOR - deactivated.");
+            }
             return true;
         }
     }
 
     public boolean isActivate() {
-        return generator.isActive();
+        for (TaskGeneratorThread generator : generators) {
+            if(!generator.isActive())
+                return false;
+        }
+        return true;
     }
 
     private void launchGenerator() {
-        generator.activate();
-        generatorThread = new Thread(generator);
-        generatorThread.setDaemon(true);
-        generatorThread.start();
+        for (TaskGeneratorThread generator : generators) {
+            generator.activate();
+            Thread t = new Thread(generator);
+            t.setDaemon(true);
+            generatorThreads.add(t);
+            t.start();
+        }
+
     }
 
 }

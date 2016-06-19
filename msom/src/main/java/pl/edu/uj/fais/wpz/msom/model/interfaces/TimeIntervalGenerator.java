@@ -12,7 +12,7 @@ import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
  * Generator distribution probability generators
  * @author Adam
  */
-public interface Generator {
+public interface TimeIntervalGenerator {
     
     /**
      * @return Generate a random value sampled from this distribution. 

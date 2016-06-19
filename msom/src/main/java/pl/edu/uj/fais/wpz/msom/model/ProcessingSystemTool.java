@@ -15,6 +15,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskProbabilityService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -31,10 +32,11 @@ public class ProcessingSystemTool {
     private final ProcessingPathService pathService;
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
+    private final TaskProbabilityService taskProbabilityService;
 
     private final List<ProcessingSystem> localProcessingSystems = new ArrayList<>();
 
-    public ProcessingSystemTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    public ProcessingSystemTool(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskProbabilityService taskProbabilityService,TaskTypeService taskTypeService) {
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
@@ -42,8 +44,11 @@ public class ProcessingSystemTool {
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        this.taskProbabilityService = taskProbabilityService;
         reloadProcessingSystemsFromDatabase();
     }
+
+
 
     public List<ProcessingSystem> getAllProcessingSystems() {
         updateProcessingSystemsList();
@@ -72,7 +77,7 @@ public class ProcessingSystemTool {
         for (Model m : models) {
             Long id = m.getId();
             if (!isProcessingSystemOnLocalList(id)) {
-                ProcessingSystemImpl processingSystem = new ProcessingSystemImpl(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+                ProcessingSystemImpl processingSystem = new ProcessingSystemImpl(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService,taskProbabilityService, taskTypeService);
                 localProcessingSystems.add(processingSystem);
             }
         }
@@ -109,7 +114,7 @@ public class ProcessingSystemTool {
         localProcessingSystems.clear();
         List<Model> models = modelService.findAll();
         for (Model m : models) {
-            ProcessingSystemImpl p = new ProcessingSystemImpl(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            ProcessingSystemImpl p = new ProcessingSystemImpl(m, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService,taskProbabilityService, taskTypeService);
             localProcessingSystems.add(p);
         }
     }
@@ -119,7 +124,7 @@ public class ProcessingSystemTool {
 
         Model model = modelService.find(id);
         if (model != null) {
-            ProcessingSystemImpl processingSystem = new ProcessingSystemImpl(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            ProcessingSystemImpl processingSystem = new ProcessingSystemImpl(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService,taskProbabilityService, taskTypeService);
             localProcessingSystems.add(processingSystem);
             return processingSystem;
         }
@@ -144,7 +149,7 @@ public class ProcessingSystemTool {
         }
         Model model = modelService.find(id);
         if (model != null) {
-            ProcessingSystemImpl system = new ProcessingSystemImpl(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+            ProcessingSystemImpl system = new ProcessingSystemImpl(model, controllerUnitService, distributionService, modelService, moduleService, pathService, taskService,taskProbabilityService, taskTypeService);
             localProcessingSystems.add(system);
             return system;
         }

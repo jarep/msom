@@ -23,6 +23,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskProbabilityService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -45,6 +46,8 @@ public class ProcessingSystemController {
     private ProcessingPathService pathService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private TaskProbabilityService taskProbabilityService;
     @Autowired
     private TaskTypeService taskTypeService;
 
@@ -207,6 +210,6 @@ public class ProcessingSystemController {
     }
 
     private void setProcessingSystemTool() {
-        processingSystemTool = new ProcessingSystemTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+        processingSystemTool = new ProcessingSystemTool(controllerUnitService, distributionService, modelService, moduleService, pathService, taskService,taskProbabilityService, taskTypeService);
     }
 }

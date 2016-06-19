@@ -6,6 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.concurrent.atomic.AtomicLong;
+import pl.edu.uj.fais.wpz.msom.entities.Distribution;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
 
 /**
@@ -17,10 +18,12 @@ public class TaskEntityWrapper {
     private final Task taskEntity;
     private final Long typeId;
     private final AtomicLong instanceCounter = new AtomicLong();
-
-    public TaskEntityWrapper(Task taskEntity, Long typeId) {
+    private final Distribution distributionEntity;
+    
+    public TaskEntityWrapper(Task taskEntity, Long typeId, Distribution distributionEntity) {
         this.taskEntity = taskEntity;
         this.typeId = typeId;
+        this.distributionEntity = distributionEntity;
     }
 
     public Task getTaskEntity() {
@@ -34,6 +37,11 @@ public class TaskEntityWrapper {
     public Long incrementAndGetInstanceCounter(){
         return instanceCounter.incrementAndGet();
     }
+
+    public Distribution getDistributionEntity() {
+        return distributionEntity;
+    }
+
     
 
 }
