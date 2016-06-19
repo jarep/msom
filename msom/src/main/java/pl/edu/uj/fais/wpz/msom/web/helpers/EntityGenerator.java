@@ -157,6 +157,7 @@ public class EntityGenerator {
     }
 
     public void deleteDomain() {
+        clearFistControllerUnits();
         removeAll(taskProbabilityDao);
         removeAll(distributionDao);
         removeAll(processingPathDao);
@@ -165,6 +166,13 @@ public class EntityGenerator {
         removeAll(taskDao);
         removeAll(taskTypeDao);
         removeAll(modelDao);
+    }
+    
+    private void clearFistControllerUnits(){
+        List<Model> models = modelDao.findAll();
+        for(Model m : models){
+            modelDao.detachFirstTaskDispatcher(m);
+        }
     }
 
     private <T> void addAll(IDao<T, Long> dao, T... entites) {
