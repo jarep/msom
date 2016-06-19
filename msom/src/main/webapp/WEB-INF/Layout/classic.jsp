@@ -20,7 +20,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
         <script src="/msom/resources/js/jsPlumb-2.1.2-min.js "></script>
-        <script src="/msom/resources/js/jsplumb-paths.js "></script>
         <title>MSOM</title>
     </head>
     <body>

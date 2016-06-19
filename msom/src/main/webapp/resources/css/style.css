@@ -15,16 +15,29 @@ nav#tmp-nav {
     padding-top: 90px;
 }
 
-div.processing-container {
+#area {
+    position: relative;
+    display: block;
     overflow: hidden;
+    border: 1px #a6e1ec solid;
 }
 
+#jsPlumbContainer {
+    position: relative;
+}
+
+
 div.task-dispatcher {
-    float: left;
-    display: block;
     width: 350px;
     border: 1px #000 solid;
-    margin: 10px;
+    margin: 35px;
+    float: left;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.8); 
+}
+
+.jsplumb-connector {
+    z-index: -1;
 }
 
 .task-dispatcher h4 {
@@ -121,6 +134,23 @@ div#monitoring .type p {
     padding: 0 5px;
 }
 
-ul.paths li {
+.paths {
+    padding: 5px;
+}
+.paths ul {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.paths ul li {
+    float: left;
+    display: block;
+    height: 25px;
+    border: 1px #ebccd1 solid;
+    padding: 0 5px;
+    line-height: 25px;
+    text-align: center;
+    margin: 5px;
     font-size: 11px;
 }
