@@ -5,15 +5,23 @@
                     required : true
                 },
                 parameterA: {
-                    required : true
+                    required : true,
+                    min: 0
                 },
                 parameterB: {
-                    required : true
+                    required : true,
+                    min: 0
                 }
             },messages: {
                 type: "Please select the type",
-                parameterA: "Please specify the parameterA",
-                parameterB: "Please specify the parameterB"
+                parameterA: {
+                    required: "Please specify the parameter A",
+                    min : jQuery.validator.format("The parameter A must be a non-negative number")
+                },
+                parameterB: {
+                    required: "Please specify the parameter B",
+                    min : jQuery.validator.format("The parameter A must be a non-negative number")
+                }
             },
             highlight: function(element) {
                 $(element).closest('.form-group').addClass('has-error');
