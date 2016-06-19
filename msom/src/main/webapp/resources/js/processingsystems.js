@@ -21,16 +21,24 @@ var isHidden = [];
     function toggleDetails(self)
     {   
         $(self.parentNode).find('.tasks-list').toggle(); 
-        if(isHidden.includes(self.parentElement.children[2].className))
-        isHidden.splice( $.inArray(self.parentElement.children[2].className, isHidden), 1 );
-        else
+        if(isHidden.includes(self.parentElement.children[2].className)){
+            self.innerHTML = 'hide details';
+        isHidden.splice( $.inArray(self.parentElement.children[2].className, isHidden), 1 );      
+    }
+        else{
           isHidden.push(self.parentElement.children[2].className);
+       
+      }
     }
 
      function checkHiddenElements(){
          for (var i = 0;i<isHidden.length;i++)
          {
-             $("[class*='"+isHidden[i]+"']").hide();
+             $("[class*='"+isHidden[i]+"']").parent().children()[1].innerHTML = 'show details';
+             $("[class*='"+isHidden[i]+"']").hide(); 
          }
      }
      
+        $('.details-toogle').hover(function() {
+   $(this).css('cursor','pointer');
+   });
