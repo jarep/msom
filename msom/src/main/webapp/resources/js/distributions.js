@@ -6,21 +6,21 @@
                 },
                 parameterA: {
                     required : true,
-                    min: 0
+                    min: 1
                 },
                 parameterB: {
                     required : true,
-                    min: 0
+                    min: 1
                 }
             },messages: {
                 type: "Please select the type",
                 parameterA: {
                     required: "Please specify the parameter A",
-                    min : jQuery.validator.format("The parameter A must be a non-negative number")
+                    min : jQuery.validator.format("The parameter A must be greater or equal than {0}")
                 },
                 parameterB: {
                     required: "Please specify the parameter B",
-                    min : jQuery.validator.format("The parameter A must be a non-negative number")
+                    min : jQuery.validator.format("The parameter A must be greater or equal than {0}")
                 }
             },
             highlight: function(element) {
