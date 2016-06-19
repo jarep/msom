@@ -14,10 +14,10 @@ var intval = "";
     }
         else{
           isHidden.push(self.parentElement.children[2].className);
+           self.innerHTML = 'show details';
        
       }
     }
-
      function checkHiddenElements(){
          for (var i = 0;i<isHidden.length;i++)
          {
@@ -25,7 +25,6 @@ var intval = "";
              $("[class*='"+isHidden[i]+"']").hide(); 
          }
      }
-
         function refreshView() {
             var addr = document.location.href;
         var x = $("#isLocked").val();
@@ -43,7 +42,6 @@ var intval = "";
           
         }
    }
-   
    function setIntervalValue(){
       intervalValue =  $("#intervalValueInput").val()*1000;
        
@@ -71,3 +69,11 @@ var intval = "";
             }, intervalValue);
         }
    }
+       function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+              return false;
+            }
+              return true;
+            }

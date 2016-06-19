@@ -14,8 +14,8 @@
     <p class="btn btn-info" onclick="refreshView()">REFRESH VIEW</p> 
 </div>
 <input type="hidden" id="isLocked" name="isLocked" value="${isLocked}"/>
-<div id="intervalValue"><p> Set refresh interval</p>
-    <input style="width: 100px" class="form-control"  id="intervalValueInput"type="number" onChange="setIntervalValue()"></input>
+<div id="intervalValue"><p> Set refresh interval in seconds(default is 1 second)</p>
+    <input style="width: 100px" class="form-control"  onkeypress="return isNumber(event)"  id="intervalValueInput"type="number"  onKeyUp="setIntervalValue()" ></input>
 </div>
 <div class="simulation-container">
 <tiles:insertDefinition name="processingsystem/refresh" />  
