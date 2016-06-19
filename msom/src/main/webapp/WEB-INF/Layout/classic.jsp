@@ -10,7 +10,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <tiles:importAttribute name="javascripts"/>
-        
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,6 +19,8 @@
         <link rel="stylesheet" href="/msom/resources/css/style.css" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+        <script src="/msom/resources/js/jsPlumb-2.1.2-min.js "></script>
+        <script src="/msom/resources/js/jsplumb-paths.js "></script>
         <title>MSOM</title>
     </head>
     <body>
@@ -31,11 +33,11 @@
                 </div>
                 <div class="col-md-3">
                     <tiles:insertAttribute name="menu"></tiles:insertAttribute>
+                    </div>
                 </div>
             </div>
-        </div>
-    <c:forEach var="script" items="${javascripts}">
-        <script src="<c:url value="${script}"/>"></script>
-    </c:forEach>
+        <c:forEach var="script" items="${javascripts}">
+            <script src="<c:url value="${script}"/>"></script>
+        </c:forEach>
     </body>
 </html>

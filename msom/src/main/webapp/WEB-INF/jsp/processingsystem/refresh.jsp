@@ -6,7 +6,7 @@
 </div>
 <div class="processing-container">
 <c:forEach items="${processingSystem.getTaskDispatchers()}" var="taskDispatcher">
-    <div class="task-dispatcher">
+    <div class="task-dispatcher" id="${taskDispatcher.id}">
         <h4>${taskDispatcher.name} <c:if test="${taskDispatcher.first}"><em>- first controller -</em></c:if></h4>
             <div class="processing-units">
                 <h5>Processing units:</h5>
