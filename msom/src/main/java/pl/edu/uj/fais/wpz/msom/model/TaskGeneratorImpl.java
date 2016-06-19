@@ -63,6 +63,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
                 generatorThread.interrupt();
                 System.out.println("TASK GENERATOR - deactivated.");
             }
+            generatorThreads.clear();
             return true;
         }
     }

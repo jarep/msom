@@ -24,12 +24,13 @@ public class TaskGeneratorThread implements Runnable {
     private final SystemStorage systemStorage;
     private final TaskEntityWrapper taskEntityWrapper;
     private final TimeIntervalGenerator intervalGenerator;
-
+    private final TaskService taskService;
 
     public TaskGeneratorThread(SystemStorage systemStorage, TaskEntityWrapper taskEntityWrapper) {
         this.systemStorage = systemStorage;
         this.taskEntityWrapper=taskEntityWrapper;
         intervalGenerator = TimeIntervalGeneratorFactory.getTimeIntervalGenerator(taskEntityWrapper.getDistributionEntity());
+        this.taskService = systemStorage.getTaskService();
     }
 
     @Override
@@ -80,7 +81,7 @@ public class TaskGeneratorThread implements Runnable {
      * @return created new task
      */
     private TaskImpl createTask(TaskEntityWrapper taskEntityWrapper) {
-        TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), systemStorage.getTaskService(), taskEntityWrapper.incrementAndGetInstanceCounter());
+        TaskImpl task = new TaskImpl(taskEntityWrapper.getTaskEntity(), taskService, taskEntityWrapper.incrementAndGetInstanceCounter());
         Long typeId = taskEntityWrapper.getTypeId();
         TypeImpl type = systemStorage.getTypeObject(typeId);
         task.setType(type);

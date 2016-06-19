@@ -64,7 +64,6 @@ public class SystemStorage extends Activatable {
      * All generated tasks.
      */
     private final BlockingQueue<TaskImpl> tasksBlockingQueue = new LinkedBlockingQueue<>();
-//    private final DistributionType distributionType = DistributionType.UNKNOWN;
 
     protected SystemStorage(Long modelId, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService,TaskProbabilityService taskProbabilityService,TaskTypeService taskTypeService) {
         this.modelId.set(modelId);
@@ -350,15 +349,6 @@ public class SystemStorage extends Activatable {
         return getTaskDispatcherObject(controllerUnit.getId());
     }
 
-/*  public DistributionType getDistributionType() {
-        executionReadLock.lock();
-        try {
-            return distributionType;
-        } finally {
-            executionReadLock.unlock();
-        }
-    }
-*/
     public List<TaskImpl> getTasks() {
         executionWriteLock.lock();
         try {
