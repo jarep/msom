@@ -1,21 +1,8 @@
 var isHidden = [];
+var intervalValue = 1000;
+var intval = "";
     $(document).ready(function(){
-        var addr = document.location.href;
-        var x = $("#isLocked").val();
-        if (x === "true") {
-            setInterval(function(){ 
-                $.ajax({
-                   type : "GET",
-                   url : addr.replace(/start|simulate|stop|reset/, "refresh"),
-                   dataType : "html",
-                   cache : false,
-                   success : function(data) {
-                       $(".simulation-container").html(data);
-                       checkHiddenElements();
-                   }
-                });
-            }, 1000);
-        }
+      refreshTaskList();
     });
 
     function toggleDetails(self)
@@ -38,15 +25,11 @@ var isHidden = [];
              $("[class*='"+isHidden[i]+"']").hide(); 
          }
      }
-     
-    $('.details-toogle').hover(function() {
-         $(this).css('cursor','pointer');
-     });
-   
+
         function refreshView() {
-             var addr = document.location.href;
-             var x = $("#isLocked").val();
-             if (x === "true") {
+            var addr = document.location.href;
+        var x = $("#isLocked").val();
+        if (x === "true") {
                 $.ajax({
                    type : "GET",
                    url : addr.replace(/start|simulate|stop|reset/, "refresh"),
@@ -58,5 +41,33 @@ var isHidden = [];
                    }
                 });
           
+        }
+   }
+   
+   function setIntervalValue(){
+      intervalValue =  $("#intervalValueInput").val()*1000;
+       
+          window.clearInterval(intval);
+          refreshTaskList();
+      
+      refreshView();
+   }
+   
+   function refreshTaskList(){
+     var addr = document.location.href;
+        var x = $("#isLocked").val();
+        if (x === "true") {
+         intval =   setInterval(function(){ 
+                $.ajax({
+                   type : "GET",
+                   url : addr.replace(/start|simulate|stop|reset/, "refresh"),
+                   dataType : "html",
+                   cache : false,
+                   success : function(data) {
+                       $(".simulation-container").html(data);
+                       checkHiddenElements();
+                   }
+                });
+            }, intervalValue);
         }
    }
