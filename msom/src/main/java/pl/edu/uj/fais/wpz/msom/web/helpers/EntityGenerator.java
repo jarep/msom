@@ -157,6 +157,10 @@ public class EntityGenerator {
     }
 
     public void deleteDomain() {
+        List<Model> models = modelDao.findAll();
+        for (Model m : models) {
+            modelDao.detachFirstTaskDispatcher(m);
+        }
         removeAll(taskProbabilityDao);
         removeAll(distributionDao);
         removeAll(processingPathDao);
