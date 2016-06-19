@@ -27,3 +27,6 @@
 <div class="alert alert-danger" role="alert">
     <em>Only POISSON distribution is supported.</em>
 </div>
+<div class="alert alert-warning" role="alert">
+    <em>Only positive parameters allowed for distributions! Else task will be not created</em>
+</div>

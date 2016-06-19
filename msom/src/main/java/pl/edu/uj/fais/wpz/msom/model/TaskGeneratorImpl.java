@@ -17,16 +17,14 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 public class TaskGeneratorImpl implements TaskGenerator {
 
     private List<TaskGeneratorThread> generators = new ArrayList<>();
-    private List<Thread> generatorThreads;
-    //private SystemStorage systemStorage;
+    private List<Thread> generatorThreads= new ArrayList<>();
     final private List<TaskEntityWrapper> taskEntityWrappers;
 
     public TaskGeneratorImpl(SystemStorage systemStorage) {
-        //this.systemStorage=systemStorage;
-        //this.generator = new TaskGeneratorThread(systemStorage, taskService);
         taskEntityWrappers = systemStorage.getTaskEntityWrappers();
         for (TaskEntityWrapper taskEntityWrapper : taskEntityWrappers) {
-            generators.add(new TaskGeneratorThread(systemStorage, taskEntityWrapper ));
+            if(taskEntityWrapper.getDistributionEntity().getParameterA()>=1&&taskEntityWrapper.getDistributionEntity().getParameterB()>=1)  //Tymczasowa ochrona przed zlymi danymi
+                generators.add(new TaskGeneratorThread(systemStorage, taskEntityWrapper ));
         }
     }
 
