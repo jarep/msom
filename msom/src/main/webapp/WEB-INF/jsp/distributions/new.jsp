@@ -29,7 +29,7 @@
     <em>Parameter B - number of occurrences.</em>
 </div>
 <div class="alert alert-info" role="alert">
-    <em>Only integer parameters bigger than "1" allowed for distributions! Else task will be not created</em>
+    <em>Only integer parameters greater than "1" allowed for distributions! Else task will be not created</em>
 </div>
 <div class="alert alert-danger" role="alert">
     <em>Now only POISSON distribution is supported.</em>
