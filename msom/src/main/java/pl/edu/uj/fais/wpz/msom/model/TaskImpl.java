@@ -117,22 +117,19 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
                 return false;
             } else if (processed.get()) {
                 PrintHelper.printError(getName(), "Attempt to process already being processed task!");
+                return false;
             } else {
+                lastProcessingUnit = processingUnit;
                 process();
             }
         } finally {
             executionReadLock.unlock();
         }
-        executionWriteLock.lock();
-        try {
-            lastProcessingUnit = processingUnit;
-            return true;
-        } finally {
-            executionWriteLock.unlock();
-        }
+        return true;
     }
 
     private void process() {
+        
         currentPercentage.set(0);
         Long currentWaitingTime = (System.currentTimeMillis()) - timeThreshold.get();
         staticWaitingTime.addAndGet(currentWaitingTime);
@@ -141,7 +138,7 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
         type.incrementProcessingCounter();
         try {
             PrintHelper.printMsg(getName(), "Somebody is going to process me. I'm so happy!");
-            int millis = 1000 * type.getDifficulty();
+            int millis =(type.getDifficulty()*1000*1000) / getLastProcessingUnit().getEfficiency();
             int interval = millis / 100;
             for (int i = 0; i < 100; i++) {
                 Thread.sleep(interval);
