@@ -25,8 +25,8 @@
 </div>
 <br/>
 <div class="alert alert-warning" role="alert">
-    <em>Parameter A - is the average number of events per interval.</em>
-    <em>Parameter B - number of occurrences.</em>
+    <em>Parameter A - specified mean.</em>
+    <em>Parameter B - maximum number of iterations.</em>
 </div>
 <div class="alert alert-info" role="alert">
     <em>Only integer parameters greater than "1" allowed for distributions! Else task will be not created</em>
