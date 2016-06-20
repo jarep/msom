@@ -22,11 +22,9 @@
                     <div class="tasks-box">
                         <p class="simulation-parameters">
                             <span> Tasks in progress <em>${processingUnit.numberOfProcessingTasks}</em> </span> <br/>
-                            <span> Processed  <em>...</em> </span> <br/>
-                            <span> Avg. processing time: <em>...</em> </span> 
                         </p>
-                        <p class="details-toogle"> - Show/hide details - </p>
-                        <ul class="tasks-list"> 
+                        <p  style="cursor:pointer;" class="details-toogle" onclick="toggleDetails(this)"> - hide details - </p>
+                        <ul class="tasks-list percentages ${taskDispatcher.name} ${processingUnit.name}"> 
                             <c:forEach items="${processingUnit.getProcessingTasks()}" var="task">
                                 <li class="progress" style="height:35px; margin-bottom: 5px;">
                                     ${task.shortName} 
@@ -46,10 +44,9 @@
                         <p class="simulation-parameters">
                             <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
                             <span> Queue Value: <em>${processingUnit.queueValue}</em> </span> <br/>
-                            <span> Avg. waiting time: <em>...</em> </span> 
                         </p>
-                        <p class="details-toogle"> - Show/hide details - </p>
-                        <ul class="tasks-list"> 
+                        <p  style="cursor:pointer;" class="details-toogle" onclick="toggleDetails(this)"> - hide details - </p>
+                        <ul class="tasks-list ${taskDispatcher.name} ${processingUnit.name}"> 
                             <c:forEach items="${processingUnit.getWaitingTasks()}" var="waitingTask">
                                 <li>${waitingTask.shortName} 
                                     (ex.: ${waitingTask.executionCounter}, 
@@ -65,7 +62,7 @@
             <h6>Coming out paths</h6>
             <ul class="paths">
                 <c:forEach items="${taskDispatcher.getComingOutPaths()}" var="cPath">
-                    <li>${cPath.type.getName()} (processing: ${cPath.processing}) -> ${cPath.nextTaskDispatcher.getName()}</li>
+                    <li>${cPath.getName()}</li>
                     </c:forEach>
             </ul>
         </div>

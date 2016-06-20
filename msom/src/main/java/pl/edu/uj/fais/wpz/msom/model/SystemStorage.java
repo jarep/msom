@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
 import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.TaskDispatcher;
 import pl.edu.uj.fais.wpz.msom.model.interfaces.Type;
@@ -24,6 +25,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskProbabilityService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -41,8 +43,14 @@ public class SystemStorage extends Activatable {
     private final ProcessingPathService pathService;
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
+    private final TaskProbabilityService taskProbabilityService;
 
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
+    /**
+     * Task entity wrappers with tasks to generate
+     */
+    private final List<TaskEntityWrapper> taskEntitiesWrappers = new ArrayList<>();
+
     private TaskDispatcherImpl firstTaskDispatcher = null;
     /**
      * All types available in this processing system - used by any processing
@@ -50,13 +58,15 @@ public class SystemStorage extends Activatable {
      */
     private final List<Type> allTypes = new ArrayList<>();
 
+    private final AtomicLong modelId = new AtomicLong();
+
     /**
      * All generated tasks.
      */
     private final BlockingQueue<TaskImpl> tasksBlockingQueue = new LinkedBlockingQueue<>();
-    private final DistributionType distributionType = DistributionType.UNKNOWN;
 
-    protected SystemStorage(ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    protected SystemStorage(Long modelId, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService,TaskProbabilityService taskProbabilityService,TaskTypeService taskTypeService) {
+        this.modelId.set(modelId);
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
         this.modelService = modelService;
@@ -64,10 +74,15 @@ public class SystemStorage extends Activatable {
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        this.taskProbabilityService = taskProbabilityService;        
     }
 
     public ControllerUnitService getControllerUnitService() {
         return controllerUnitService;
+    }
+
+    public TaskProbabilityService getTaskProbabilityService() {
+        return taskProbabilityService;
     }
 
     public DistributionService getDistributionService() {
@@ -94,6 +109,10 @@ public class SystemStorage extends Activatable {
         return taskTypeService;
     }
 
+    public Long getModelId() {
+        return modelId.get();
+    }
+
     public boolean clean() {
         return executeIfNonActive(new Executable() {
 
@@ -103,6 +122,7 @@ public class SystemStorage extends Activatable {
                 cleanTasks();
                 cleanTasksDispatchers();
                 cleanTypes();
+                cleanTaskEntityWrappers();
                 PrintHelper.printMsg(getName(), "Simulation data cleared.");
                 return true;
             }
@@ -131,6 +151,46 @@ public class SystemStorage extends Activatable {
         }, executionWriteLock);
     }
 
+    protected boolean cleanTaskEntityWrappers() {
+        return executeIfNonActive(new Executable() {
+
+            @Override
+            public boolean execute() {
+                PrintHelper.printMsg(getName(), "Clearing task entities list");
+                taskEntitiesWrappers.clear();
+                PrintHelper.printMsg(getName(), "Task entities list cleared");
+                return true;
+            }
+        }, executionWriteLock);
+    }
+
+    protected boolean addTaskEntityWrapper(final TaskEntityWrapper taskEntityWrapper) {
+        return executeIfNonActive(new Executable() {
+
+            @Override
+            public boolean execute() {
+                PrintHelper.printMsg(getName(), "Adding task entity wrapper");
+                taskEntitiesWrappers.add(taskEntityWrapper);
+                PrintHelper.printMsg(getName(), "Task entity wrapper was added: " + taskEntityWrapper.getTaskEntity().getName());
+                return true;
+            }
+        }, executionWriteLock);
+    }
+
+    /**
+     * Get list of task entity wrappers with tasks to generate in this model.
+     *
+     * @return list of tasks to generate
+     */
+    protected List<TaskEntityWrapper> getTaskEntityWrappers() {
+        executionReadLock.lock();
+        try {
+            return taskEntitiesWrappers;
+        } finally {
+            executionReadLock.unlock();
+        }
+    }
+
     protected boolean addType(final TypeImpl type) {
         return executeIfNonActive(new Executable() {
 
@@ -138,7 +198,7 @@ public class SystemStorage extends Activatable {
             public boolean execute() {
                 PrintHelper.printMsg(getName(), "Adding type");
                 allTypes.add(type);
-                PrintHelper.printMsg(getName(), "Type added: " + type.getName());
+                PrintHelper.printMsg(getName(), "Type was added: " + type.getName());
                 return true;
             }
         }, executionWriteLock);
@@ -289,15 +349,6 @@ public class SystemStorage extends Activatable {
         return getTaskDispatcherObject(controllerUnit.getId());
     }
 
-    public DistributionType getDistributionType() {
-        executionReadLock.lock();
-        try {
-            return distributionType;
-        } finally {
-            executionReadLock.unlock();
-        }
-    }
-
     public List<TaskImpl> getTasks() {
         executionWriteLock.lock();
         try {
@@ -341,7 +392,7 @@ public class SystemStorage extends Activatable {
         try {
             tasksBlockingQueue.add(task);
             getFirstTaskDispatcher().receiveTask(task);
-        } catch (PathDefinitionExcpetion | PathDefinitionInfinityLoopExcpetion ex) {
+        } catch (PathDefinitionException | PathDefinitionInfinityLoopExcpetion ex) {
             Logger.getLogger(SystemStorage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

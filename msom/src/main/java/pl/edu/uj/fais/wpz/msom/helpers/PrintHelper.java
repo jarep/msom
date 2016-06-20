@@ -30,4 +30,24 @@ public class PrintHelper {
         System.out.println("{" + threadName + "} \t" + msg);
     }
 
+    public static void printSeparator() {
+        System.out.println("-------------------------------------------------------------");
+    }
+
+    public static void startSection(String header) {
+        System.out.println("\n******************** -- START " + header + " -- ********************");
+    }
+
+    public static void endSection(String header) {
+        System.out.println("******************** -- END OF " + header + " -- ********************\n");
+    }
+
+    public static void startSubSection(String header) {
+        System.out.println("\t*** -- start " + header + " -- ***");
+    }
+
+    public static void endSubSection(String header) {
+        System.out.println("\t*** -- end of " + header + " -- ***");
+    }
+
 }

@@ -6,6 +6,8 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -15,7 +17,7 @@ import pl.edu.uj.fais.wpz.msom.entities.Module;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
@@ -40,7 +42,9 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     private final ProcessingPathService pathService;
 
     private final List<ProcessingUnit> processingUnits = new ArrayList<>();
-    private final List<Path> comingOutPahts = new ArrayList<>();
+    private final List<Path> pathsComingOut = new ArrayList<>();
+    private final List<Path> pathsLeadingTo = new ArrayList<>();
+
     private final List<Type> knownTypes = new ArrayList<>();
     private final AtomicBoolean first = new AtomicBoolean(false);
 
@@ -131,19 +135,31 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
      *
      * @return
      */
-    protected boolean reloadComingOutPaths() {
+    protected boolean reloadPaths() {
         return executeIfNonActive(new Executable() {
 
             @Override
             public boolean execute() {
-                comingOutPahts.clear();
+                pathsComingOut.clear();
                 if (getEntityObject() != null) {
-                    List<ProcessingPath> comingOutPaths = pathService.getProcessingPathsComingOutFromTheControllerUnit(getEntityObject());
-                    for (ProcessingPath entity : comingOutPaths) {
+                    List<ProcessingPath> paths = pathService.getProcessingPathsByControllerUnit(getEntityObject());
+                    for (ProcessingPath entity : paths) {
                         TypeImpl typeObject = systemStorage.getTypeObject(entity.getTaskType());
                         TaskDispatcher forwardTo = systemStorage.getTaskDispatcherObject(entity.getNextControllerUnit());
-                        PathImpl pathImpl = new PathImpl(entity, typeObject, forwardTo, pathService);
-                        comingOutPahts.add(pathImpl);
+                        TaskDispatcher from = systemStorage.getTaskDispatcherObject(entity.getControllerUnit());
+                        PathImpl pathImpl = new PathImpl(entity, typeObject, from, forwardTo, pathService);
+                        boolean correctPath = false;
+                        if (from.getId().equals(getId())) {
+                            pathsComingOut.add(pathImpl);
+                            correctPath = true;
+                        }
+                        if (forwardTo.getId().equals(getId())) {
+                            pathsLeadingTo.add(pathImpl);
+                            correctPath = true;
+                        }
+                        if (!correctPath) {
+                            PrintHelper.printError(getName(), "Wrong path !!! " + pathImpl.toString());
+                        }
                     }
                     PrintHelper.printMsg(getName(), "Reloading controller's paths");
                     return true;
@@ -151,7 +167,6 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                     PrintHelper.printAlert(getName(), "Controller's paths not loaded - controller is null");
                     return false;
                 }
-
             }
         }, executionWriteLock);
     }
@@ -188,12 +203,12 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
             executionReadLock.unlock();
         }
     }
-    
-    protected void markAsFirst(){
+
+    protected void markAsFirst() {
         first.set(true);
     }
-    
-    public boolean isFirst(){
+
+    public boolean isFirst() {
         return first.get();
     }
 
@@ -254,7 +269,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     }
 
     @Override
-    public boolean validate() throws PathDefinitionExcpetion, ProcessingAbilityException {
+    public boolean validate() throws PathDefinitionException, ProcessingAbilityException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -282,14 +297,14 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     public void returnTaskFromProcessingUnit(Task task) throws SystemIntegrityException {
         try {
             forwardTaskOrFinish(task);
-        } catch (PathDefinitionExcpetion ex) {
+        } catch (PathDefinitionException ex) {
             Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (PathDefinitionInfinityLoopExcpetion ex) {
             Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void forwardTaskOrFinish(Task task, Path pathForTask) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
+    private void forwardTaskOrFinish(Task task, Path pathForTask) throws PathDefinitionException, PathDefinitionInfinityLoopExcpetion {
         TaskDispatcher forwardTo = pathForTask.getNextTaskDispatcher();
         if (forwardTo == null || forwardTo.getId().equals(this.getId())) {
             PrintHelper.printMsg(getName(), "Task should be finished");
@@ -300,14 +315,14 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
         }
     }
 
-    private void forwardTaskOrFinish(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
-        forwardTaskOrFinish(task, getPathForTask(task));
+    private void forwardTaskOrFinish(Task task) throws PathDefinitionException, PathDefinitionInfinityLoopExcpetion {
+        forwardTaskOrFinish(task, getComingOutPathForTask(task));
     }
 
     @Override
-    public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion {
+    public void receiveTask(Task task) throws PathDefinitionException, PathDefinitionInfinityLoopExcpetion {
         PrintHelper.printMsg(getName(), "Received task " + ((TaskImpl) task).toString());
-        Path pathForTask = getPathForTask(task);
+        Path pathForTask = getComingOutPathForTask(task);
         if (pathForTask != null) {
             if (pathForTask.isProcessing()) {
                 try {
@@ -318,7 +333,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                         unit.processTask(task);
                     } else {
                         PrintHelper.printAlert(getName(), "Processing unit for task not found");
-                        throw new ProcessingAbilityException();
+                        throw new ProcessingAbilityException("Processing unit for task not found");
                     }
                 } catch (ProcessingAbilityException ex) {
                     Logger.getLogger(TaskDispatcherImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -331,10 +346,10 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
         }
     }
 
-    private Path getPathForTask(Task task) {
+    private Path getComingOutPathForTask(Task task) {
         executionReadLock.lock();
         try {
-            for (Path p : comingOutPahts) {
+            for (Path p : pathsComingOut) {
                 if (p.getType().getId().equals(task.getType().getId())) {
                     return p;
                 }
@@ -364,7 +379,8 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
         }
     }
 
-    private List<ProcessingUnit> findProcessingUnitsForType(Type type) {
+    @Override
+    public List<ProcessingUnit> findProcessingUnitsForType(Type type) {
         executionReadLock.lock();
         try {
             PrintHelper.printMsg(getName(), "Checking available processing units");
@@ -379,11 +395,21 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                 }
             }
             PrintHelper.printMsg(getName(), "Found " + foundedProcessingUnits.size() + " possible processing units.");
-            return foundedProcessingUnits;
+            return sortProcessingUnitsByEfficiency(foundedProcessingUnits);
         } finally {
             executionReadLock.unlock();
         }
 
+    }
+
+    private List<ProcessingUnit> sortProcessingUnitsByEfficiency(List<ProcessingUnit> processingUnits) {
+         Collections.sort(processingUnits, new Comparator<ProcessingUnit>() {
+                @Override
+                public int compare(ProcessingUnit lhs, ProcessingUnit rhs) {
+                    return lhs.getEfficiency() > rhs.getEfficiency() ? -1 : (lhs.getEfficiency() > rhs.getEfficiency() ) ? 1 : 0;
+                }
+            });
+        return processingUnits;
     }
 
     @Override
@@ -395,10 +421,25 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
     public List<Path> getComingOutPaths() {
         executionReadLock.lock();
         try {
-            return comingOutPahts;
+            return pathsComingOut;
         } finally {
             executionReadLock.unlock();
         }
+    }
+
+    @Override
+    public List<Path> getLeadingToPaths() {
+        executionReadLock.lock();
+        try {
+            return pathsLeadingTo;
+        } finally {
+            executionReadLock.unlock();
+        }
+    }
+
+    @Override
+    public Long getModelId() {
+        return systemStorage.getModelId();
     }
 
 }

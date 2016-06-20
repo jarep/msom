@@ -351,7 +351,7 @@ public class ProcessingPathDaoImplTest extends DomainAwareBase {
      * ProcessingPathDaoImpl.
      */
     @Test
-    public void testGetSupportedTaskTypesByControllerUnit() {
+    public void testGetKnownTaskTypesByControllerUnit() {
         List<TaskType> taskTypes1 = processingPathDao.getKnownTaskTypesByControllerUnit(controllers.get(0));
         assertTrue(taskTypes1.size() == supportedTaskTypes1.size());
         assertTrue(taskTypes1.containsAll(supportedTaskTypes1));

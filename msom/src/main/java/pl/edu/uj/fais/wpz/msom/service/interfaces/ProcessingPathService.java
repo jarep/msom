@@ -35,6 +35,16 @@ public interface ProcessingPathService extends IService<ProcessingPath> {
     public List<ProcessingPath> getProcessingPathsLeadingToTheControllerUnit(ControllerUnit controllerUnit);
 
     /**
+     * Get Processing Paths which leading to given Controller Unit (by
+     * controller unit id) from another Controller Unit (or from the same
+     * Controller Unit when task should be finished in given Controller Unit).
+     *
+     * @param controllerUnitId
+     * @return
+     */
+    public List<ProcessingPath> getProcessingPathsLeadingToTheControllerUnit(Long controllerUnitId);
+
+    /**
      * Get Processing Paths which coming out from given Controller Unit to
      * another Controller Unit (or the same Controller Unit when task should be
      * finished in given Controller Unit).

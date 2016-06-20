@@ -52,6 +52,11 @@ public class ProcessingPathServiceImpl extends AbstractService<ProcessingPath> i
     }
 
     @Override
+    public List<ProcessingPath> getProcessingPathsLeadingToTheControllerUnit(Long controllerUnitId) {
+        return processingPathDao.getProcessingPathsLeadingToTheControllerUnit(controllerUnitId);
+    }
+
+    @Override
     public List<ProcessingPath> getProcessingPathsComingOutFromTheControllerUnit(ControllerUnit controllerUnit) {
         return processingPathDao.getProcessingPathsComingOutFromTheControllerUnit(controllerUnit);
     }

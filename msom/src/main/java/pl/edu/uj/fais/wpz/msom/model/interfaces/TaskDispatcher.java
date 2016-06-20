@@ -7,7 +7,7 @@ package pl.edu.uj.fais.wpz.msom.model.interfaces;
 
 import java.util.List;
 import pl.edu.uj.fais.wpz.msom.entities.ControllerUnit;
-import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion;
+import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.SystemIntegrityException;
@@ -34,6 +34,13 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
     public String getName();
 
     /**
+     * Get id of model.
+     *
+     * @return
+     */
+    public Long getModelId();
+
+    /**
      * Create new Processing Unit for this Task Dispatcher.
      *
      * @param name Name of Processing Unit
@@ -56,6 +63,14 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
      * @return List of Processing Units
      */
     public List<ProcessingUnit> getProcessingUnits();
+
+    /**
+     * Get Processing Units which can process tasks with given type.
+     *
+     * @param type Type of task
+     * @return List of Processing Units
+     */
+    public List<ProcessingUnit> findProcessingUnitsForType(Type type);
 
     /**
      * Define processing path, if forwardTo is this Task Dispatcher or null,
@@ -81,6 +96,13 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
      * @return List of paths
      */
     public List<Path> getComingOutPaths();
+
+    /**
+     * Get processing paths leading to this task dispatcher.
+     *
+     * @return List of paths
+     */
+    public List<Path> getLeadingToPaths();
 
     /**
      * Remove Processing Paths coming out from this Task Dispatcher to another
@@ -149,11 +171,11 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
      * Path.
      *
      * @return
-     * @throws pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion
+     * @throws pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException
      * @throws
      * pl.edu.uj.fais.wpz.msom.model.exceptions.ProcessingAbilityException
      */
-    public boolean validate() throws PathDefinitionExcpetion, ProcessingAbilityException;
+    public boolean validate() throws PathDefinitionException, ProcessingAbilityException;
 
     /**
      * Get list of types to processing in this Task Dispatcher
@@ -170,7 +192,8 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
     public List<Type> getTypesToFinished();
 
     /**
-     * Get all types for which have defined path in this task dispatcher.
+     * Get all types for which have defined path coming out from this task
+     * dispatcher.
      *
      * @return List of types.
      */
@@ -192,10 +215,10 @@ public interface TaskDispatcher extends IModelObject<ControllerUnit>, IActivatab
      * @throws
      * pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionInfinityLoopExcpetion
      * when this task was received second time in this simulation
-     * @throws pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionExcpetion
+     * @throws pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException
      * when not defined path which leads given Type of task to this Task
      * Dispatcher or not defined what to do with this task.
      */
-    public void receiveTask(Task task) throws PathDefinitionExcpetion, PathDefinitionInfinityLoopExcpetion;
+    public void receiveTask(Task task) throws PathDefinitionException, PathDefinitionInfinityLoopExcpetion;
 
 }
