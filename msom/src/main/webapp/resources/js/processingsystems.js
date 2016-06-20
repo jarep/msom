@@ -7,6 +7,10 @@ $(document).ready(function () {
     refreshTaskList();
 });
 
+(window).resize(function(){
+    plumbInstance.repaintEverything();
+});
+
 function toggleDetails(self)
 {
     $(self.parentNode).find('.tasks-list').toggle();
