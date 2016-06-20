@@ -7,9 +7,9 @@ $(document).ready(function () {
     refreshTaskList();
 });
 
-(window).resize(function(){
+window.onresize = function(){
     plumbInstance.repaintEverything();
-});
+};
 
 function toggleDetails(self)
 {
@@ -37,7 +37,7 @@ function refreshView() {
     if (x === "true") {
         $.ajax({
             type: "GET",
-            url: addr.replace(/start|simulate|stop|reset/, "refresh"),
+            url: addr.replace(/start|simulate|stop|reset|validate/, "refresh"),
             dataType: "html",
             cache: false,
             success: function (data) {
@@ -65,7 +65,7 @@ function refreshTaskList() {
         intval = setInterval(function () {
             $.ajax({
                 type: "GET",
-                url: addr.replace(/start|simulate|stop|reset/, "refresh"),
+                url: addr.replace(/start|simulate|stop|reset|validate/, "refresh"),
                 dataType: "html",
                 cache: false,
                 success: function (data) {

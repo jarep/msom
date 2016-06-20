@@ -6,7 +6,8 @@
                 },
                 difficulty: {
                     required : true,
-                    min: 1
+                    min: 1,
+                    digits: true
                 }
             },messages:{
                 name : "Please specify the name",

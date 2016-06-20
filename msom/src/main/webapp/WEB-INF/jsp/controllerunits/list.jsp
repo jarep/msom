@@ -29,6 +29,7 @@
     <tr>
         <th>Id</th>
         <th>Name</th>
+        <th>Modules</th>
         <th>Model</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -37,6 +38,12 @@
         <tr>
             <td>${controller.id}</td>
             <td><a href="controllerunits/${controller.id}">${controller.name}</a></td>
+            <td>
+            <c:forEach items="#{controller.modules}" var="module" varStatus="loop">    
+                <a href="/msom/modules/${module.id}">${module.name}</a>
+                <c:if test="${!loop.last}"><br/></c:if>
+            </c:forEach>
+            </td>
             <td><a href="/msom/models/${controller.model.id}">${controller.model.name}</a></td>
             <td><a href="controllerunits/${controller.id}">Edit</a></td>
             <td>
