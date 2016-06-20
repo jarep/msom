@@ -15,6 +15,7 @@ import pl.edu.uj.fais.wpz.msom.entities.DistributionType;
 import pl.edu.uj.fais.wpz.msom.entities.Model;
 import pl.edu.uj.fais.wpz.msom.entities.ProcessingPath;
 import pl.edu.uj.fais.wpz.msom.entities.Task;
+import pl.edu.uj.fais.wpz.msom.entities.TaskProbability;
 import pl.edu.uj.fais.wpz.msom.entities.TaskType;
 import pl.edu.uj.fais.wpz.msom.helpers.PrintHelper;
 import pl.edu.uj.fais.wpz.msom.model.exceptions.PathDefinitionException;
@@ -31,6 +32,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskProbabilityService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -49,10 +51,11 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
     private final ProcessingPathService pathService;
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
+    private final TaskProbabilityService taskProbabilityService;
 
     private TaskGeneratorImpl taskGenerator;
 
-    public ProcessingSystemImpl(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    public ProcessingSystemImpl(Model entityObject, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService,TaskProbabilityService taskProbabilityService, TaskTypeService taskTypeService) {
         super(entityObject, modelService);
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
@@ -60,7 +63,8 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
-        this.systemStorage = new SystemStorage(entityObject.getId(), controllerUnitService, distributionService, modelService, moduleService, pathService, taskService, taskTypeService);
+        this.taskProbabilityService = taskProbabilityService;
+        this.systemStorage = new SystemStorage(entityObject.getId(), controllerUnitService, distributionService, modelService, moduleService, pathService, taskService,taskProbabilityService, taskTypeService);
         initializeSystemStorage();
     }
 
@@ -125,13 +129,13 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
         systemStorage.cleanTaskEntityWrappers();
         if (getEntityObject() != null) {
             PrintHelper.printMsg(getName(), "Initiallizing task list");
-            List<Task> tasksToGenerate = taskService.getTasksByModelId(getEntityObject().getId());
-            for (Task taskEntity : tasksToGenerate) {
-                PrintHelper.printMsg(getName(), "Task: " + taskEntity.getName() + "...");
-                TaskEntityWrapper entityWrapper = new TaskEntityWrapper(taskEntity, taskEntity.getTaskType().getId());
+            List<TaskProbability> taskToGen = taskProbabilityService.getTaskProbabilitiesByModel(getEntityObject());
+            for (TaskProbability taskPropabilyty : taskToGen) {
+                PrintHelper.printMsg(getName(), "Task: " + taskPropabilyty.getTask().getName()+ "...");
+                TaskEntityWrapper entityWrapper = new TaskEntityWrapper(taskPropabilyty.getTask(), taskPropabilyty.getTask().getTaskType().getId(), taskPropabilyty.getDistribution());
                 systemStorage.addTaskEntityWrapper(entityWrapper);
             }
-            PrintHelper.printMsg(getName(), "Task list ready - saved " + tasksToGenerate.size() + " tasks");
+            PrintHelper.printMsg(getName(), "Task list ready - saved " + taskToGen.size() + " tasks");
         }
     }
 
@@ -195,7 +199,7 @@ public class ProcessingSystemImpl extends ActivatableAbstractModelObject<Model, 
 
     private void activateGenerator() {
         PrintHelper.printMsg(getName(), "Activating task generator");
-        taskGenerator = new TaskGeneratorImpl(systemStorage, taskService);
+        taskGenerator = new TaskGeneratorImpl(systemStorage);
         taskGenerator.activate();
         PrintHelper.printMsg(getName(), "Task generator activated");
     }

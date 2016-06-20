@@ -24,6 +24,13 @@
 </sf:form>
 </div>
 <br/>
+<div class="alert alert-warning" role="alert">
+    <em>Parameter A - is the average number of events per interval.</em>
+    <em>Parameter B - number of occurrences.</em>
+</div>
+<div class="alert alert-info" role="alert">
+    <em>Only integer parameters greater than "1" allowed for distributions! Else task will be not created</em>
+</div>
 <div class="alert alert-danger" role="alert">
-    <em>Only POISSON distribution is supported.</em>
+    <em>Now only POISSON distribution is supported.</em>
 </div>

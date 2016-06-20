@@ -25,6 +25,7 @@ import pl.edu.uj.fais.wpz.msom.service.interfaces.DistributionService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModelService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ModuleService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.ProcessingPathService;
+import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskProbabilityService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskService;
 import pl.edu.uj.fais.wpz.msom.service.interfaces.TaskTypeService;
 
@@ -42,6 +43,7 @@ public class SystemStorage extends Activatable {
     private final ProcessingPathService pathService;
     private final TaskService taskService;
     private final TaskTypeService taskTypeService;
+    private final TaskProbabilityService taskProbabilityService;
 
     private final List<TaskDispatcher> taskDispatchers = new ArrayList<>();
     /**
@@ -62,9 +64,8 @@ public class SystemStorage extends Activatable {
      * All generated tasks.
      */
     private final BlockingQueue<TaskImpl> tasksBlockingQueue = new LinkedBlockingQueue<>();
-    private final DistributionType distributionType = DistributionType.UNKNOWN;
 
-    protected SystemStorage(Long modelId, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService, TaskTypeService taskTypeService) {
+    protected SystemStorage(Long modelId, ControllerUnitService controllerUnitService, DistributionService distributionService, ModelService modelService, ModuleService moduleService, ProcessingPathService pathService, TaskService taskService,TaskProbabilityService taskProbabilityService,TaskTypeService taskTypeService) {
         this.modelId.set(modelId);
         this.controllerUnitService = controllerUnitService;
         this.distributionService = distributionService;
@@ -73,10 +74,15 @@ public class SystemStorage extends Activatable {
         this.pathService = pathService;
         this.taskService = taskService;
         this.taskTypeService = taskTypeService;
+        this.taskProbabilityService = taskProbabilityService;        
     }
 
     public ControllerUnitService getControllerUnitService() {
         return controllerUnitService;
+    }
+
+    public TaskProbabilityService getTaskProbabilityService() {
+        return taskProbabilityService;
     }
 
     public DistributionService getDistributionService() {
@@ -341,15 +347,6 @@ public class SystemStorage extends Activatable {
 
     public TaskDispatcher getTaskDispatcherObject(ControllerUnit controllerUnit) {
         return getTaskDispatcherObject(controllerUnit.getId());
-    }
-
-    public DistributionType getDistributionType() {
-        executionReadLock.lock();
-        try {
-            return distributionType;
-        } finally {
-            executionReadLock.unlock();
-        }
     }
 
     public List<TaskImpl> getTasks() {
