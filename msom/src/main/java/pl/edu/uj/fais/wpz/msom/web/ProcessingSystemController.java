@@ -86,7 +86,7 @@ public class ProcessingSystemController {
             throw new NullPointerException();
         }
 
-        model.addAttribute("message", "The system is running...");
+        model.addAttribute("message", "Hello!");
         model.addAttribute("processingSystem", processingSystem);
         model.addAttribute("isLocked", processingSystem.isLocked());
 
@@ -198,7 +198,7 @@ public class ProcessingSystemController {
         processingSystem.stopSimulation();
 
         model.addAttribute("processingSystem", processingSystem);
-        model.addAttribute("message", "The simulation of model with id " + id + "was stopped");
+        model.addAttribute("message", "The simulation of model with id " + id + " was stopped");
         model.addAttribute("isLocked", processingSystem.isLocked());
         return "processingsystem/simulate";
     }

@@ -1,7 +1,6 @@
 <h2>Modelowanie Systemów Obsługi Masowej</h2>
 <p class="lead">
     System provides powerful tools to manage tasks, task types and modules.
-    Probability management is currently unavailable.
 </p>
 <hr /> 
 <div class="alert alert-danger" role="alert">
