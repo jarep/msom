@@ -7,9 +7,9 @@ $(document).ready(function () {
     refreshTaskList();
 });
 
-(window).resize(function(){
+window.onresize = function(){
     plumbInstance.repaintEverything();
-});
+};
 
 function toggleDetails(self)
 {
