@@ -107,4 +107,3 @@
     </table>
 </div>
 <hr/>
-+<script src="/msom/resources/js/jsplumb-paths.js "></script>
