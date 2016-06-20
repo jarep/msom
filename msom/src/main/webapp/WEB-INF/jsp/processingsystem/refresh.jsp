@@ -23,8 +23,6 @@
                             <div class="tasks-box">
                                 <p class="simulation-parameters">
                                     <span> Tasks in progress <em>${processingUnit.numberOfProcessingTasks}</em> </span> <br/>
-                                    <span> Processed  <em>...</em> </span> <br/>
-                                    <span> Avg. processing time: <em>...</em> </span> 
                                 </p>
                                 <p  style="cursor:pointer;" class="details-toogle" onclick="toggleDetails(this)"> - hide details - </p>
                                 <ul class="tasks-list percentages ${taskDispatcher.name} ${processingUnit.name}"> 
@@ -47,7 +45,6 @@
                                 <p class="simulation-parameters">
                                     <span> Tasks in queue: <em>${processingUnit.queueLength}</em> </span> <br/>
                                     <span> Queue Value: <em>${processingUnit.queueValue}</em> </span> <br/>
-                                    <span> Avg. waiting time: <em>...</em> </span> 
                                 </p>
                                 <p  style="cursor:pointer;" class="details-toogle" onclick="toggleDetails(this)"> - hide details - </p>
                                 <ul class="tasks-list ${taskDispatcher.name} ${processingUnit.name}"> 
