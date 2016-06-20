@@ -12,9 +12,13 @@
     <a class="btn btn-danger" href="/msom/processingsystem/reset/${processingSystem.id}">RESET</a>
     <a class="btn btn-success" href="/msom/processingsystem/start/${processingSystem.id}">START</a>
     <a class="btn btn-warning" href="/msom/processingsystem/stop/${processingSystem.id}">STOP</a> 
-    <a class="btn btn-info" href="/msom/processingsystem/simulate/${processingSystem.id}">REFRESH VIEW</a> 
+    <p class="btn btn-info" onclick="refreshView()">REFRESH VIEW</p> 
 </div>
 <input type="hidden" id="isLocked" name="isLocked" value="${isLocked}"/>
+<div id="intervalValue">
+    <p>Set refresh interval in seconds (default is 1 second)</p>
+    <input style="width: 100px" class="form-control"  onkeypress="return isNumber(event)"  id="intervalValueInput"type="number"  onKeyUp="setIntervalValue()" value="1"/>
+</div>
 <div class="simulation-container">
     <tiles:insertDefinition name="processingsystem/refresh" />  
 </div>

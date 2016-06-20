@@ -14,11 +14,11 @@
     </div>
     <div class="form-group">
         <label for="parameterA">Parameter A (Double)</label>
-        <sf:input path="parameterA" class="form-control" type="number" step="0.01"/>
+        <sf:input path="parameterA" class="form-control" type="number"/>
     </div>
     <div class="form-group">
         <label for="parameterB">Parameter B (Double)</label>
-        <sf:input path="parameterB" class="form-control" type="number" step="0.01"/>
+        <sf:input path="parameterB" class="form-control" type="number"/>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </sf:form>
