@@ -25,12 +25,14 @@ public class TaskGeneratorThread implements Runnable {
     private final TaskEntityWrapper taskEntityWrapper;
     private final TimeIntervalGenerator intervalGenerator;
     private final TaskService taskService;
+    private final String name;
 
     public TaskGeneratorThread(SystemStorage systemStorage, TaskEntityWrapper taskEntityWrapper) {
         this.systemStorage = systemStorage;
         this.taskEntityWrapper=taskEntityWrapper;
         intervalGenerator = TimeIntervalGeneratorFactory.getTimeIntervalGenerator(taskEntityWrapper.getDistributionEntity());
         this.taskService = systemStorage.getTaskService();
+        this.name = "GENERATOR for " + taskEntityWrapper.getTaskEntity().getName();
     }
 
     @Override
@@ -105,7 +107,7 @@ public class TaskGeneratorThread implements Runnable {
 
 
     private String getName() {
-        return "GENERATOR";
+        return name;
     }
 
 }
