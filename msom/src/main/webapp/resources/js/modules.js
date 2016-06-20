@@ -6,11 +6,13 @@
                 },
                 cores:{
                     required : true,
-                    min:1
+                    min:1,
+                    digits: true
                 },
                 efficiency:{
                     required : true,
-                    min: 1
+                    min: 1,
+                    digits: true
                 },
                 "controllerUnit.id": {
                     required : true
