@@ -107,6 +107,14 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
 
     @Override
     public boolean processTask(ProcessingUnit processingUnit) {
+            executionWriteLock.lock();
+        try {
+             lastProcessingUnit = processingUnit;
+         } 
+        finally {
+            executionWriteLock.unlock();
+         }
+        
         executionReadLock.lock(); // we only change atomic variables, others can read
         try {
             if (!active.get()) {
@@ -119,7 +127,6 @@ public class TaskImpl extends ActivatableAbstractModelObject<pl.edu.uj.fais.wpz.
                 PrintHelper.printError(getName(), "Attempt to process already being processed task!");
                 return false;
             } else {
-                lastProcessingUnit = processingUnit;
                 process();
             }
         } finally {
