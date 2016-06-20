@@ -8,7 +8,7 @@ var intval = "";
     function toggleDetails(self)
     {   
         $(self.parentNode).find('.tasks-list').toggle(); 
-        if(isHidden.includes(self.parentElement.children[2].className)){
+        if(isHidden.indexOf(self.parentElement.children[2].className) !== -1){
             self.innerHTML = 'hide details';
         isHidden.splice( $.inArray(self.parentElement.children[2].className, isHidden), 1 );      
     }
