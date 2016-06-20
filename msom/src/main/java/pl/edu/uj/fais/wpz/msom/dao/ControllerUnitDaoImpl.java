@@ -6,6 +6,7 @@
 package pl.edu.uj.fais.wpz.msom.dao;
 
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import pl.edu.uj.fais.wpz.msom.dao.interfaces.ControllerUnitDao;
@@ -132,6 +133,12 @@ public class ControllerUnitDaoImpl extends AbstractDao<ControllerUnit, Long> imp
                 + " WHERE model.id = :id");
         controllersByModelQuery.setParameter("id", model.getId());
         return controllersByModelQuery.list();
+    }
+    
+    @Override
+    public List<ControllerUnit> findAll() {
+        return getCurrentSession().createCriteria(daoType).
+                setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
     }
 
 }

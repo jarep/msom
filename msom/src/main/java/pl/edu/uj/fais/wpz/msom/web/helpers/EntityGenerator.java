@@ -152,8 +152,9 @@ public class EntityGenerator {
         TaskProbability probability3 = new TaskProbability(distribution2, task3, m1);
         TaskProbability probability4 = new TaskProbability(distribution3, task4, m1);
         TaskProbability probability5 = new TaskProbability(distribution3, task5, m1);
+        TaskProbability probability6 = new TaskProbability(distribution3, task6, m1);
 
-        addAll(taskProbabilityDao, probability1, probability2, probability3, probability4, probability5);
+        addAll(taskProbabilityDao, probability1, probability2, probability3, probability4, probability5, probability6);
     }
 
     public void deleteDomain() {

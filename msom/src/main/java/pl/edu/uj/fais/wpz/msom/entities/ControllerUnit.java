@@ -5,9 +5,13 @@
  */
 package pl.edu.uj.fais.wpz.msom.entities;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import pl.edu.uj.fais.wpz.msom.entities.abstracts.AbstractEntity;
 
 /**
@@ -26,6 +30,9 @@ public class ControllerUnit extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "model_id")
     private Model model;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "controllerUnit") 
+    private Set<Module> modules = new HashSet<>();
 
     public ControllerUnit() {
     }
@@ -33,7 +40,12 @@ public class ControllerUnit extends AbstractEntity {
     public ControllerUnit(String name) {
         this.name = name;
     }
-
+    
+    public ControllerUnit(String name, Set<Module> modules) {
+        this.name = name;
+        this.modules = modules;
+    }
+    
     public String getName() {
         return name;
     }
@@ -48,6 +60,14 @@ public class ControllerUnit extends AbstractEntity {
 
     public void setModel(Model model) {
         this.model = model;
+    }
+    
+    public Set<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(Set<Module> modules) {
+        this.modules = modules;
     }
 
 }

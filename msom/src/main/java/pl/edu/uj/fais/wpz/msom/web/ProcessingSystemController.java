@@ -103,7 +103,7 @@ public class ProcessingSystemController {
             throw new NullPointerException();
         }
 
-        model.addAttribute("message", "Hello!");
+        model.addAttribute("message", "The system is running...");
         model.addAttribute("processingSystem", processingSystem);
 
         return "processingsystem/refresh";
@@ -116,11 +116,11 @@ public class ProcessingSystemController {
         ProcessingSystem processingSystem = processingSystemTool.getProcessingSystem(id);
         if (processingSystem.isLocked()) {
             model.addAttribute("processingSystem", processingSystem);
-            model.addAttribute("message", "System jest w trakcie pracy - nie mozna przeladowac.");
+            model.addAttribute("message", "Unable to reset - the system is locked.");
         } else {
             processingSystem = processingSystemTool.reloadProcessingSystem(id);
             model.addAttribute("processingSystem", processingSystem);
-            model.addAttribute("message", "Przeladowano system!");
+            model.addAttribute("message", "The system was reset.");
         }
 
         //if (processingSystem == null) throw new NullPointerException();
@@ -142,9 +142,9 @@ public class ProcessingSystemController {
         try {
             if (processingSystem.validate()) {
                 processingSystem.startSimulation();
-                msg += "Simulation of model with id " + id + " was started.";
+                msg += "The simulation of model with id " + id + " was started.";
             } else {
-                msg += "Simulation of model with id " + id + " can not be started.";
+                msg += "The simulation of model with id " + id + " can not be started.";
             }
         } catch (SystemIntegrityException | ProcessingAbilityException | PathDefinitionException | PathDefinitionInfinityLoopExcpetion ex) {
             msg += getValidationFailedMsg(ex);
@@ -198,7 +198,7 @@ public class ProcessingSystemController {
         processingSystem.stopSimulation();
 
         model.addAttribute("processingSystem", processingSystem);
-        model.addAttribute("message", "Zatrzymano symulację modelu o id " + id);
+        model.addAttribute("message", "The simulation of model with id " + id + " was stopped");
         model.addAttribute("isLocked", processingSystem.isLocked());
         return "processingsystem/simulate";
     }
