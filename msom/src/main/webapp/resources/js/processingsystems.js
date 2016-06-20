@@ -3,6 +3,7 @@ var intervalValue = 1000;
 var intval = "";
 var plumbInstance;
 $(document).ready(function () {
+    funfunfun();
     refreshTaskList();
 });
 
