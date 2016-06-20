@@ -39,8 +39,8 @@
         <tr>
             <td>${task.id}</td>
             <td>${task.name}</td>
-            <td>${task.taskType.name}</td>
-            <td>${task.taskType.difficulty}</td>
+            <td><a href="/msom/tasktypes/${task.taskType.id}">${task.taskType.name}</a></td>
+            <td><a href="/msom/tasktypes/${task.taskType.id}">${task.taskType.difficulty}</a></td>
             <td><a href="tasks/${task.id}">Edit</a></td>
             <td>
                 <sf:form action="tasks/remove/${task.id}" method="post">

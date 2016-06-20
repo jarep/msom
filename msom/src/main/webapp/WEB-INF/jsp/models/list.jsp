@@ -37,8 +37,8 @@
     <c:forEach items="#{modelsList}" var="m">
         <tr>
             <td>${m.id}</td>
-            <td>${m.name}</td>
-            <td>${m.firstControllerUnit.name} 
+            <td><a href="models/${m.id}">${m.name}</a></td>
+            <td><a href="/msom/controllerunits/${m.firstControllerUnit.id}"> ${m.firstControllerUnit.name} </a>
                 <c:if test="${m.firstControllerUnit.id>0}">
                     <sf:form action="models/remove-first-task-dispatcher/${m.id}" method="post" cssStyle="display: inline;">
                         <input type="submit" class="btn-sm btn-danger" value="x" id="remove-btn" />
@@ -46,7 +46,8 @@
                 </c:if>
             <td>
             <c:forEach items="#{m.controllerUnits}" var="controllerUnit" varStatus="loop">    
-                ${controllerUnit.name}<c:if test="${!loop.last}"><br/></c:if>
+                <a href="/msom/controllerunits/${controllerUnit.id}">${controllerUnit.name}</a>
+                <c:if test="${!loop.last}"><br/></c:if>
             </c:forEach>
             </td>
             <td><a href="models/${m.id}">Edit</a></td>
@@ -59,5 +60,5 @@
     </c:forEach>
 </table>
 <div class="alert alert-warning" role="alert">
-    <em>You can manage distribution for particular tasks on on model editing site.</em>
+    <em>You can manage distribution for particular tasks on model editing site.</em>
 </div>

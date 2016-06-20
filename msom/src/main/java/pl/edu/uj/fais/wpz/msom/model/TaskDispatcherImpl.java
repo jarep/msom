@@ -6,6 +6,8 @@
 package pl.edu.uj.fais.wpz.msom.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -45,7 +47,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
 
     private final List<Type> knownTypes = new ArrayList<>();
     private final AtomicBoolean first = new AtomicBoolean(false);
-    
+
     public TaskDispatcherImpl(ControllerUnit entityObject, SystemStorage systemStorage) {
         super(entityObject, systemStorage.getControllerUnitService());
         this.systemStorage = systemStorage;
@@ -377,6 +379,7 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
         }
     }
 
+    @Override
     public List<ProcessingUnit> findProcessingUnitsForType(Type type) {
         executionReadLock.lock();
         try {
@@ -392,11 +395,21 @@ public class TaskDispatcherImpl extends ActivatableAbstractModelObject<Controlle
                 }
             }
             PrintHelper.printMsg(getName(), "Found " + foundedProcessingUnits.size() + " possible processing units.");
-            return foundedProcessingUnits;
+            return sortProcessingUnitsByEfficiency(foundedProcessingUnits);
         } finally {
             executionReadLock.unlock();
         }
 
+    }
+
+    private List<ProcessingUnit> sortProcessingUnitsByEfficiency(List<ProcessingUnit> processingUnits) {
+         Collections.sort(processingUnits, new Comparator<ProcessingUnit>() {
+                @Override
+                public int compare(ProcessingUnit lhs, ProcessingUnit rhs) {
+                    return lhs.getEfficiency() > rhs.getEfficiency() ? -1 : (lhs.getEfficiency() > rhs.getEfficiency() ) ? 1 : 0;
+                }
+            });
+        return processingUnits;
     }
 
     @Override

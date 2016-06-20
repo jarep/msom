@@ -36,8 +36,8 @@
     <c:forEach items="#{controllersList}" var="controller">
         <tr>
             <td>${controller.id}</td>
-            <td>${controller.name}</td>
-            <td>${controller.model.name}</td>
+            <td><a href="controllerunits/${controller.id}">${controller.name}</a></td>
+            <td><a href="/msom/models/${controller.model.id}">${controller.model.name}</a></td>
             <td><a href="controllerunits/${controller.id}">Edit</a></td>
             <td>
                 <sf:form action="controllerunits/remove/${controller.id}" method="post">
