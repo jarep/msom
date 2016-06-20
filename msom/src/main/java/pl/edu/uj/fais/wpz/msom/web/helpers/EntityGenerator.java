@@ -96,9 +96,9 @@ public class EntityGenerator {
         controller2.setModel(m1);
         controller3.setModel(m1);
         controller4.setModel(m1);
-        
+
         addAll(controllerUnitDao, controller1, controller2, controller3, controller4);
-        
+
         m1.setFirstControllerUnit(controller1);
         modelDao.update(m1);
 
@@ -157,10 +157,7 @@ public class EntityGenerator {
     }
 
     public void deleteDomain() {
-        List<Model> models = modelDao.findAll();
-        for (Model m : models) {
-            modelDao.detachFirstTaskDispatcher(m);
-        }
+        clearFistControllerUnits();
         removeAll(taskProbabilityDao);
         removeAll(distributionDao);
         removeAll(processingPathDao);
@@ -169,6 +166,13 @@ public class EntityGenerator {
         removeAll(taskDao);
         removeAll(taskTypeDao);
         removeAll(modelDao);
+    }
+
+    private void clearFistControllerUnits() {
+        List<Model> models = modelDao.findAll();
+        for (Model m : models) {
+            modelDao.detachFirstTaskDispatcher(m);
+        }
     }
 
     private <T> void addAll(IDao<T, Long> dao, T... entites) {

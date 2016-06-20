@@ -17,7 +17,7 @@
 <input type="hidden" id="isLocked" name="isLocked" value="${isLocked}"/>
 <div id="intervalValue">
     <p>Set refresh interval in seconds (default is 1 second)</p>
-    <input style="width: 100px" class="form-control"  onkeypress="return isNumber(event)"  id="intervalValueInput"type="number"  onKeyUp="setIntervalValue()" value="1"/>
+    <input style="width: 100px" class="form-control"  onkeypress="return isNumber(event)"  id="intervalValueInput"type="number" onKeyUp="setIntervalValue()" onChange="setIntervalValue()" value="1" min="1"/>
 </div>
 <div class="simulation-container">
     <tiles:insertDefinition name="processingsystem/refresh" />  
