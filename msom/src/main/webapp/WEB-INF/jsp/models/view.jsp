@@ -54,9 +54,9 @@
             <tr>
                 <td>${p.id}</td>
                 <td>${p.model.name}</td>
-                <td>${p.task.name}</td>
-                <td>${p.distribution.type}</td>
-                <td>${p.distribution.parameterA}, ${p.distribution.parameterB}</td>
+                <td><a href="/msom/tasks/${p.task.id}">${p.task.name}</a></td>
+                <td><a href="/msom/distributions/${p.distribution.id}">${p.distribution.type}</a></td>
+                <td><a href="/msom/distributions/${p.distribution.id}">${p.distribution.parameterA}, ${p.distribution.parameterB}</a></td>
                 <td><a href="/msom/models/editprobability/${p.id}">Edit</a></td>
                 <td>
                     <sf:form action="/msom/models/removeprobability/${p.model.id}/${p.id}" method="post">

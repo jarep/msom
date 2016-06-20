@@ -40,5 +40,8 @@
         </div>
     </sf:form>
 </div>
+<br/>
 
-
+<div class="alert alert-info" role="alert">
+    <em>If task should be finished in this Controller Unit just choose the same Controller Unit in field "To".</em>
+</div>
